@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Repository;
+
+
+use App\Models\Block;
+use Illuminate\Support\Collection;
+
+interface BlockRepositoryInterface
+{
+    /**
+     * Сохранить блок
+     * @param Block $block
+     * @param Collection $transactions
+     */
+    public function save(Block $block, Collection $transactions = null): void;
+
+    /**
+     * Найти блок по Id
+     * @param int $id
+     * @return Block|null
+     */
+    public function findById(int $id): ?Block;
+
+    /**
+     * Найти блок по Id
+     * @param int $height
+     * @return Block|null
+     */
+    public function findByHeight(int $height): ?Block;
+
+    /**
+     * Получить все блоки
+     * @param array $filter
+     * @return Collection
+     */
+    public function getAll(array $filter = []): Collection;
+
+}

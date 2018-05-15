@@ -1,0 +1,190 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Minter Explorer API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/blocks": {
+            "get": {
+                "tags": [
+                    "Blocks"
+                ],
+                "summary": "\u0421\u043f\u0438\u0441\u043e\u043a \u0431\u043b\u043e\u043a\u043e\u0432",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "validator_id",
+                        "in": "query",
+                        "description": "ID \u0412\u0430\u043b\u0438\u0434\u0430\u0442\u043e\u0440\u0430",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "\u0421\u043f\u0438\u0441\u043e\u043a \u0431\u043b\u043e\u043a\u043e\u0432"
+                    }
+                }
+            }
+        },
+        "/api/v1/block/{hash}": {
+            "get": {
+                "tags": [
+                    "Blocks"
+                ],
+                "summary": "\u041d\u0430\u0439\u0442\u0438 \u0431\u043b\u043e\u043a \u043f\u043e hash-\u0441\u0443\u043c\u043c\u0435",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "code": {
+                                    "type": "integer"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Block"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Block": {
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "description": {
+                    "description": "Class Block",
+                    "properties": {
+                        "height": {
+                            "description": "Class Block",
+                            "type": "integer",
+                            "example": "12345"
+                        },
+                        "timestamp": {
+                            "description": "Class Block",
+                            "type": "timestamp",
+                            "example": "2017-01-01"
+                        },
+                        "tx_count": {
+                            "description": "Class Block",
+                            "type": "integer",
+                            "example": "4"
+                        },
+                        "size": {
+                            "description": "Class Block",
+                            "type": "integer",
+                            "example": "1024"
+                        },
+                        "hash": {
+                            "description": "Class Block",
+                            "type": "string",
+                            "example": "2BFB56B62A25E0D5853A7790211E64B198BEECFD"
+                        },
+                        "block_reward": {
+                            "description": "Class Block",
+                            "type": "string",
+                            "example": "130.02500008"
+                        },
+                        "data": {
+                            "description": "Class Block",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Transaction"
+                            }
+                        }
+                    }
+                }
+            },
+            "type": "object"
+        },
+        "Transaction": {
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "description": {
+                    "description": "Class Transaction",
+                    "properties": {
+                        "id": {
+                            "description": "Class Transaction",
+                            "type": "integer",
+                            "example": "1"
+                        },
+                        "block_id": {
+                            "description": "Class Transaction",
+                            "type": "integer",
+                            "example": "10"
+                        },
+                        "block": {
+                            "description": "Class Transaction",
+                            "type": "integer",
+                            "example": "1023"
+                        },
+                        "type": {
+                            "description": "Class Transaction",
+                            "type": "integer",
+                            "example": "2"
+                        },
+                        "nonce": {
+                            "description": "Class Transaction",
+                            "type": "integer",
+                            "example": "2"
+                        },
+                        "validator_id": {
+                            "description": "Class Transaction",
+                            "type": "integer",
+                            "example": "4"
+                        },
+                        "gas_price": {
+                            "description": "Class Transaction",
+                            "type": "integer",
+                            "example": "100"
+                        },
+                        "value": {
+                            "description": "Class Transaction",
+                            "type": "float",
+                            "example": "23.93674623"
+                        },
+                        "string": {
+                            "description": "Class Transaction",
+                            "type": "string",
+                            "example": "f86e020101a6e58a4d4e540000000000000094a93163fdf10724dc4785ff5cbfb9ac0b5949409f8405f5e100801ba093a1e6a609208de90c9617e0b4b3f3e40b4aa5109e0fc63e96920e8692e7e5e7a06a24b676dce44664ff0dd03cf63845c8ef5d44e51ebfa8e3b687412e580dc112"
+                        },
+                        "from": {
+                            "description": "Class Transaction",
+                            "type": "string",
+                            "example": "Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"
+                        },
+                        "to": {
+                            "description": "Class Transaction",
+                            "type": "string",
+                            "example": "Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"
+                        },
+                        "coin": {
+                            "description": "Class Transaction",
+                            "type": "string",
+                            "example": "MNT"
+                        }
+                    }
+                }
+            },
+            "type": "object"
+        }
+    }
+}

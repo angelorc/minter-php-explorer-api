@@ -1,0 +1,43 @@
+version: '3'
+services:
+    web:
+        build: ./docker/nginx
+        volumes:
+            - ./:/var/www
+        ports:
+            - "8000:80"
+        links:
+            - app
+
+    postgres:
+        image: postgres
+        restart: always
+        ports:
+            - 5432:5432
+        environment:
+          POSTGRES_DB: explorer_db
+          POSTGRES_USER: minter_adm
+          POSTGRES_PASSWORD: fL4n;~R8Pe
+        volumes:
+            - ./docker/postgres/dbdata:/var/lib/postgresql/data
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U postgres"]
+          interval: 30s
+          timeout: 3s
+          retries: 5
+
+    app:
+        build: ./docker/php
+        volumes:
+            - ./:/var/www
+        depends_on:
+            - postgres
+        links:
+            - postgres
+
+    composer:
+        restart: 'no'
+        image: composer/composer:php7.2
+        command: install
+        volumes:
+          - .:/var/www
