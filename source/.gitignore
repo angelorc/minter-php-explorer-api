@@ -1,5 +1,5 @@
 /vendor
-docker/postgres/dbdata
+db_data/
 /.idea
 Homestead.json
 Homestead.yaml
