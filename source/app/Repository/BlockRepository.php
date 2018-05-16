@@ -16,7 +16,7 @@ class BlockRepository implements BlockRepositoryInterface
     {
         $block->save();
 
-        if (\count($transactions)){
+        if ($transactions){
             $block->transactions()->saveMany($transactions);
         }
 

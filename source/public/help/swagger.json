@@ -24,22 +24,6 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "\u0421\u043f\u0438\u0441\u043e\u043a \u0431\u043b\u043e\u043a\u043e\u0432"
-                    }
-                }
-            }
-        },
-        "/api/v1/block/{hash}": {
-            "get": {
-                "tags": [
-                    "Blocks"
-                ],
-                "summary": "\u041d\u0430\u0439\u0442\u0438 \u0431\u043b\u043e\u043a \u043f\u043e hash-\u0441\u0443\u043c\u043c\u0435",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
                         "description": "Success",
                         "schema": {
                             "properties": {
@@ -60,128 +44,359 @@
                     }
                 }
             }
+        },
+        "/api/v1/block/{height}": {
+            "get": {
+                "tags": [
+                    "Blocks"
+                ],
+                "summary": "\u041d\u0430\u0439\u0442\u0438 \u0431\u043b\u043e\u043a \u043f\u043e \u0432\u044b\u0441\u043e\u0442\u0435",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "height",
+                        "in": "path",
+                        "description": "\u0412\u044b\u0441\u043e\u0442\u0430 \u0431\u043b\u043e\u043a\u0430",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "code": {
+                                    "type": "integer"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Block"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/status": {
+            "get": {
+                "tags": [
+                    "Info"
+                ],
+                "summary": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0441\u0435\u0442\u0438",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "code": {
+                                    "type": "integer"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Status"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/txCountChartData": {
+            "get": {
+                "tags": [
+                    "Info"
+                ],
+                "summary": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0439 \u0437\u0430 \u0441\u0435\u0433\u043e\u0434\u043d\u044f",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "code": {
+                                    "type": "integer"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/CountChartData"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/transactions": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "\u0421\u043f\u0438\u0441\u043e\u043a \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0439",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "block_height",
+                        "in": "query",
+                        "description": "\u0412\u044b\u0441\u043e\u0442\u0430 \u0431\u043b\u043e\u043a\u0430",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "code": {
+                                    "type": "integer"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Transaction"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/transaction/{hash}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "\u041d\u0430\u0439\u0442\u0438 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044e \u043f\u043e hash-\u0441\u0443\u043c\u043c\u0435",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "hash",
+                        "in": "path",
+                        "description": "Hash-\u0441\u0443\u043c\u043c\u0430 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0438",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "properties": {
+                                "success": {
+                                    "type": "boolean"
+                                },
+                                "code": {
+                                    "type": "integer"
+                                },
+                                "data": {
+                                    "$ref": "#/definitions/Transaction"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "Block": {
-            "required": [
-                "id"
-            ],
+        "Status": {
             "properties": {
-                "description": {
+                "bipPriceUsd": {
+                    "type": "float",
+                    "example": "123.23"
+                },
+                "bipPriceBtc": {
+                    "type": "float",
+                    "example": "1.23456789"
+                },
+                "bipPriceChange": {
+                    "type": "float",
+                    "example": "1.23456789"
+                },
+                "marketCap": {
+                    "type": "float",
+                    "example": "123456789.003"
+                },
+                "averageBlockTime": {
+                    "type": "float",
+                    "example": "1.23"
+                },
+                "latestBlockHeight": {
+                    "type": "integer",
+                    "example": "123456"
+                },
+                "totalTransactions": {
+                    "type": "integer",
+                    "example": "1234569875975"
+                },
+                "transactionsPerSecond": {
+                    "type": "integer",
+                    "example": "12345"
+                }
+            },
+            "type": "object"
+        },
+        "CountChartData": {
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "example": "2018-05-14"
+                },
+                "amount": {
+                    "type": "integer",
+                    "example": "123456789"
+                }
+            },
+            "type": "object"
+        },
+        "Block": {
+            "properties": {
+                "height": {
                     "description": "Class Block",
-                    "properties": {
-                        "height": {
-                            "description": "Class Block",
-                            "type": "integer",
-                            "example": "12345"
-                        },
-                        "timestamp": {
-                            "description": "Class Block",
-                            "type": "timestamp",
-                            "example": "2017-01-01"
-                        },
-                        "tx_count": {
-                            "description": "Class Block",
-                            "type": "integer",
-                            "example": "4"
-                        },
-                        "size": {
-                            "description": "Class Block",
-                            "type": "integer",
-                            "example": "1024"
-                        },
-                        "hash": {
-                            "description": "Class Block",
-                            "type": "string",
-                            "example": "2BFB56B62A25E0D5853A7790211E64B198BEECFD"
-                        },
-                        "block_reward": {
-                            "description": "Class Block",
-                            "type": "string",
-                            "example": "130.02500008"
-                        },
-                        "data": {
-                            "description": "Class Block",
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Transaction"
-                            }
-                        }
+                    "type": "integer",
+                    "example": "12345"
+                },
+                "timestamp": {
+                    "description": "Class Block",
+                    "type": "timestamp",
+                    "example": "2017-01-01"
+                },
+                "tx_count": {
+                    "description": "Class Block",
+                    "type": "integer",
+                    "example": "4"
+                },
+                "size": {
+                    "description": "Class Block",
+                    "type": "integer",
+                    "example": "1024"
+                },
+                "hash": {
+                    "description": "Class Block",
+                    "type": "string",
+                    "example": "2BFB56B62A25E0D5853A7790211E64B198BEECFD"
+                },
+                "block_reward": {
+                    "description": "Class Block",
+                    "type": "string",
+                    "example": "130.02500008"
+                },
+                "validators": {
+                    "description": "Class Block",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Validator"
                     }
                 }
             },
             "type": "object"
         },
-        "Transaction": {
-            "required": [
-                "id"
-            ],
+        "TransactionData": {
             "properties": {
-                "description": {
-                    "description": "Class Transaction",
-                    "properties": {
-                        "id": {
-                            "description": "Class Transaction",
-                            "type": "integer",
-                            "example": "1"
-                        },
-                        "block_id": {
-                            "description": "Class Transaction",
-                            "type": "integer",
-                            "example": "10"
-                        },
-                        "block": {
-                            "description": "Class Transaction",
-                            "type": "integer",
-                            "example": "1023"
-                        },
-                        "type": {
-                            "description": "Class Transaction",
-                            "type": "integer",
-                            "example": "2"
-                        },
-                        "nonce": {
-                            "description": "Class Transaction",
-                            "type": "integer",
-                            "example": "2"
-                        },
-                        "validator_id": {
-                            "description": "Class Transaction",
-                            "type": "integer",
-                            "example": "4"
-                        },
-                        "gas_price": {
-                            "description": "Class Transaction",
-                            "type": "integer",
-                            "example": "100"
-                        },
-                        "value": {
-                            "description": "Class Transaction",
-                            "type": "float",
-                            "example": "23.93674623"
-                        },
-                        "string": {
-                            "description": "Class Transaction",
-                            "type": "string",
-                            "example": "f86e020101a6e58a4d4e540000000000000094a93163fdf10724dc4785ff5cbfb9ac0b5949409f8405f5e100801ba093a1e6a609208de90c9617e0b4b3f3e40b4aa5109e0fc63e96920e8692e7e5e7a06a24b676dce44664ff0dd03cf63845c8ef5d44e51ebfa8e3b687412e580dc112"
-                        },
-                        "from": {
-                            "description": "Class Transaction",
-                            "type": "string",
-                            "example": "Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"
-                        },
-                        "to": {
-                            "description": "Class Transaction",
-                            "type": "string",
-                            "example": "Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"
-                        },
-                        "coin": {
-                            "description": "Class Transaction",
-                            "type": "string",
-                            "example": "MNT"
-                        }
-                    }
+                "from": {
+                    "type": "string",
+                    "example": "Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"
+                },
+                "to": {
+                    "type": "string",
+                    "example": "Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"
+                },
+                "coin": {
+                    "type": "string",
+                    "example": "MNT"
+                },
+                "value": {
+                    "type": "float",
+                    "example": "23.93674623"
+                }
+            },
+            "type": "object"
+        },
+        "Transaction": {
+            "properties": {
+                "hash": {
+                    "type": "string",
+                    "example": "f86e020101a6e58a4d4e540000000000000094a93163..."
+                },
+                "nonce": {
+                    "type": "integer",
+                    "example": "2"
+                },
+                "block": {
+                    "type": "integer",
+                    "example": "1023"
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2018-05-14 14:17:56+03"
+                },
+                "fee": {
+                    "type": "integer",
+                    "example": "100"
+                },
+                "type": {
+                    "type": "integer",
+                    "example": "2"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                },
+                "data": {
+                    "$ref": "#/definitions/TransactionData"
+                }
+            },
+            "type": "object"
+        },
+        "Validator": {
+            "properties": {
+                "id": {
+                    "description": "Class Validator",
+                    "type": "integer",
+                    "example": "12345"
+                },
+                "name": {
+                    "description": "Class Validator",
+                    "type": "string",
+                    "example": "SomeValidator"
+                },
+                "address": {
+                    "description": "Class Validator",
+                    "type": "string",
+                    "example": "XXXXXX"
+                },
+                "public_key": {
+                    "description": "Class Validator",
+                    "type": "string",
+                    "example": "XXXXX"
                 }
             },
             "type": "object"

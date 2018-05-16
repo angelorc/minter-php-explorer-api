@@ -86,13 +86,6 @@ class BlockService implements BlockServiceInterface
 
         } else {
             $block->size = 0;
-
-            //TODO: Используется для теста, удалить перед коммитом
-            $blockData['block']['data']['txs'] = [
-                "+G4CAQGm5YpNTlQAAAAAAAAAlKkxY/3xByTcR4X/XL+5rAtZSUCfhAX14QCAG6CToeamCSCN6QyWF+C0s/PkC0qlEJ4Pxj6Wkg6Gkufl56BqJLZ23ORGZP8N0Dz2OEXI711E5R6/qOO2h0EuWA3BEg==",
-                "+G4CAQGm5YpNTlQAAAAAAAAAlKkxY/3xByTcR4X/XL+5rAtZSUCfhAX14QCAG6CToeamCSCN6QyWF+C0s/PkC0qlEJ4Pxj6Wkg6Gkufl56BqJLZ23ORGZP8N0Dz2OEXI711E5R6/qOO2h0EuWA3BEg=="
-            ];
-            $transactions = $this->transactionService->decodeTransactionsFromApiData($blockData);
         }
 
         $this->blockRepository->save($block, $transactions);

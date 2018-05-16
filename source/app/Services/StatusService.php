@@ -18,7 +18,7 @@ class StatusService implements StatusServiceInterface
         $height = Cache::get('latest_block_height');
 
         if (!$height){
-            return Block::orderBy('created_at', 'desc')->first()->height;
+            return Block::orderBy('created_at', 'desc')->first()->height ?? 0;
         }
 
         return $height;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3fb3aa5a60f4530b662a4663ebef9a1d",
+    "content-hash": "891ef9cabcd1ec6bd58b08433300d2a8",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -638,16 +638,16 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "322ec80498b3bf85bc4025d028e130a9b50242b9"
+                "reference": "3dc639feabe0f302f574157a782ede323881a944"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/322ec80498b3bf85bc4025d028e130a9b50242b9",
-                "reference": "322ec80498b3bf85bc4025d028e130a9b50242b9",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/3dc639feabe0f302f574157a782ede323881a944",
+                "reference": "3dc639feabe0f302f574157a782ede323881a944",
                 "shasum": ""
             },
             "require": {
@@ -678,7 +678,7 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "https://laravel.com",
-            "time": "2018-04-07T17:05:26+00:00"
+            "time": "2018-05-11T23:38:58+00:00"
         },
         {
             "name": "illuminate/database",
@@ -1163,6 +1163,51 @@
             "time": "2018-03-31T14:14:19+00:00"
         },
         {
+            "name": "illuminate/redis",
+            "version": "v5.6.22",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/redis.git",
+                "reference": "d6a371aa43f6e985d53724d31c6f135df9eaa94a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/redis/zipball/d6a371aa43f6e985d53724d31c6f135df9eaa94a",
+                "reference": "d6a371aa43f6e985d53724d31c6f135df9eaa94a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "5.6.*",
+                "illuminate/support": "5.6.*",
+                "php": "^7.1.3",
+                "predis/predis": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Redis\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "The Illuminate Redis package.",
+            "homepage": "https://laravel.com",
+            "time": "2018-05-08T13:22:25+00:00"
+        },
+        {
             "name": "illuminate/session",
             "version": "v5.6.20",
             "source": {
@@ -1545,12 +1590,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MinterTeam/minter-php-sdk.git",
-                "reference": "ef77e9581f996531d8802e9e0af6f5ca57fc12cf"
+                "reference": "7eebb19109b0cdef0f9660d9822e4a6d1b36968b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MinterTeam/minter-php-sdk/zipball/ef77e9581f996531d8802e9e0af6f5ca57fc12cf",
-                "reference": "ef77e9581f996531d8802e9e0af6f5ca57fc12cf",
+                "url": "https://api.github.com/repos/MinterTeam/minter-php-sdk/zipball/7eebb19109b0cdef0f9660d9822e4a6d1b36968b",
+                "reference": "7eebb19109b0cdef0f9660d9822e4a6d1b36968b",
                 "shasum": ""
             },
             "require": {
@@ -1570,7 +1615,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2018-04-28T07:22:29+00:00"
+            "time": "2018-05-10T12:36:42+00:00"
         },
         {
             "name": "monolog/monolog",
