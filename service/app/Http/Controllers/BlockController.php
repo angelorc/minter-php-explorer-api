@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BlockCollection;
 use App\Models\Block;
 use App\Models\Validator;
 use App\Repository\BlockRepositoryInterface;
@@ -10,6 +11,8 @@ use Illuminate\Http\Request;
 
 class BlockController extends Controller
 {
+    public const BLOCKS_PER_PAGE = 50;
+
     /** @var BlockRepositoryInterface  */
     private $blockRepository;
 
@@ -50,23 +53,13 @@ class BlockController extends Controller
      * )
      *
      * @param Request $request
-     * @return array
+     * @return BlockCollection
      */
-    public function getList(Request $request): array
+    public function getList(Request $request):BlockCollection
     {
+        $query = Block::with('validators');
 
-        $filter = ['validator_id' =>  $request->get('validator_id')];
-
-        $result = [];
-
-        foreach ($this->blockRepository->getAll($filter) as $block) {
-            $result[] = $this->prepareBlockForResponse($block);
-        }
-
-        return [
-            'latestBlockHeight' => $this->statusService->getLastBlockHeight(),
-            'data' => $result,
-        ];
+        return new BlockCollection($query->orderByDesc('height')->paginate($this::BLOCKS_PER_PAGE));
     }
 
     /**
