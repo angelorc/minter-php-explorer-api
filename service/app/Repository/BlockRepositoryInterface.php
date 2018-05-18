@@ -36,4 +36,12 @@ interface BlockRepositoryInterface
      */
     public function getAll(array $filter = []): Collection;
 
+    /**
+     * Получить количество блоков за период в секундах
+     * @param int $periodSec
+     * @param \DateTime|null $endDate
+     * @return int
+     */
+    public function getBlocksCountByPeriod(int $periodSec, \DateTime $endDate = null): int;
+
 }

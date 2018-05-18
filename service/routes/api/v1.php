@@ -6,6 +6,7 @@ $router->get('/', function ()    {
 
 $router->get('status', StatusController::class. '@status');
 $router->get('txCountChartData', StatusController::class. '@txCountChartData');
+$router->get('status_page', StatusController::class. '@statusPage');
 
 $router->get('blocks', BlockController::class. '@getList');
 $router->get('block/{height}', BlockController::class. '@getBlockByHeight');

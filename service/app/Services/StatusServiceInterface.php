@@ -3,6 +3,10 @@
 namespace App\Services;
 
 
+/**
+ * Interface StatusServiceInterface
+ * @package App\Services
+ */
 interface StatusServiceInterface
 {
 
@@ -23,4 +27,21 @@ interface StatusServiceInterface
      * @return int
      */
     public function getAverageBlockTime(): int;
+
+    /**
+     * Получить статус
+     * @return bool
+     */
+    public function isActiveStatus(): bool;
+
+    /**
+     * @return int
+     */
+    public function getUpTime(): int;
+
+    /**
+     * @param int $periodInSeconds
+     * @return int
+     */
+    public function getSpeedOfBlocks(int $periodInSeconds = 86400): int;
 }

@@ -5,20 +5,31 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TxCountCollection;
 use App\Models\Transaction;
 use App\Models\TxPerDay;
+use App\Repository\TransactionRepositoryInterface;
 use App\Services\StatusServiceInterface;
+use App\Services\TransactionServiceInterface;
+use Illuminate\Support\Facades\Cache;
 
 class StatusController extends Controller
 {
+    /**
+     * @var StatusServiceInterface
+     */
     private $statusService;
+    /**
+     * @var TransactionServiceInterface
+     */
+    private $transactionService;
 
     /**
      * Create a new controller instance.
      *
      * @param StatusServiceInterface $statusService
      */
-    public function __construct(StatusServiceInterface $statusService)
+    public function __construct(StatusServiceInterface $statusService, TransactionServiceInterface $transactionService)
     {
         $this->statusService = $statusService;
+        $this->transactionService = $transactionService;
     }
 
     /**
@@ -109,5 +120,44 @@ class StatusController extends Controller
     public function txCountChartData(): TxCountCollection
     {
         return new TxCountCollection(TxPerDay::limit(14)->get());
+    }
+
+
+    /**
+     * @SWG\Get(
+     *     path="/api/v1/status_page",
+     *     tags={"Info"},
+     *     summary="Статус сети",
+     *     produces={"application/json"},
+     *
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success",
+     *         @SWG\Schema(
+     *             @SWG\Property(property="success", type="boolean"),
+     *             @SWG\Property(property="code",    type="integer"),
+     *             @SWG\Property(property="message", type="string"),
+     *             @SWG\Property(property="data",    ref="#/definitions/Status")
+     *         )
+     *     )
+     * )
+     *
+     * @return array
+     */
+    public function statusPage(): array
+    {
+        return [
+            'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
+            'uptime' => $this->statusService->getUpTime(),
+            'number_of_blocks' => $this->statusService->getLastBlockHeight(),
+            'tx_speed_24h' => '???',
+            'tx_total_count' => $this->transactionService->getTotalTransactionsCount(),
+            'tx_24h_count' => $this->transactionService->get24hTransactionsCount(),
+            'tx_per_second' => '???',
+            'active_validators' =>'???',
+            'total_validators_count' => '???',
+            'average_tx_commission' => '???',
+            'total_commission' => '???',
+        ];
     }
 }

@@ -13,4 +13,17 @@ interface TransactionServiceInterface
      * @return Collection
      */
     public function decodeTransactionsFromApiData(array $data): Collection;
+
+
+    /**
+     * Количество транзакций
+     * @return int
+     */
+    public function getTotalTransactionsCount(): int;
+
+    /**
+     * Количество транзакций за последние 24 часа
+     * @return int
+     */
+    public function get24hTransactionsCount(): int;
 }

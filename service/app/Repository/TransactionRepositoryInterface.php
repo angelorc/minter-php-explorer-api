@@ -44,4 +44,11 @@ interface TransactionRepositoryInterface
      */
     public function getTransactionsPerDayCount(\DateTime $date = null): int;
 
+    /**
+     * Количество транзакций
+     * @param \DateInterval|null $periodSeconds - Период в секундах
+     * @return int
+     */
+    public function getTransactionsCount(\DateInterval $periodSeconds = null): int;
+
 }

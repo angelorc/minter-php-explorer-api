@@ -65,4 +65,19 @@ class BlockRepository implements BlockRepositoryInterface
         return $query->orderByDesc('height')->get();
 
     }
+
+    /**
+     * Получить количество блоков за период в секундах
+     * @param int $periodSec
+     * @param \DateTime|null $endDate
+     * @return int
+     * @throws \Exception
+     */
+    public function getBlocksCountByPeriod(int $periodSec, \DateTime $endDate = null): int
+    {
+        $dt = $endDate ?? new \DateTime();
+        $di = new \DateInterval("PT{$periodSec}S");
+
+        return Block::whereDate('created_at', '>=', $dt->sub($di)->format('Y-m-d'))->count();
+    }
 }
