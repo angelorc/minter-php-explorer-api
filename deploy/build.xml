@@ -49,7 +49,7 @@
         <fail unless="env.redis_port" message="redis_port environment variable is not set"/>
         <fail unless="env.rmq_host" message="rmq_host environment variable is not set"/>
         <fail unless="env.rmq_port" message="rmq_port environment variable is not set"/>
-        <fail unless="env.rmq_user" message="rmq_user environment variable is not set"/>
+        <fail unless="env.rmq_username" message="rmq_username environment variable is not set"/>
         <fail unless="env.rmq_password" message="rmq_password environment variable is not set"/>
         <fail unless="env.rmq_vhost" message="rmq_vhost environment variable is not set"/>
         <fail unless="env.minter_api" message="minter_api environment variable is not set"/>
