@@ -30,7 +30,6 @@ use Illuminate\Support\Collection;
  *     @SWG\Property(property="size",      type="integer",   example="1024"),
  *     @SWG\Property(property="hash",      type="string",    example="2BFB56B62A25E0D5853A7790211E64B198BEECFD"),
  *     @SWG\Property(property="reward",    type="string",    example="130.02500008"),
- *     @SWG\Property(property="blockTime", type="integer",   example="5"),
  *     @SWG\Property(property="validators", type="array",
  *         @SWG\Items(ref="#/definitions/Validator")
  *     )

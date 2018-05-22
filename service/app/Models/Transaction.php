@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  *     @SWG\Property(property="block",     type="integer", example="1023"),
  *     @SWG\Property(property="timestamp", type="string",  example="2018-05-14 14:17:56+03"),
  *     @SWG\Property(property="fee",       type="integer", example="100"),
- *     @SWG\Property(property="type",      type="integer", example="2"),
+ *     @SWG\Property(property="type",      type="integer", example="send"),
  *     @SWG\Property(property="status",    type="string",  example="success"),
  *     @SWG\Property(property="data",      ref="#/definitions/TransactionData")
  * )
@@ -59,6 +59,8 @@ class Transaction extends Model
     public const TYPE_DELEGATE = 5;
     public const TYPE_UNBOND = 6;
 
+    protected $dateFormat = 'Y-m-d H:i:sO';
+
     /**
      * Get the block that owns the transactions.
      */
@@ -73,6 +75,38 @@ class Transaction extends Model
     public function getFeeAttribute(): int
     {
         return $this->gas_price * $this->getBasePrice($this->type);
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusAttribute(): string
+    {
+        //TODO: добавить реализацию
+        return 'success';
+    }
+
+    /**
+     * @return int
+     */
+    public function getTypeStringAttribute(): string
+    {
+        switch ($this->type){
+            case $this::TYPE_SEND:
+                return 'send';
+            case $this::TYPE_CONVERT:
+                return 'convert';
+            case $this::TYPE_CREATE_COIN:
+                return 'createCoin';
+            case $this::TYPE_DECLARE_CANDIDACY:
+                return 'declareCandidacy';
+            case $this::TYPE_DELEGATE:
+                return 'delegate';
+            case $this::TYPE_UNBOND:
+                return 'unbond';
+            default:
+                return '';
+        }
     }
 
     /**

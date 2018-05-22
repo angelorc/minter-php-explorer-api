@@ -158,6 +158,12 @@
                         "in": "query",
                         "description": "\u0412\u044b\u0441\u043e\u0442\u0430 \u0431\u043b\u043e\u043a\u0430",
                         "type": "integer"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "\u041d\u043e\u043c\u0435\u0440 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -165,12 +171,6 @@
                         "description": "Success",
                         "schema": {
                             "properties": {
-                                "success": {
-                                    "type": "boolean"
-                                },
-                                "code": {
-                                    "type": "integer"
-                                },
                                 "data": {
                                     "type": "array",
                                     "items": {
@@ -206,12 +206,6 @@
                         "description": "Success",
                         "schema": {
                             "properties": {
-                                "success": {
-                                    "type": "boolean"
-                                },
-                                "code": {
-                                    "type": "integer"
-                                },
                                 "data": {
                                     "$ref": "#/definitions/Transaction"
                                 }
@@ -344,6 +338,11 @@
                     "type": "integer",
                     "example": "4"
                 },
+                "blockTime": {
+                    "description": "Class Block",
+                    "type": "integer",
+                    "example": "5"
+                },
                 "size": {
                     "description": "Class Block",
                     "type": "integer",
@@ -358,11 +357,6 @@
                     "description": "Class Block",
                     "type": "string",
                     "example": "130.02500008"
-                },
-                "blockTime": {
-                    "description": "Class Block",
-                    "type": "integer",
-                    "example": "5"
                 },
                 "validators": {
                     "description": "Class Block",
@@ -419,7 +413,7 @@
                 },
                 "type": {
                     "type": "integer",
-                    "example": "2"
+                    "example": "send"
                 },
                 "status": {
                     "type": "string",

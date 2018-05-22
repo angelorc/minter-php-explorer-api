@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Http\Request;
@@ -29,13 +30,12 @@ class TransactionController extends Controller
      *     produces={"application/json"},
      *
      *     @SWG\Parameter(in="query", name="block_height", type="integer", description="Высота блока"),
+     *     @SWG\Parameter(in="query", name="page", type="integer", description="Номер страницы"),
      *
      *     @SWG\Response(
      *         response=200,
      *         description="Success",
      *         @SWG\Schema(
-     *             @SWG\Property(property="success", type="boolean"),
-     *             @SWG\Property(property="code",    type="integer"),
      *             @SWG\Property(property="data",    type="array",
      *                @SWG\Items(ref="#/definitions/Transaction")
      *             )
@@ -83,9 +83,7 @@ class TransactionController extends Controller
      *         response=200,
      *         description="Success",
      *         @SWG\Schema(
-     *             @SWG\Property(property="success", type="boolean"),
-     *             @SWG\Property(property="code",    type="integer"),
-     *             @SWG\Property(property="data",    ref="#/definitions/Transaction")
+     *             @SWG\Property(property="data", ref="#/definitions/Transaction")
      *         )
      *     )
      * )
@@ -93,37 +91,12 @@ class TransactionController extends Controller
      * Получить информацию по транзакции по хэш-сумме
      *
      * @param string $hash
-     * @return array
+     * @return TransactionResource
      */
-    public function getTransactionByHash(string $hash): array
+    public function getTransactionByHash(string $hash): TransactionResource
     {
         $transaction = $this->transactionRepository->findByHash($hash);
 
-        return $transaction ? $this->prepareTransactionForResponse($transaction) : [];
-    }
-
-    /**
-     * @param Transaction $transaction
-     * @return array
-     */
-    private function prepareTransactionForResponse(Transaction $transaction): array
-    {
-        $result = [
-            'hash' => $transaction->hash,
-            'status' => 'success', //TODO: пока в тз так. изменить
-            'nonce' => $transaction->nonce,
-            'block' => $transaction->block->height,
-            'timestamp' => $transaction->block->timestamp,
-            'fee' => $transaction->fee,
-            'type' => $transaction->type,
-            'data' => [
-                'from' => $transaction->from,
-                'to' => $transaction->to,
-                'coin' => $transaction->coin,
-                'amount' => $transaction->value,
-            ]
-        ];
-
-        return $result;
+        return new TransactionResource($transaction);
     }
 }
