@@ -22,7 +22,7 @@ class TransactionResource extends JsonResource
                         'from' => $this->from,
                         'to' => $this->from,
                         'coin' => $this->coin,
-                        'value' => (float)$this->value
+                        'amount' => (float)$this->value
                     ]
                 ]
             ];

@@ -1,6 +1,47 @@
 {
     "swagger": "2.0",
     "paths": {
+        "/api/v1/address/{address}": {
+            "get": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "\u0414\u0430\u043d\u043d\u044b\u0435 \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u0430",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "address",
+                        "in": "path",
+                        "description": "\u0410\u0434\u0440\u0435\u0441",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "properties": {
+                                "bipBalace": {
+                                    "type": "integer",
+                                    "example": "10"
+                                },
+                                "bipBalanceUsd": {
+                                    "type": "integer",
+                                    "example": "1244"
+                                },
+                                "txCount": {
+                                    "type": "integer",
+                                    "example": "40"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/blocks": {
             "get": {
                 "tags": [
@@ -448,7 +489,7 @@
                     "type": "string",
                     "example": "MNT"
                 },
-                "value": {
+                "amount": {
                     "type": "float",
                     "example": "23.93674623"
                 }

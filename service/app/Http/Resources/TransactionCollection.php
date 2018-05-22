@@ -53,7 +53,7 @@ class TransactionCollection extends ResourceCollection
                        'from' => $item->from,
                        'to' => $item->from,
                        'coin' => $item->coin,
-                       'value' => (float)$item->value
+                       'amount' => (float)$item->value
                    ]
                ];
             }),
