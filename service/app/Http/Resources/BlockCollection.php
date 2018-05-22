@@ -39,33 +39,20 @@ class BlockCollection extends ResourceCollection
      */
     public function toArray($request): array
     {
-        $result = [];
-
-        $prevBlockTime = null;
-
-        foreach (parent::toArray($request) as &$item ){
-
-            $data = [];
-
-            $item['block_time'] = 5;
-
-            foreach ($item as $k => $v ){
-
-                if ($k === 'created_at' || $k === 'updated_at'){
-                    continue;
-                }
-
-                if ($k === 'block_reward'){
-                    $data['reward'] = $v;
-                    continue;
-                }
-
-                $data[camel_case($k)] = $v;
-            }
-
-            $result[] = $data;
-        }
-
-        return $result;
+        return [
+            'data'  => $this->collection->map(function ($item) {
+                return [
+                    'latestBlockHeight' => $item->latestBlockHeight,
+                    'height' => $item->height,
+                    'timestamp' => $item->timestamp,
+                    'txCount' => $item->tx_count,
+                    'reward' => $item->block_reward,
+                    'size' => $item->size,
+                    'hash' => $item->hash,
+                    'blockTime' => 5, //TODO: добавить вычисление
+                    'validators' => ValidatorResource::collection($this->validators)
+                ];
+            }),
+        ];
     }
 }
