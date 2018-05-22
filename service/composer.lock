@@ -1,11 +1,67 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "891ef9cabcd1ec6bd58b08433300d2a8",
+    "content-hash": "9679169438683201776261f1155ff732",
     "packages": [
+        {
+            "name": "bitwasp/bitcoin-lib",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Bit-Wasp/bitcoin-lib-php.git",
+                "reference": "2fa3fd3ab9d3d474c3c65426f6c550c581ab9f15"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Bit-Wasp/bitcoin-lib-php/zipball/2fa3fd3ab9d3d474c3c65426f6c550c581ab9f15",
+                "reference": "2fa3fd3ab9d3d474c3c65426f6c550c581ab9f15",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gmp": "*",
+                "mdanter/ecc": "0.2.0",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "suggest": {
+                "ext-intl": "Required for BIP39 Mnemonic Seeds with UTF-8 passphrases"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BitWasp\\BitcoinLib\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Unlicense"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Kerin",
+                    "email": "thomas.kerin@gmail.com"
+                }
+            ],
+            "description": "Implementation of raw transactions in bitcoin, HD wallets, Electrum wallets, and other fun stuff.",
+            "keywords": [
+                "HD wallet",
+                "bip32",
+                "bitcoin",
+                "btc",
+                "cryptocurrency",
+                "ecc",
+                "electrum",
+                "php",
+                "transactions"
+            ],
+            "time": "2014-12-11T17:48:09+00:00"
+        },
         {
             "name": "doctrine/inflector",
             "version": "v1.3.0",
@@ -305,7 +361,7 @@
         },
         {
             "name": "illuminate/auth",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/auth.git",
@@ -356,7 +412,7 @@
         },
         {
             "name": "illuminate/broadcasting",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/broadcasting.git",
@@ -406,7 +462,7 @@
         },
         {
             "name": "illuminate/bus",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/bus.git",
@@ -451,16 +507,16 @@
         },
         {
             "name": "illuminate/cache",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/cache.git",
-                "reference": "c04e07baf0377671031b12469c3165c4c2ebb3e4"
+                "reference": "befdd3ee01faa38a63830eec5bc2ccdc8f7eb1f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/cache/zipball/c04e07baf0377671031b12469c3165c4c2ebb3e4",
-                "reference": "c04e07baf0377671031b12469c3165c4c2ebb3e4",
+                "url": "https://api.github.com/repos/illuminate/cache/zipball/befdd3ee01faa38a63830eec5bc2ccdc8f7eb1f5",
+                "reference": "befdd3ee01faa38a63830eec5bc2ccdc8f7eb1f5",
                 "shasum": ""
             },
             "require": {
@@ -496,11 +552,11 @@
             ],
             "description": "The Illuminate Cache package.",
             "homepage": "https://laravel.com",
-            "time": "2018-04-07T17:05:26+00:00"
+            "time": "2018-05-04T13:22:51+00:00"
         },
         {
             "name": "illuminate/config",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/config.git",
@@ -544,7 +600,7 @@
         },
         {
             "name": "illuminate/console",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/console.git",
@@ -594,16 +650,16 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "4a42d667a05ec6d31f05b532cdac7e8e68e5ea2a"
+                "reference": "1a29b314dd5c7a5a5bce3dd7b9da924cc1ec22ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/4a42d667a05ec6d31f05b532cdac7e8e68e5ea2a",
-                "reference": "4a42d667a05ec6d31f05b532cdac7e8e68e5ea2a",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/1a29b314dd5c7a5a5bce3dd7b9da924cc1ec22ec",
+                "reference": "1a29b314dd5c7a5a5bce3dd7b9da924cc1ec22ec",
                 "shasum": ""
             },
             "require": {
@@ -634,7 +690,7 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "https://laravel.com",
-            "time": "2018-01-21T02:13:38+00:00"
+            "time": "2018-05-14T12:49:42+00:00"
         },
         {
             "name": "illuminate/contracts",
@@ -682,16 +738,16 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "e7d0688105df14ba973ff31dd91a7669e96dcb63"
+                "reference": "713d376a2e2b9c7cded8916125c24b7b3adb4984"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/e7d0688105df14ba973ff31dd91a7669e96dcb63",
-                "reference": "e7d0688105df14ba973ff31dd91a7669e96dcb63",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/713d376a2e2b9c7cded8916125c24b7b3adb4984",
+                "reference": "713d376a2e2b9c7cded8916125c24b7b3adb4984",
                 "shasum": ""
             },
             "require": {
@@ -737,11 +793,11 @@
                 "orm",
                 "sql"
             ],
-            "time": "2018-05-02T15:18:51+00:00"
+            "time": "2018-05-14T22:33:47+00:00"
         },
         {
             "name": "illuminate/encryption",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/encryption.git",
@@ -787,7 +843,7 @@
         },
         {
             "name": "illuminate/events",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/events.git",
@@ -832,16 +888,16 @@
         },
         {
             "name": "illuminate/filesystem",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
-                "reference": "ad4a3655ad695f5b1f5e155bfda61597e0e9fc8b"
+                "reference": "a4ca4a9c2f969ec227748ab334693144995ba0ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/ad4a3655ad695f5b1f5e155bfda61597e0e9fc8b",
-                "reference": "ad4a3655ad695f5b1f5e155bfda61597e0e9fc8b",
+                "url": "https://api.github.com/repos/illuminate/filesystem/zipball/a4ca4a9c2f969ec227748ab334693144995ba0ce",
+                "reference": "a4ca4a9c2f969ec227748ab334693144995ba0ce",
                 "shasum": ""
             },
             "require": {
@@ -880,20 +936,20 @@
             ],
             "description": "The Illuminate Filesystem package.",
             "homepage": "https://laravel.com",
-            "time": "2018-04-25T14:22:57+00:00"
+            "time": "2018-05-02T16:10:37+00:00"
         },
         {
             "name": "illuminate/hashing",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/hashing.git",
-                "reference": "230859eb01c72dfe1d17e0283e27b6720337abb5"
+                "reference": "a7e11986c3e6614f3c407c49190b8f8adc56e434"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/hashing/zipball/230859eb01c72dfe1d17e0283e27b6720337abb5",
-                "reference": "230859eb01c72dfe1d17e0283e27b6720337abb5",
+                "url": "https://api.github.com/repos/illuminate/hashing/zipball/a7e11986c3e6614f3c407c49190b8f8adc56e434",
+                "reference": "a7e11986c3e6614f3c407c49190b8f8adc56e434",
                 "shasum": ""
             },
             "require": {
@@ -924,20 +980,20 @@
             ],
             "description": "The Illuminate Hashing package.",
             "homepage": "https://laravel.com",
-            "time": "2018-03-18T12:58:03+00:00"
+            "time": "2018-05-13T13:27:36+00:00"
         },
         {
             "name": "illuminate/http",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/http.git",
-                "reference": "1c58a1fd0b668c9d7203c6e69ba7391431815e47"
+                "reference": "25559979ca88bc7714832f3b13e12ed8892b9bdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/http/zipball/1c58a1fd0b668c9d7203c6e69ba7391431815e47",
-                "reference": "1c58a1fd0b668c9d7203c6e69ba7391431815e47",
+                "url": "https://api.github.com/repos/illuminate/http/zipball/25559979ca88bc7714832f3b13e12ed8892b9bdd",
+                "reference": "25559979ca88bc7714832f3b13e12ed8892b9bdd",
                 "shasum": ""
             },
             "require": {
@@ -970,11 +1026,11 @@
             ],
             "description": "The Illuminate Http package.",
             "homepage": "https://laravel.com",
-            "time": "2018-03-12T13:37:01+00:00"
+            "time": "2018-05-04T18:20:44+00:00"
         },
         {
             "name": "illuminate/log",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/log.git",
@@ -1019,16 +1075,16 @@
         },
         {
             "name": "illuminate/pagination",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pagination.git",
-                "reference": "030f10b9adf986bbf028c46ca3c4eca8f910dc6e"
+                "reference": "ee3177bd380ea2be7c0330d8ef8b0ab858be8947"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/pagination/zipball/030f10b9adf986bbf028c46ca3c4eca8f910dc6e",
-                "reference": "030f10b9adf986bbf028c46ca3c4eca8f910dc6e",
+                "url": "https://api.github.com/repos/illuminate/pagination/zipball/ee3177bd380ea2be7c0330d8ef8b0ab858be8947",
+                "reference": "ee3177bd380ea2be7c0330d8ef8b0ab858be8947",
                 "shasum": ""
             },
             "require": {
@@ -1059,20 +1115,20 @@
             ],
             "description": "The Illuminate Pagination package.",
             "homepage": "https://laravel.com",
-            "time": "2018-04-25T14:32:32+00:00"
+            "time": "2018-05-06T14:22:45+00:00"
         },
         {
             "name": "illuminate/pipeline",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/pipeline.git",
-                "reference": "0ea9439ed6e4b0bbbc74bf15aab84e4c9a3a9b3b"
+                "reference": "07b12156ad6d429d9f0ea179b2ed1e918372023e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/pipeline/zipball/0ea9439ed6e4b0bbbc74bf15aab84e4c9a3a9b3b",
-                "reference": "0ea9439ed6e4b0bbbc74bf15aab84e4c9a3a9b3b",
+                "url": "https://api.github.com/repos/illuminate/pipeline/zipball/07b12156ad6d429d9f0ea179b2ed1e918372023e",
+                "reference": "07b12156ad6d429d9f0ea179b2ed1e918372023e",
                 "shasum": ""
             },
             "require": {
@@ -1103,11 +1159,11 @@
             ],
             "description": "The Illuminate Pipeline package.",
             "homepage": "https://laravel.com",
-            "time": "2017-11-07T20:23:51+00:00"
+            "time": "2018-05-14T13:08:37+00:00"
         },
         {
             "name": "illuminate/queue",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/queue.git",
@@ -1209,7 +1265,7 @@
         },
         {
             "name": "illuminate/session",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/session.git",
@@ -1259,16 +1315,16 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "2a97d211c052f6d6ce9756c89d64b855d860d923"
+                "reference": "2ef559ad8840481d5247bd7ebfd04eb37d3f6889"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/2a97d211c052f6d6ce9756c89d64b855d860d923",
-                "reference": "2a97d211c052f6d6ce9756c89d64b855d860d923",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/2ef559ad8840481d5247bd7ebfd04eb37d3f6889",
+                "reference": "2ef559ad8840481d5247bd7ebfd04eb37d3f6889",
                 "shasum": ""
             },
             "require": {
@@ -1312,11 +1368,11 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2018-05-02T14:59:13+00:00"
+            "time": "2018-05-12T17:43:47+00:00"
         },
         {
             "name": "illuminate/translation",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/translation.git",
@@ -1361,16 +1417,16 @@
         },
         {
             "name": "illuminate/validation",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/validation.git",
-                "reference": "538df21edc299d6eef06afd8c467f0cd8cfc2ae2"
+                "reference": "d23f9a63ef018f103ad5563782bdd516f5f5f806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/validation/zipball/538df21edc299d6eef06afd8c467f0cd8cfc2ae2",
-                "reference": "538df21edc299d6eef06afd8c467f0cd8cfc2ae2",
+                "url": "https://api.github.com/repos/illuminate/validation/zipball/d23f9a63ef018f103ad5563782bdd516f5f5f806",
+                "reference": "d23f9a63ef018f103ad5563782bdd516f5f5f806",
                 "shasum": ""
             },
             "require": {
@@ -1407,11 +1463,11 @@
             ],
             "description": "The Illuminate Validation package.",
             "homepage": "https://laravel.com",
-            "time": "2018-04-26T13:23:31+00:00"
+            "time": "2018-05-08T13:22:25+00:00"
         },
         {
             "name": "illuminate/view",
-            "version": "v5.6.20",
+            "version": "v5.6.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/view.git",
@@ -1585,22 +1641,113 @@
             "time": "2018-03-27T16:21:45+00:00"
         },
         {
+            "name": "mdanter/ecc",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpecc/phpecc.git",
+                "reference": "ca9d127114e087bdeac24ada488631f18ae80d3f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpecc/phpecc/zipball/ca9d127114e087bdeac24ada488631f18ae80d3f",
+                "reference": "ca9d127114e087bdeac24ada488631f18ae80d3f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.1",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "suggest": {
+                "ext-bcmath": "Required if GMP is not installed.",
+                "ext-gmp": "Improves drastically ECDSA library performance"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mdanter\\Ecc\\Tests\\": "tests/unit",
+                    "Mdanter\\Ecc\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matyas Danter",
+                    "homepage": "http://matejdanter.com/",
+                    "role": "Author"
+                },
+                {
+                    "name": "Thibaud Fabre",
+                    "email": "thibaud@aztech.io",
+                    "homepage": "http://aztech.io",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Drak",
+                    "email": "drak@zikula.org",
+                    "homepage": "http://zikula.org",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "PHP Elliptic Curve Cryptography library",
+            "homepage": "https://github.com/mdanter/phpecc",
+            "time": "2014-07-07T12:44:15+00:00"
+        },
+        {
+            "name": "minter/minter-php-bip-44",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MinterTeam/minter-php-bip-44.git",
+                "reference": "414a06679cacec877a148280d09802e09022790b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MinterTeam/minter-php-bip-44/zipball/414a06679cacec877a148280d09802e09022790b",
+                "reference": "414a06679cacec877a148280d09802e09022790b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3",
+                "simplito/elliptic-php": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "BIP\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2018-05-21T07:23:26+00:00"
+        },
+        {
             "name": "minter/minter-php-sdk",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MinterTeam/minter-php-sdk.git",
-                "reference": "7eebb19109b0cdef0f9660d9822e4a6d1b36968b"
+                "reference": "72f5d1cb8fe79ddb13ccad39492e8e348bf2ebf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MinterTeam/minter-php-sdk/zipball/7eebb19109b0cdef0f9660d9822e4a6d1b36968b",
-                "reference": "7eebb19109b0cdef0f9660d9822e4a6d1b36968b",
+                "url": "https://api.github.com/repos/MinterTeam/minter-php-sdk/zipball/72f5d1cb8fe79ddb13ccad39492e8e348bf2ebf6",
+                "reference": "72f5d1cb8fe79ddb13ccad39492e8e348bf2ebf6",
                 "shasum": ""
             },
             "require": {
+                "bitwasp/bitcoin-lib": "1.0.*",
                 "guzzlehttp/guzzle": "^6.3",
                 "kornrunner/keccak": "^1.0",
+                "minter/minter-php-bip-44": "dev-master",
                 "php": "^7.1.3",
                 "simplito/elliptic-php": "^1.0",
                 "web3p/rlp": "^0.2.0"
@@ -1615,7 +1762,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2018-05-10T12:36:42+00:00"
+            "time": "2018-05-21T07:49:21+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2109,16 +2256,16 @@
         },
         {
             "name": "simplito/elliptic-php",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplito/elliptic-php.git",
-                "reference": "cab829d270dfd6acdff8383d862ed02a12d1f9dd"
+                "reference": "be6b14c6999a5c328457d571f643ef8b3f3f82d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplito/elliptic-php/zipball/cab829d270dfd6acdff8383d862ed02a12d1f9dd",
-                "reference": "cab829d270dfd6acdff8383d862ed02a12d1f9dd",
+                "url": "https://api.github.com/repos/simplito/elliptic-php/zipball/be6b14c6999a5c328457d571f643ef8b3f3f82d0",
+                "reference": "be6b14c6999a5c328457d571f643ef8b3f3f82d0",
                 "shasum": ""
             },
             "require": {
@@ -2165,7 +2312,7 @@
                 "nistp521",
                 "secp256k1"
             ],
-            "time": "2018-04-12T11:17:52+00:00"
+            "time": "2018-05-11T07:40:56+00:00"
         },
         {
             "name": "symfony/console",
@@ -2807,6 +2954,74 @@
     ],
     "packages-dev": [
         {
+            "name": "doctrine/annotations",
+            "version": "v1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/annotations.git",
+                "reference": "c7f2050c68a9ab0bdb0f98567ec08d80ea7d24d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/c7f2050c68a9ab0bdb0f98567ec08d80ea7d24d5",
+                "reference": "c7f2050c68a9ab0bdb0f98567ec08d80ea7d24d5",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "1.*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "doctrine/cache": "1.*",
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Docblock Annotations Parser",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "annotations",
+                "docblock",
+                "parser"
+            ],
+            "time": "2017-12-06T07:11:42+00:00"
+        },
+        {
             "name": "doctrine/instantiator",
             "version": "1.1.0",
             "source": {
@@ -2859,6 +3074,121 @@
                 "instantiate"
             ],
             "time": "2017-07-22T11:58:36+00:00"
+        },
+        {
+            "name": "doctrine/lexer",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/lexer.git",
+                "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/83893c552fd2045dd78aef794c31e694c37c0b8c",
+                "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Lexer\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Base library for a lexer that can be used in Top-Down, Recursive Descent Parsers.",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "lexer",
+                "parser"
+            ],
+            "time": "2014-09-09T13:34:57+00:00"
+        },
+        {
+            "name": "filp/whoops",
+            "version": "2.1.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/filp/whoops.git",
+                "reference": "c6081b8838686aa04f1e83ba7e91f78b7b2a23e6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/c6081b8838686aa04f1e83ba7e91f78b7b2a23e6",
+                "reference": "c6081b8838686aa04f1e83ba7e91f78b7b2a23e6",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9 || ^7.0",
+                "psr/log": "^1.0.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "^4.8.35 || ^5.7",
+                "symfony/var-dumper": "^2.6 || ^3.0"
+            },
+            "suggest": {
+                "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
+                "whoops/soap": "Formats errors as SOAP responses"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Whoops\\": "src/Whoops/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Filipe Dobreira",
+                    "homepage": "https://github.com/filp",
+                    "role": "Developer"
+                }
+            ],
+            "description": "php error handling for cool kids",
+            "homepage": "https://filp.github.io/whoops/",
+            "keywords": [
+                "error",
+                "exception",
+                "handling",
+                "library",
+                "throwable",
+                "whoops"
+            ],
+            "time": "2017-11-23T18:22:44+00:00"
         },
         {
             "name": "fzaninotto/faker",
@@ -2960,16 +3290,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "1bac8c362b12f522fdd1f1fa3556284c91affa38"
+                "reference": "99e29d3596b16dabe4982548527d5ddf90232e99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/1bac8c362b12f522fdd1f1fa3556284c91affa38",
-                "reference": "1bac8c362b12f522fdd1f1fa3556284c91affa38",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/99e29d3596b16dabe4982548527d5ddf90232e99",
+                "reference": "99e29d3596b16dabe4982548527d5ddf90232e99",
                 "shasum": ""
             },
             "require": {
@@ -2978,7 +3308,8 @@
                 "php": ">=5.6.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~5.7|~6.1"
+                "phpdocumentor/phpdocumentor": "^2.9",
+                "phpunit/phpunit": "~5.7.10|~6.5"
             },
             "type": "library",
             "extra": {
@@ -3007,8 +3338,8 @@
                     "homepage": "http://davedevelopment.co.uk"
                 }
             ],
-            "description": "Mockery is a simple yet flexible PHP mock object framework for use in unit testing with PHPUnit, PHPSpec or any other testing framework. Its core goal is to offer a test double framework with a succinct API capable of clearly defining all possible object operations and interactions using a human readable Domain Specific Language (DSL). Designed as a drop in alternative to PHPUnit's phpunit-mock-objects library, Mockery is easy to integrate with PHPUnit and can operate alongside phpunit-mock-objects without the World ending.",
-            "homepage": "http://github.com/mockery/mockery",
+            "description": "Mockery is a simple yet flexible PHP mock object framework",
+            "homepage": "https://github.com/mockery/mockery",
             "keywords": [
                 "BDD",
                 "TDD",
@@ -3021,7 +3352,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2017-10-06T16:20:43+00:00"
+            "time": "2018-05-08T08:54:48+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -4422,6 +4753,68 @@
                 "validate"
             ],
             "time": "2018-01-29T19:49:41+00:00"
+        },
+        {
+            "name": "zircote/swagger-php",
+            "version": "2.0.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zircote/swagger-php.git",
+                "reference": "8b42fdc3d8c5a5e0d1f8d344aa359822c9f085e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/8b42fdc3d8c5a5e0d1f8d344aa359822c9f085e0",
+                "reference": "8b42fdc3d8c5a5e0d1f8d344aa359822c9f085e0",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "*",
+                "php": ">=5.6",
+                "symfony/finder": ">=2.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=4.8.35 <=5.6",
+                "squizlabs/php_codesniffer": ">=2.7",
+                "zendframework/zend-form": "<2.8"
+            },
+            "bin": [
+                "bin/swagger"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Swagger\\": "src"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache2"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Allen",
+                    "email": "zircote@gmail.com",
+                    "homepage": "http://www.zircote.com"
+                },
+                {
+                    "name": "Bob Fanger",
+                    "email": "bfanger@gmail.com",
+                    "homepage": "http://bfanger.nl"
+                }
+            ],
+            "description": "Swagger-PHP - Generate interactive documentation for your RESTful API using phpdoc annotations",
+            "homepage": "https://github.com/zircote/swagger-php/",
+            "keywords": [
+                "api",
+                "json",
+                "rest",
+                "service discovery"
+            ],
+            "time": "2017-12-01T09:22:05+00:00"
         }
     ],
     "aliases": [],

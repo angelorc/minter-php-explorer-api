@@ -18,10 +18,10 @@ use Illuminate\Database\Eloquent\Model;
  *     definition="Validator",
  *     type="object",
  *
- *     @SWG\Property(property="id", type="integer", example="12345"),
- *     @SWG\Property(property="name", type="string", example="SomeValidator"),
- *     @SWG\Property(property="address", type="string", example="XXXXXX"),
- *     @SWG\Property(property="public_key", type="string", example="XXXXX")
+ *     @SWG\Property(property="id",        type="integer", example="12345"),
+ *     @SWG\Property(property="name",      type="string", example="SomeValidator"),
+ *     @SWG\Property(property="address",   type="string", example="XXXXXX"),
+ *     @SWG\Property(property="publicKey", type="string", example="XXXXX")
  * )
  */
 class Validator extends Model

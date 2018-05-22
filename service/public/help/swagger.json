@@ -1,9 +1,5 @@
 {
     "swagger": "2.0",
-    "info": {
-        "title": "Minter Explorer API",
-        "version": "1.0"
-    },
     "paths": {
         "/api/v1/blocks": {
             "get": {
@@ -16,6 +12,12 @@
                 ],
                 "parameters": [
                     {
+                        "name": "page",
+                        "in": "query",
+                        "description": "\u041d\u043e\u043c\u0435\u0440 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+                        "type": "integer"
+                    },
+                    {
                         "name": "validator_id",
                         "in": "query",
                         "description": "ID \u0412\u0430\u043b\u0438\u0434\u0430\u0442\u043e\u0440\u0430",
@@ -27,17 +29,17 @@
                         "description": "Success",
                         "schema": {
                             "properties": {
-                                "success": {
-                                    "type": "boolean"
-                                },
-                                "code": {
-                                    "type": "integer"
-                                },
                                 "data": {
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/definitions/Block"
                                     }
+                                },
+                                "links": {
+                                    "$ref": "#/definitions/LinksData"
+                                },
+                                "meta": {
+                                    "$ref": "#/definitions/MetaData"
                                 }
                             }
                         }
@@ -68,12 +70,6 @@
                         "description": "Success",
                         "schema": {
                             "properties": {
-                                "success": {
-                                    "type": "boolean"
-                                },
-                                "code": {
-                                    "type": "integer"
-                                },
                                 "data": {
                                     "$ref": "#/definitions/Block"
                                 }
@@ -277,6 +273,60 @@
             },
             "type": "object"
         },
+        "MetaData": {
+            "properties": {
+                "current_page": {
+                    "type": "integer",
+                    "example": "1"
+                },
+                "from": {
+                    "type": "integer",
+                    "example": "2"
+                },
+                "last_page": {
+                    "type": "integer",
+                    "example": "4"
+                },
+                "path": {
+                    "type": "string",
+                    "example": "http://localhost:8000/api/v1/blocks"
+                },
+                "per_page": {
+                    "type": "integer",
+                    "example": "50"
+                },
+                "to": {
+                    "type": "integer",
+                    "example": "50"
+                },
+                "total": {
+                    "type": "integer",
+                    "example": "130"
+                }
+            },
+            "type": "object"
+        },
+        "LinksData": {
+            "properties": {
+                "first": {
+                    "type": "string",
+                    "example": "http://localhost:8000/api/v1/blocks?page=1"
+                },
+                "last": {
+                    "type": "string",
+                    "example": "http://localhost:8000/api/v1/blocks?page=2"
+                },
+                "prev": {
+                    "type": "string",
+                    "example": "null"
+                },
+                "next": {
+                    "type": "string",
+                    "example": "http://localhost:8000/api/v1/blocks?page=2"
+                }
+            },
+            "type": "object"
+        },
         "Block": {
             "properties": {
                 "height": {
@@ -287,9 +337,9 @@
                 "timestamp": {
                     "description": "Class Block",
                     "type": "timestamp",
-                    "example": "2017-01-01"
+                    "example": "2018-05-18 15:06:10+00"
                 },
-                "tx_count": {
+                "txCount": {
                     "description": "Class Block",
                     "type": "integer",
                     "example": "4"
@@ -304,10 +354,15 @@
                     "type": "string",
                     "example": "2BFB56B62A25E0D5853A7790211E64B198BEECFD"
                 },
-                "block_reward": {
+                "reward": {
                     "description": "Class Block",
                     "type": "string",
                     "example": "130.02500008"
+                },
+                "blockTime": {
+                    "description": "Class Block",
+                    "type": "integer",
+                    "example": "5"
                 },
                 "validators": {
                     "description": "Class Block",
@@ -393,7 +448,7 @@
                     "type": "string",
                     "example": "XXXXXX"
                 },
-                "public_key": {
+                "publicKey": {
                     "description": "Class Validator",
                     "type": "string",
                     "example": "XXXXX"
