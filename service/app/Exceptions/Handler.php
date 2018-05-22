@@ -30,6 +30,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Exception $e
      * @return void
+     * @throws Exception
      */
     public function report(Exception $e)
     {
@@ -45,6 +46,34 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof ModelNotFoundException) {
+            return response()->view('errors.modelNotFound', [
+                'message' => $e->getMessage(),
+            ]);
+        }
+
         return parent::render($request, $e);
+    }
+
+    /**
+     * Create a Symfony response for the given exception.
+     *
+     * @param  \Exception $e
+     * @return mixed
+     */
+    protected function convertExceptionToResponse(Exception $e)
+    {
+        if (config('app.debug')) {
+            $whoops = new \Whoops\Run;
+            $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+
+            return response()->make(
+                $whoops->handleException($e),
+                method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500,
+                method_exists($e, 'getHeaders') ? $e->getHeaders() : []
+            );
+        }
+
+        return parent::convertExceptionToResponse($e);
     }
 }

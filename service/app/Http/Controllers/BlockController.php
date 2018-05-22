@@ -48,8 +48,8 @@ class BlockController extends Controller
      *             @SWG\Property(property="data", type="array",
      *                @SWG\Items(ref="#/definitions/Block")
      *             ),
-     *             @SWG\Property(property="links", ref="#/definitions/LinksData"),
-     *             @SWG\Property(property="meta", ref="#/definitions/MetaData")
+     *             @SWG\Property(property="links", ref="#/definitions/BlockLinksData"),
+     *             @SWG\Property(property="meta", ref="#/definitions/BlockMetaData")
      *         ),
      *     )
      * )

@@ -5,7 +5,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
 * @SWG\Definition(
- *     definition="MetaData",
+ *     definition="BlockMetaData",
  *     type="object",
  *
  *     @SWG\Property(property="current_page", type="integer", example="1"),
@@ -19,7 +19,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 **/
 /**
 * @SWG\Definition(
- *     definition="LinksData",
+ *     definition="BlockLinksData",
  *     type="object",
  *
  *     @SWG\Property(property="first", type="string", example="http://localhost:8000/api/v1/blocks?page=1"),

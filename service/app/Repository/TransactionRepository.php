@@ -40,27 +40,26 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     /**
      * Получить все транзакции
-     * @param int $page
      * @param array $filter
-     * @return Collection
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function getAll(int $page = 1, array $filter = []): Collection
+    public function getAllQuery(array $filter = []): \Illuminate\Database\Eloquent\Builder
     {
-        $query = Transaction::with('block');
+        $query = Transaction::query();
 
-        if ($filter['block_height']) {
+        if ($filter['block']) {
             $query->whereHas('block', function ($query) use ($filter) {
-                $query->where('block.height', $filter['block_height']);
+                $query->where('blocks.height', $filter['block']);
             });
         }
 
         if($filter['account']){
             $query->where(function ($query) use ($filter){
-                $query->where('transactions.from',  $filter['account'])
-                    ->orWhere('transactions.to', $filter['account']);
+                $query->where('transactions.from', 'ilike', $filter['account'])
+                    ->orWhere('transactions.to', 'ilike', $filter['account']);
             });
         }
 
-        return $query->orderByDesc('id')->get();
+        return $query;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TransactionCollection;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use App\Repository\TransactionRepositoryInterface;
@@ -9,6 +10,8 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
+    public const BLOCKS_PER_PAGE = 50;
+
     /** @var TransactionRepositoryInterface  */
     protected $transactionRepository;
 
@@ -29,7 +32,8 @@ class TransactionController extends Controller
      *     summary="Список транзакций",
      *     produces={"application/json"},
      *
-     *     @SWG\Parameter(in="query", name="block_height", type="integer", description="Высота блока"),
+     *     @SWG\Parameter(in="query", name="block", type="integer", description="Высота блока"),
+     *     @SWG\Parameter(in="query", name="account", type="string", description="Адрес"),
      *     @SWG\Parameter(in="query", name="page", type="integer", description="Номер страницы"),
      *
      *     @SWG\Response(
@@ -38,7 +42,9 @@ class TransactionController extends Controller
      *         @SWG\Schema(
      *             @SWG\Property(property="data",    type="array",
      *                @SWG\Items(ref="#/definitions/Transaction")
-     *             )
+     *             ),
+     *             @SWG\Property(property="links", ref="#/definitions/TransactionLinksData"),
+     *             @SWG\Property(property="meta", ref="#/definitions/TransactionMetaData")
      *         )
      *     )
      * )
@@ -46,27 +52,18 @@ class TransactionController extends Controller
      * Получить список транзакций
      *
      * @param Request $request
-     * @return array
+     * @return TransactionCollection
      */
-    public function getList(Request $request): array
+    public function getList(Request $request): TransactionCollection
     {
-        $page = $request->get('page', 1);
-
         $filter = [
-            'block_height' =>  $request->get('block_height'),
+            'block' =>  $request->get('block'),
             'account' =>  $request->get('account'),
         ];
 
-        $result = [];
+        $query = $this->transactionRepository->getAllQuery($filter);
 
-        foreach ($this->transactionRepository->getAll($page, $filter) as $transaction) {
-            $result[] = $this->prepareTransactionForResponse($transaction);
-        }
-
-        return [
-            'totalCount' => \count($result),
-            'data' => $result,
-        ];
+        return new TransactionCollection($query->orderByDesc('created_at')->paginate($this::BLOCKS_PER_PAGE));
 
     }
 

@@ -31,10 +31,9 @@ interface TransactionRepositoryInterface
 
     /**
      * Получить все транзакции
-     * @param int $page
      * @param array $filter
-     * @return Collection
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function getAll(int $page = 1, array $filter = []): Collection;
+    public function getAllQuery(array $filter = []) : \Illuminate\Database\Eloquent\Builder;
 
 }
