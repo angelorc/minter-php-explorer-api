@@ -16,6 +16,8 @@ class BlockRepository implements BlockRepositoryInterface
     {
         $block->save();
 
+        $block->validators()->sync(1);
+
         if ($transactions){
             $block->transactions()->saveMany($transactions);
         }

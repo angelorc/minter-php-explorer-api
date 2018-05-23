@@ -51,7 +51,7 @@ class TransactionCollection extends ResourceCollection
                    'status' => $item->status,
                    'data' => [
                        'from' => $item->from,
-                       'to' => $item->from,
+                       'to' => $item->to,
                        'coin' => $item->coin,
                        'amount' => (float)$item->value
                    ]
