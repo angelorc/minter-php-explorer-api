@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
 class Validator extends Model
 {
 
+    protected $dateFormat = 'Y-m-d H:i:sO';
+
     /**
      * The transactions that belong to the block.
      */
