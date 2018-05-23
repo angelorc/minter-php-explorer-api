@@ -50,7 +50,7 @@ class BlockCollection extends ResourceCollection
                     'size' => $item->size,
                     'hash' => $item->hash,
                     'blockTime' => 5, //TODO: добавить вычисление
-                    'validators' => ValidatorResource::collection($this->validators)
+                    'validators' => isset($this->validators) ? ValidatorResource::collection($this->validators) : []
                 ];
             }),
         ];
