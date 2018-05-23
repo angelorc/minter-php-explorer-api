@@ -53,10 +53,21 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
-        if($filter['account']){
+        if($filter['addresses']){
+            $addresses = implode(',', array_map(function($item){
+                return "'" .   preg_replace("/\W/", '', $item)  .  "'";}, $filter['addresses']));
+
+            $query->where(function ($query) use ($addresses){
+                $query
+                    ->whereRaw('transactions.from ilike any (array['.$addresses.']) ')
+                    ->orWhereRaw('transactions.to ilike any (array['.$addresses.']) ');
+            });
+
+        }
+        elseif($filter['address']){
             $query->where(function ($query) use ($filter){
-                $query->where('transactions.from', 'ilike', $filter['account'])
-                    ->orWhere('transactions.to', 'ilike', $filter['account']);
+                $query->where('transactions.from', 'ilike', $filter['address'])
+                    ->orWhere('transactions.to', 'ilike', $filter['address']);
             });
         }
 

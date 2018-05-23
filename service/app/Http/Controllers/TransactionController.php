@@ -33,7 +33,8 @@ class TransactionController extends Controller
      *     produces={"application/json"},
      *
      *     @SWG\Parameter(in="query", name="block", type="integer", description="Высота блока"),
-     *     @SWG\Parameter(in="query", name="account", type="string", description="Адрес"),
+     *     @SWG\Parameter(in="query", name="address", type="string", description="Адрес"),
+     *     @SWG\Parameter(in="query", name="addresses", type="array", description="Список адресов"),
      *     @SWG\Parameter(in="query", name="page", type="integer", description="Номер страницы"),
      *
      *     @SWG\Response(
@@ -58,7 +59,8 @@ class TransactionController extends Controller
     {
         $filter = [
             'block' =>  $request->get('block'),
-            'account' =>  $request->get('account'),
+            'address' =>  $request->get('address'),
+            'addresses' =>  $request->get('addresses'),
         ];
 
         $query = $this->transactionRepository->getAllQuery($filter);
