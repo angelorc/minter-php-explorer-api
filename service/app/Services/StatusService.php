@@ -28,10 +28,10 @@ class StatusService implements StatusServiceInterface
      * Получить количество транзакций в секунду
      * @return int
      */
-    public function getTransactionsPerSecond(): int
+    public function getTransactionsPerSecond(): float
     {
         //TODO: добавить реализацию
-        return 1;
+        return 0.2;
     }
 
     /**

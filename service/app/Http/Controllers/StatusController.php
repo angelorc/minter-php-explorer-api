@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TxCountCollection;
-use App\Http\Resources\TxCountResource;
 use App\Models\Transaction;
 use App\Models\TxPerDay;
 use App\Services\StatusServiceInterface;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class StatusController extends Controller
 {
@@ -35,7 +33,7 @@ class StatusController extends Controller
      *     @SWG\Property(property="averageBlockTime",      type="float", example="1.23"),
      *     @SWG\Property(property="latestBlockHeight",     type="integer", example="123456"),
      *     @SWG\Property(property="totalTransactions",     type="integer", example="1234569875975"),
-     *     @SWG\Property(property="transactionsPerSecond", type="integer", example="12345")
+     *     @SWG\Property(property="transactionsPerSecond", type="float", example="0.2")
      * )
      */
     /**
@@ -67,10 +65,10 @@ class StatusController extends Controller
     {
         //TODO: поменять значения, как станет ясно откуда брать
         return [
-            'bipPriceUsd' => 0,
-            'bipPriceBtc' => 0,
-            'bipPriceChange' => 0,
-            'marketCap' => 0,
+            'bipPriceUsd' => 1,
+            'bipPriceBtc' => 1,
+            'bipPriceChange' => 1,
+            'marketCap' => 1,
             'latestBlockHeight' => $this->statusService->getLastBlockHeight(),
             'totalTransactions' => Transaction::count(),
             'transactionsPerSecond' => $this->statusService->getTransactionsPerSecond(),
