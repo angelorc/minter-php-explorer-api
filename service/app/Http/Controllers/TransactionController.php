@@ -34,7 +34,7 @@ class TransactionController extends Controller
      *
      *     @SWG\Parameter(in="query", name="block", type="integer", description="Высота блока"),
      *     @SWG\Parameter(in="query", name="address", type="string", description="Адрес"),
-     *     @SWG\Parameter(in="query", name="addresses", type="array", description="Список адресов"),
+     *     @SWG\Parameter(in="query", name="addresses", type="string", description="Список адресов"),
      *     @SWG\Parameter(in="query", name="page", type="integer", description="Номер страницы"),
      *
      *     @SWG\Response(

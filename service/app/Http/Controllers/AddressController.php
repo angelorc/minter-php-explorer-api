@@ -20,21 +20,6 @@ class AddressController extends Controller
     }
 
     /**
-     * @SWG\Definition(
-     *     definition="Status",
-     *     type="object",
-     *
-     *     @SWG\Property(property="bipPriceUsd",           type="float", example="123.23"),
-     *     @SWG\Property(property="bipPriceBtc",           type="float", example="1.23456789"),
-     *     @SWG\Property(property="bipPriceChange",        type="float", example="1.23456789"),
-     *     @SWG\Property(property="marketCap",             type="float", example="123456789.003"),
-     *     @SWG\Property(property="averageBlockTime",      type="float", example="1.23"),
-     *     @SWG\Property(property="latestBlockHeight",     type="integer", example="123456"),
-     *     @SWG\Property(property="totalTransactions",     type="integer", example="1234569875975"),
-     *     @SWG\Property(property="transactionsPerSecond", type="integer", example="12345")
-     * )
-     */
-    /**
      * @SWG\Get(
      *     path="/api/v1/address/{address}",
      *     tags={"Address"},

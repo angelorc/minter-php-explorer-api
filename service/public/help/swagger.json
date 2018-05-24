@@ -157,7 +157,7 @@
                 "tags": [
                     "Info"
                 ],
-                "summary": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0439 \u0437\u0430 \u0441\u0435\u0433\u043e\u0434\u043d\u044f",
+                "summary": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u0439 \u043f\u043e \u0434\u043d\u044f\u043c \u0437\u0430 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 14",
                 "produces": [
                     "application/json"
                 ],
@@ -166,12 +166,6 @@
                         "description": "Success",
                         "schema": {
                             "properties": {
-                                "success": {
-                                    "type": "boolean"
-                                },
-                                "code": {
-                                    "type": "integer"
-                                },
                                 "data": {
                                     "type": "array",
                                     "items": {
@@ -210,7 +204,7 @@
                         "name": "addresses",
                         "in": "query",
                         "description": "\u0421\u043f\u0438\u0441\u043e\u043a \u0430\u0434\u0440\u0435\u0441\u043e\u0432",
-                        "type": "array"
+                        "type": "string"
                     },
                     {
                         "name": "page",
@@ -534,6 +528,21 @@
                 },
                 "data": {
                     "$ref": "#/definitions/TransactionData"
+                }
+            },
+            "type": "object"
+        },
+        "TxPerDay": {
+            "properties": {
+                "date": {
+                    "description": "Class Block",
+                    "type": "timestamp",
+                    "example": "2018-05-18"
+                },
+                "txCount": {
+                    "description": "Class Block",
+                    "type": "integer",
+                    "example": "4"
                 }
             },
             "type": "object"

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\TxPerDay;
 use App\Services\StatusServiceInterface;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class StatusController extends Controller
 {
@@ -84,19 +86,18 @@ class StatusController extends Controller
      *     @SWG\Property(property="amount", type="integer", example="123456789")
      * )
      */
+
     /**
      * @SWG\Get(
      *     path="/api/v1/txCountChartData",
      *     tags={"Info"},
-     *     summary="Количество транзакций за сегодня",
+     *     summary="Количество транзакций по дням за последние 14",
      *     produces={"application/json"},
      *
      *     @SWG\Response(
      *         response=200,
      *         description="Success",
      *         @SWG\Schema(
-     *             @SWG\Property(property="success", type="boolean"),
-     *             @SWG\Property(property="code",    type="integer"),
      *             @SWG\Property(property="data",    type="array",
      *                @SWG\Items(ref="#/definitions/CountChartData")
      *             )
@@ -104,17 +105,10 @@ class StatusController extends Controller
      *     )
      * )
      *
-     * @return array
+     * @return JsonResource
      */
-    public function txCountChartData(): array
+    public function txCountChartData(): JsonResource
     {
-        $date = date('Y-m-d');
-
-        $data = Transaction::whereDate('created_at', $date)->count();
-
-        return [
-            'date' => $date,
-            'amount' => $data,
-        ];
+        return new JsonResource(TxPerDay::limit(14)->get());
     }
 }
