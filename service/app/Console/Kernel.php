@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Console\Commands\FillTxPerDayCountTableCommand;
+use App\Console\Commands\FillTxPerDayTableCommand;
 use App\Console\Commands\PullBlockDataCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         PullBlockDataCommand::class,
-        FillTxPerDayCountTableCommand::class,
+        FillTxPerDayTableCommand::class,
     ];
 
     /**
