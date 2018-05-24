@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TxCountCollection;
+use App\Http\Resources\TxCountResource;
 use App\Models\Transaction;
 use App\Models\TxPerDay;
 use App\Services\StatusServiceInterface;
@@ -69,7 +71,6 @@ class StatusController extends Controller
             'bipPriceBtc' => 0,
             'bipPriceChange' => 0,
             'marketCap' => 0,
-
             'latestBlockHeight' => $this->statusService->getLastBlockHeight(),
             'totalTransactions' => Transaction::count(),
             'transactionsPerSecond' => $this->statusService->getTransactionsPerSecond(),
@@ -98,17 +99,17 @@ class StatusController extends Controller
      *         response=200,
      *         description="Success",
      *         @SWG\Schema(
-     *             @SWG\Property(property="data",    type="array",
+     *             @SWG\Property(property="data", type="array",
      *                @SWG\Items(ref="#/definitions/CountChartData")
      *             )
      *         )
      *     )
      * )
      *
-     * @return JsonResource
+     * @return TxCountCollection
      */
-    public function txCountChartData(): JsonResource
+    public function txCountChartData(): TxCountCollection
     {
-        return new JsonResource(TxPerDay::limit(14)->get());
+        return new TxCountCollection(TxPerDay::limit(14)->get());
     }
 }
