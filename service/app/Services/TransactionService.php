@@ -45,13 +45,8 @@ class TransactionService implements TransactionServiceInterface
 
                 $transactions[] = $transaction;
             }catch (\Exception $exception){
-
                 Log::error($exception->getMessage());
-
-                //TODO: выводить в лог
             }
-
-
         }
 
         return collect($transactions);

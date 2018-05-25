@@ -36,4 +36,12 @@ interface TransactionRepositoryInterface
      */
     public function getAllQuery(array $filter = []) : \Illuminate\Database\Eloquent\Builder;
 
+    /**
+     * Получить количество транзакций за сутки
+     * Если дата не передается, возвращается количество за предыдущие сутки
+     * @param \DateTime|null $date
+     * @return int
+     */
+    public function getTransactionsPerDayCount(\DateTime $date = null): int;
+
 }

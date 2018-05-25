@@ -3,9 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Models\TxPerDay;
+use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @property TransactionRepositoryInterface transactionRepository
+ */
 class FillTxPerDayTableCommand extends Command
 {
     /**
@@ -19,12 +23,31 @@ class FillTxPerDayTableCommand extends Command
     protected $description = 'Fill transactions per date table';
 
     /**
+     * @var TransactionRepositoryInterface
+     */
+    protected $transactionRepository;
+
+
+    /**
+     * FillTxPerDayTableCommand constructor.
+     * @param TransactionRepositoryInterface $transactionRepository
+     */
+    public function __construct(TransactionRepositoryInterface $transactionRepository)
+    {
+        parent::__construct();
+
+        $this->transactionRepository = $transactionRepository;
+    }
+
+    /**
      *
      * @throws \RuntimeException
      */
     public function handle(): void
     {
         TxPerDay::truncate();
+
+        $today = new \DateTime();
 
         $dates = DB::table('blocks')
             ->select(DB::raw('timestamp::date'))
@@ -34,21 +57,15 @@ class FillTxPerDayTableCommand extends Command
 
         foreach ($dates as $date) {
 
-            $query = "
-                WITH tx_per_day AS (
-                    select count(t.id) as tx_count
-                    from blocks b
-                      left join transactions t on b.id = t.block_id
-                    where b.timestamp::date = '{$date}'
-                    group by b.id
-                )
-                select sum(tx_count) as cnt from tx_per_day;
-            ";
-            $txs = DB::selectOne($query);
+            if ($date === $today->format('Y-m-d') ) {
+                continue;
+            }
+
+            $count = $this->transactionRepository->getTransactionsPerDayCount(new \DateTime($date));
 
             $txCount = new TxPerDay();
             $txCount->date = $date;
-            $txCount->transactions_count = $txs->cnt;
+            $txCount->transactions_count = $count;
 
             $txCount->save();
 

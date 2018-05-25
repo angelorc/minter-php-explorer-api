@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use App\Models\Block;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class StatusService implements StatusServiceInterface
@@ -26,7 +27,7 @@ class StatusService implements StatusServiceInterface
 
     /**
      * Получить количество транзакций в секунду
-     * @return int
+     * @return float
      */
     public function getTransactionsPerSecond(): float
     {
