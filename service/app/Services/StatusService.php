@@ -42,7 +42,7 @@ class StatusService implements StatusServiceInterface
     public function getAverageBlockTime(): int
     {
         //TODO: добавить реализацию
-        return 1;
+        return 5;
     }
 
 }
