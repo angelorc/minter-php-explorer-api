@@ -65,10 +65,10 @@ class StatusController extends Controller
     {
         //TODO: поменять значения, как станет ясно откуда брать
         return [
-            'bipPriceUsd' => 1,
-            'bipPriceBtc' => 1,
-            'bipPriceChange' => 1,
-            'marketCap' => 1,
+            'bipPriceUsd' => 0.00007453,
+            'bipPriceBtc' => 0.00000001,
+            'bipPriceChange' => 10,
+            'marketCap' => 10000000000 * 0.00007453,
             'latestBlockHeight' => $this->statusService->getLastBlockHeight(),
             'totalTransactions' => Transaction::count(),
             'transactionsPerSecond' => $this->statusService->getTransactionsPerSecond(),

@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\FillTxPerDayTableCommand;
 use App\Console\Commands\PullBlockDataCommand;
+use App\Console\Commands\TxPerDaySaveCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         PullBlockDataCommand::class,
         FillTxPerDayTableCommand::class,
+        TxPerDaySaveCommand::class,
     ];
 
     /**
@@ -27,6 +29,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        //
+        $schedule->command('transactions:per_count_save')->dailyAt('00:01');
     }
 }

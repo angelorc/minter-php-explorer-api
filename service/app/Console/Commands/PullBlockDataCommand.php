@@ -2,13 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Block;
 use App\Services\BlockServiceInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class PullBlockDataCommand extends Command
 {
+
+    protected const SLEEP_TIME = 2500000;
 
     /**
      * @var string
@@ -34,28 +36,27 @@ class PullBlockDataCommand extends Command
         $this->blockService = $blockService;
     }
 
-    /**
-     *
-     * @throws \RuntimeException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
     public function handle(): void
     {
-        $lastBlockHeight = $this->blockService->getLatestBlockHeight();
+        try {
 
-        $explorerLastBlockHeight =$this->blockService->getExplorerLatestBlockHeight() + 1;
+            $lastBlockHeight = $this->blockService->getLatestBlockHeight();
+            $explorerLastBlockHeight = $this->blockService->getExplorerLatestBlockHeight() + 1;
 
-        while (true) {
-
-            if ($lastBlockHeight > $explorerLastBlockHeight){
-                $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
-                $this->blockService->saveFromApiData($blockData);
-                $explorerLastBlockHeight++;
-            }else{
-                usleep(2500000);
-                $lastBlockHeight = $this->blockService->getLatestBlockHeight();
+            while (true) {
+                if ($lastBlockHeight > $explorerLastBlockHeight) {
+                    $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
+                    $this->blockService->saveFromApiData($blockData);
+                    $explorerLastBlockHeight++;
+                } else {
+                    usleep($this::SLEEP_TIME);
+                    $lastBlockHeight = $this->blockService->getLatestBlockHeight();
+                }
             }
 
+        } catch (GuzzleException $e) {
+            Log::error($e->getMessage());
         }
+
     }
 }
