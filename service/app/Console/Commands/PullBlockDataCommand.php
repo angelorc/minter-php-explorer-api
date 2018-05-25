@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Block;
 use App\Services\BlockServiceInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
@@ -40,22 +41,20 @@ class PullBlockDataCommand extends Command
      */
     public function handle(): void
     {
+        $lastBlockHeight = $this->blockService->getLatestBlockHeight();
+
+        $explorerLastBlockHeight =$this->blockService->getExplorerLatestBlockHeight() + 1;
+
         while (true) {
 
-            $blockHeight = $this->blockService->getLatestBlockHeight();
-
-            if ($blockHeight !== (int)Cache::get('latest_block_height')) {
-
-                Cache::forget('latest_block_height');
-
-                $blockData = $this->blockService->pullBlockData($blockHeight);
-
+            if ($lastBlockHeight > $explorerLastBlockHeight){
+                $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
                 $this->blockService->saveFromApiData($blockData);
-
-                Cache::put('latest_block_height', $blockHeight, 1);
+                $explorerLastBlockHeight++;
+            }else{
+                usleep(2500000);
+                $lastBlockHeight = $this->blockService->getLatestBlockHeight();
             }
-
-            usleep(2500000);
 
         }
     }

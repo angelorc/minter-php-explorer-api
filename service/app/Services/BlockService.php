@@ -78,6 +78,7 @@ class BlockService implements BlockServiceInterface
         $block->tx_count   = $blockData['block']['header']['num_txs'];
         $block->hash       = $blockData['block_meta']['block_id']['hash'];
         $block->block_reward = $this->getBlockReward($block->height);
+        $block->block_time = 5; //TODO: добаить вычисление
 
         $transactions  = null;
 
@@ -145,5 +146,17 @@ class BlockService implements BlockServiceInterface
         $result = str_replace(".{$nano}Z", '.' . substr($nano, 0, 6) . 'Z', $stringSateTime);
 
         return new \Carbon\Carbon($result);
+    }
+
+    /**
+     * Получить высоту последнего блока из Базы
+     * @return int
+     * @throws \RuntimeException
+     */
+    public function getExplorerLatestBlockHeight(): int
+    {
+        $block = Block::orderByDesc('id')->first();
+
+        return $block->height ?? 0;
     }
 }

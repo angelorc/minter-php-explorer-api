@@ -15,6 +15,14 @@ interface BlockServiceInterface
     public function getLatestBlockHeight(): int;
 
     /**
+     * Получить высоту последнего блока из Базы
+     * @return int
+     * @throws \RuntimeException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getExplorerLatestBlockHeight(): int;
+
+    /**
      * Получить данные блока по высоте из API
      * @param int $blockHeight
      * @return array

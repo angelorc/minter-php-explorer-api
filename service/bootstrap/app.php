@@ -70,6 +70,7 @@ $app->singleton(
 $app->configure('app');
 $app->configure('cache');
 $app->configure('database');
+$app->configure('logging');
 
 /*
 |--------------------------------------------------------------------------
