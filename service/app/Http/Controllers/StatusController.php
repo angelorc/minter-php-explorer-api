@@ -132,6 +132,24 @@ class StatusController extends Controller
         return new TxCountCollection(TxPerDay::limit(14)->get());
     }
 
+    /**
+     * @SWG\Definition(
+     *     definition="NetworkStatusData",
+     *     type="object",
+     *
+     *     @SWG\Property(property="status",               type="string",  example="active"),
+     *     @SWG\Property(property="uptime",               type="integer", example="99"),
+     *     @SWG\Property(property="numberOfBlocks",       type="integer", example="9999"),
+     *     @SWG\Property(property="blockSpeed24h",        type="float",   example="0.01458333"),
+     *     @SWG\Property(property="txTotalCount",         type="int",     example="1458333"),
+     *     @SWG\Property(property="tx24hCount",           type="int",     example="333"),
+     *     @SWG\Property(property="txPerSecond",          type="float",   example="0.0145"),
+     *     @SWG\Property(property="activeValidators",     type="int",     example="5"),
+     *     @SWG\Property(property="totalValidatorsCount", type="int",     example="15"),
+     *     @SWG\Property(property="averageTxCommission",  type="float",   example="0.0015"),
+     *     @SWG\Property(property="totalCommission",      type="float",   example="19884.23")
+     * )
+     */
 
     /**
      * @SWG\Get(
@@ -144,10 +162,7 @@ class StatusController extends Controller
      *         response=200,
      *         description="Success",
      *         @SWG\Schema(
-     *             @SWG\Property(property="success", type="boolean"),
-     *             @SWG\Property(property="code",    type="integer"),
-     *             @SWG\Property(property="message", type="string"),
-     *             @SWG\Property(property="data",    ref="#/definitions/Status")
+     *             @SWG\Property(property="data", ref="#/definitions/NetworkStatusData")
      *         )
      *     )
      * )
@@ -157,17 +172,19 @@ class StatusController extends Controller
     public function statusPage(): array
     {
         return [
-            'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
-            'uptime' => $this->statusService->getUpTime(),
-            'number_of_blocks' => $this->statusService->getLastBlockHeight(),
-            'block_speed_24h' => $this->blockService->blockSpeed24h(),
-            'tx_total_count' => $this->transactionService->getTotalTransactionsCount(),
-            'tx_24h_count' => $this->transactionService->get24hTransactionsCount(),
-            'tx_per_second' => $this->transactionService->getTransactionsSpeed(),
-            'active_validators' => '???',
-            'total_validators_count' => '???',
-            'average_tx_commission' => '???',
-            'total_commission' => '???',
+            'data' => [
+                'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
+                'uptime' => $this->statusService->getUpTime(),
+                'numberOfBlocks' => $this->statusService->getLastBlockHeight(),
+                'blockSpeed24h' => $this->blockService->blockSpeed24h(),
+                'txTotalCount' => $this->transactionService->getTotalTransactionsCount(),
+                'tx24hCount' => $this->transactionService->get24hTransactionsCount(),
+                'txPerSecond' => $this->transactionService->getTransactionsSpeed(),
+                'activeValidators' => 1,
+                'totalValidatorsCount' => 1,
+                'averageTxCommission' => 0.2,
+                'totalCommission' => 1000,
+            ]
         ];
     }
 }

@@ -178,6 +178,29 @@
                 }
             }
         },
+        "/api/v1/status_page": {
+            "get": {
+                "tags": [
+                    "Info"
+                ],
+                "summary": "\u0421\u0442\u0430\u0442\u0443\u0441 \u0441\u0435\u0442\u0438",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "$ref": "#/definitions/NetworkStatusData"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/transactions": {
             "get": {
                 "tags": [
@@ -301,8 +324,8 @@
                     "example": "1234569875975"
                 },
                 "transactionsPerSecond": {
-                    "type": "integer",
-                    "example": "12345"
+                    "type": "float",
+                    "example": "0.2"
                 }
             },
             "type": "object"
@@ -316,6 +339,55 @@
                 "amount": {
                     "type": "integer",
                     "example": "123456789"
+                }
+            },
+            "type": "object"
+        },
+        "NetworkStatusData": {
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "active"
+                },
+                "uptime": {
+                    "type": "integer",
+                    "example": "99"
+                },
+                "numberOfBlocks": {
+                    "type": "integer",
+                    "example": "9999"
+                },
+                "blockSpeed24h": {
+                    "type": "float",
+                    "example": "0.01458333"
+                },
+                "txTotalCount": {
+                    "type": "int",
+                    "example": "1458333"
+                },
+                "tx24hCount": {
+                    "type": "int",
+                    "example": "333"
+                },
+                "txPerSecond": {
+                    "type": "float",
+                    "example": "0.0145"
+                },
+                "activeValidators": {
+                    "type": "int",
+                    "example": "5"
+                },
+                "totalValidatorsCount": {
+                    "type": "int",
+                    "example": "15"
+                },
+                "averageTxCommission": {
+                    "type": "float",
+                    "example": "0.0015"
+                },
+                "totalCommission": {
+                    "type": "float",
+                    "example": "19884.23"
                 }
             },
             "type": "object"
