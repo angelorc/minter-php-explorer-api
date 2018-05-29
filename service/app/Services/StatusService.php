@@ -76,12 +76,16 @@ class StatusService implements StatusServiceInterface
     /**
      * Получить статус
      * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function isActiveStatus(): bool
     {
-        $lastBlockTime = $this->blockService->getExplorerLatestBlockHeight();
+        /** @var Block $lastBlock */
+        $lastBlock = Block::orderByDesc('id')->first();
 
-        return time() - $lastBlockTime <= $this::IS_ACTIVE_PERIOD;
+        $lastBlockTime = new \DateTime($lastBlock->timestamp);
+
+        return time() - $lastBlockTime->getTimestamp() <= $this::IS_ACTIVE_PERIOD;
     }
 
     /**
