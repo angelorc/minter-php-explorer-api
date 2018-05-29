@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client;
 use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
-use Illuminate\Support\Carbon;
+use GuzzleHttp\Client;
 
 class BlockService implements BlockServiceInterface
 {
@@ -13,10 +12,10 @@ class BlockService implements BlockServiceInterface
     /** @var Client */
     private $client;
 
-    /** @var BlockRepositoryInterface  */
+    /** @var BlockRepositoryInterface */
     protected $blockRepository;
 
-    /** @var TransactionServiceInterface  */
+    /** @var TransactionServiceInterface */
     protected $transactionService;
 
     /**
@@ -24,8 +23,10 @@ class BlockService implements BlockServiceInterface
      * @param BlockRepositoryInterface $blockRepository
      * @param TransactionServiceInterface $transactionService
      */
-    public function __construct(BlockRepositoryInterface $blockRepository, TransactionServiceInterface $transactionService)
-    {
+    public function __construct(
+        BlockRepositoryInterface $blockRepository,
+        TransactionServiceInterface $transactionService
+    ) {
         $this->client = new Client(['base_uri' => env('MINTER_API')]);
 
         $this->blockRepository = $blockRepository;
@@ -73,17 +74,17 @@ class BlockService implements BlockServiceInterface
         $blockTime = $this->prepareDate($blockData['block']['header']['time']);
 
         $block = new Block();
-        $block->height     = $blockData['block']['header']['height'];
-        $block->timestamp  = $blockTime->format('Y-m-d H:i:sO');
-        $block->tx_count   = $blockData['block']['header']['num_txs'];
-        $block->hash       = $blockData['block_meta']['block_id']['hash'];
+        $block->height = $blockData['block']['header']['height'];
+        $block->timestamp = $blockTime->format('Y-m-d H:i:sO');
+        $block->tx_count = $blockData['block']['header']['num_txs'];
+        $block->hash = $blockData['block_meta']['block_id']['hash'];
         $block->block_reward = $this->getBlockReward($block->height);
         $block->block_time = 5; //TODO: добаить вычисление
 
-        $transactions  = null;
+        $transactions = null;
 
-        if ($block->tx_count > 0){
-            $transactions =  $this->transactionService->decodeTransactionsFromApiData($blockData);
+        if ($block->tx_count > 0) {
+            $transactions = $this->transactionService->decodeTransactionsFromApiData($blockData);
             $block->size = $this->getBlockSize($blockData);
         } else {
             $block->size = 0;
@@ -102,7 +103,7 @@ class BlockService implements BlockServiceInterface
     {
         $txs = '';
 
-        foreach ($blockData['block']['data']['txs'] as $transaction){
+        foreach ($blockData['block']['data']['txs'] as $transaction) {
             $txs .= $transaction;
         }
 
@@ -139,7 +140,7 @@ class BlockService implements BlockServiceInterface
     {
         $nano = preg_replace('/(.*)\.(.*)Z/', '$2', $stringSateTime);
 
-        if (!$nano){
+        if (!$nano) {
             return \Carbon\Carbon::now();
         }
 
@@ -159,4 +160,16 @@ class BlockService implements BlockServiceInterface
 
         return $block->height ?? 0;
     }
+
+    /**
+     * Скорость обработки блоков за последние 24 часа
+     * @return float
+     */
+    public function blockSpeed24h(): float
+    {
+        $blocks = $this->blockRepository->getBlocksCountByPeriod(86400);
+
+        return round($blocks / 86400, 8);
+    }
+
 }

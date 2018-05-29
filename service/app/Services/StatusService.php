@@ -28,16 +28,24 @@ class StatusService implements StatusServiceInterface
     protected $transactionRepository;
 
     /**
+     * @var BlockServiceInterface
+     */
+    protected $blockService;
+
+    /**
      * StatusService constructor.
      * @param BlockRepositoryInterface $blockRepository
      * @param TransactionRepositoryInterface $transactionRepository
+     * @param BlockServiceInterface $blockService
      */
     public function __construct(
         BlockRepositoryInterface $blockRepository,
-        TransactionRepositoryInterface $transactionRepository
+        TransactionRepositoryInterface $transactionRepository,
+        BlockServiceInterface $blockService
     ) {
         $this->blockRepository = $blockRepository;
         $this->transactionRepository = $transactionRepository;
+        $this->blockService = $blockService;
     }
 
     /**
@@ -71,7 +79,7 @@ class StatusService implements StatusServiceInterface
      */
     public function isActiveStatus(): bool
     {
-        $lastBlockTime = Cache::get('last_block_time', 0);
+        $lastBlockTime = $this->blockService->getExplorerLatestBlockHeight();
 
         return time() - $lastBlockTime <= $this::IS_ACTIVE_PERIOD;
     }

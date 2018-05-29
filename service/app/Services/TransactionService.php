@@ -101,6 +101,6 @@ class TransactionService implements TransactionServiceInterface
      */
     public function getTransactionsSpeed(): float
     {
-        return round($this->get24hTransactionsCount() / (24 * 3600), 2);
+        return round($this->get24hTransactionsCount() / (24 * 3600), 8);
     }
 }

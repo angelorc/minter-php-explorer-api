@@ -40,7 +40,7 @@ class PullBlockDataCommand extends Command
     {
         try {
 
-            $lastBlockHeight = $this->blockService->getLatestBlockHeight();
+            $lastBlockHeight = $this->blockService->getMinterLatestBlockHeight();
             $explorerLastBlockHeight = $this->blockService->getExplorerLatestBlockHeight() + 1;
 
             while (true) {
@@ -50,7 +50,7 @@ class PullBlockDataCommand extends Command
                     $explorerLastBlockHeight++;
                 } else {
                     usleep($this::SLEEP_TIME);
-                    $lastBlockHeight = $this->blockService->getLatestBlockHeight();
+                    $lastBlockHeight = $this->blockService->getMinterLatestBlockHeight();
                 }
             }
 

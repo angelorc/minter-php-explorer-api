@@ -35,4 +35,10 @@ interface BlockServiceInterface
      * @param array $blockData
      */
     public function saveFromApiData(array $blockData): void;
+
+    /**
+     * Скорость обработки блоков за последние 24 часа
+     * @return float
+     */
+    public function blockSpeed24h(): float;
 }

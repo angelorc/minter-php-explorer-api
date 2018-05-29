@@ -5,31 +5,41 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TxCountCollection;
 use App\Models\Transaction;
 use App\Models\TxPerDay;
-use App\Repository\TransactionRepositoryInterface;
+use App\Services\BlockServiceInterface;
 use App\Services\StatusServiceInterface;
 use App\Services\TransactionServiceInterface;
-use Illuminate\Support\Facades\Cache;
 
 class StatusController extends Controller
 {
     /**
      * @var StatusServiceInterface
      */
-    private $statusService;
+    protected $statusService;
     /**
      * @var TransactionServiceInterface
      */
-    private $transactionService;
+    protected $transactionService;
+
+    /**
+     * @var BlockServiceInterface
+     */
+    protected $blockService;
 
     /**
      * Create a new controller instance.
      *
      * @param StatusServiceInterface $statusService
+     * @param TransactionServiceInterface $transactionService
+     * @param BlockServiceInterface $blockService
      */
-    public function __construct(StatusServiceInterface $statusService, TransactionServiceInterface $transactionService)
-    {
+    public function __construct(
+        StatusServiceInterface $statusService,
+        TransactionServiceInterface $transactionService,
+        BlockServiceInterface $blockService
+    ) {
         $this->statusService = $statusService;
         $this->transactionService = $transactionService;
+        $this->blockService = $blockService;
     }
 
     /**
@@ -150,11 +160,11 @@ class StatusController extends Controller
             'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
             'uptime' => $this->statusService->getUpTime(),
             'number_of_blocks' => $this->statusService->getLastBlockHeight(),
-            'block_speed_24h' => '???',
+            'block_speed_24h' => $this->blockService->blockSpeed24h(),
             'tx_total_count' => $this->transactionService->getTotalTransactionsCount(),
             'tx_24h_count' => $this->transactionService->get24hTransactionsCount(),
             'tx_per_second' => $this->transactionService->getTransactionsSpeed(),
-            'active_validators' =>'???',
+            'active_validators' => '???',
             'total_validators_count' => '???',
             'average_tx_commission' => '???',
             'total_commission' => '???',
