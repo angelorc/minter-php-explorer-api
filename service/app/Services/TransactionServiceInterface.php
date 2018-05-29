@@ -14,7 +14,6 @@ interface TransactionServiceInterface
      */
     public function decodeTransactionsFromApiData(array $data): Collection;
 
-
     /**
      * Количество транзакций
      * @return int
@@ -26,4 +25,10 @@ interface TransactionServiceInterface
      * @return int
      */
     public function get24hTransactionsCount(): int;
+
+    /**
+     * Скорость обработки транзакций
+     * @return float
+     */
+    public function getTransactionsSpeed(): float;
 }

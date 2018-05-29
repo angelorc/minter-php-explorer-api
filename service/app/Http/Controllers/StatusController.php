@@ -82,7 +82,7 @@ class StatusController extends Controller
             'marketCap' => 10000000000 * 0.00007453,
             'latestBlockHeight' => $this->statusService->getLastBlockHeight(),
             'totalTransactions' => Transaction::count(),
-            'transactionsPerSecond' => $this->statusService->getTransactionsPerSecond(),
+            'transactionsPerSecond' => $this->transactionService->getTransactionsSpeed(),
             'averageBlockTime' => $this->statusService->getAverageBlockTime(),
         ];
     }
@@ -150,10 +150,10 @@ class StatusController extends Controller
             'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
             'uptime' => $this->statusService->getUpTime(),
             'number_of_blocks' => $this->statusService->getLastBlockHeight(),
-            'tx_speed_24h' => '???',
+            'block_speed_24h' => '???',
             'tx_total_count' => $this->transactionService->getTotalTransactionsCount(),
             'tx_24h_count' => $this->transactionService->get24hTransactionsCount(),
-            'tx_per_second' => '???',
+            'tx_per_second' => $this->transactionService->getTransactionsSpeed(),
             'active_validators' =>'???',
             'total_validators_count' => '???',
             'average_tx_commission' => '???',

@@ -56,16 +56,6 @@ class StatusService implements StatusServiceInterface
     }
 
     /**
-     * Получить количество транзакций в секунду
-     * @return float
-     */
-    public function getTransactionsPerSecond(): float
-    {
-        //TODO: добавить реализацию
-        return 0.2;
-    }
-
-    /**
      * Получить среднее время обработки блока в секундах
      * @return int
      */

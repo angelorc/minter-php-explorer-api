@@ -4,12 +4,28 @@ namespace App\Services;
 
 
 use App\Models\Transaction;
+use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Minter\SDK\MinterTx;
 
 class TransactionService implements TransactionServiceInterface
 {
+    /**
+     * @var TransactionRepositoryInterface
+     */
+    protected $transactionRepository;
+
+    /**
+     * TransactionService constructor.
+     * @param TransactionRepositoryInterface $transactionRepository
+     */
+    public function __construct(TransactionRepositoryInterface $transactionRepository)
+    {
+        $this->transactionRepository = $transactionRepository;
+    }
+
 
     /**
      * Получить колекцию транзакций из данных API
@@ -52,4 +68,39 @@ class TransactionService implements TransactionServiceInterface
         return collect($transactions);
     }
 
+    /**
+     * Количество транзакций
+     * @return int
+     */
+    public function getTotalTransactionsCount(): int
+    {
+        return $this->transactionRepository->getTotalTransactionsCount();
+    }
+
+    /**
+     * Количество транзакций за последние 24 часа
+     * @return int
+     */
+    public function get24hTransactionsCount(): int
+    {
+        $count = Cache::get('24hTransactionsCount', null);
+
+        if (!$count){
+
+            $count = $this->transactionRepository->get24hTransactionsCount();
+
+            Cache::put('24hTransactionsCount', $count, 1);
+        }
+
+       return $count;
+    }
+
+    /**
+     * Скорость обработки транзакций
+     * @return float
+     */
+    public function getTransactionsSpeed(): float
+    {
+        return round($this->get24hTransactionsCount() / (24 * 3600), 2);
+    }
 }

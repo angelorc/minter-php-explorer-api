@@ -46,9 +46,14 @@ interface TransactionRepositoryInterface
 
     /**
      * Количество транзакций
-     * @param \DateInterval|null $periodSeconds - Период в секундах
      * @return int
      */
-    public function getTransactionsCount(\DateInterval $periodSeconds = null): int;
+    public function getTotalTransactionsCount(): int;
+
+    /**
+     * Получить количество транзакций за последние 24 часа
+     * @return int
+     */
+    public function get24hTransactionsCount(): int;
 
 }

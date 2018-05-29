@@ -4,7 +4,6 @@ namespace App\Repository;
 
 
 use App\Models\Transaction;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TransactionRepository implements TransactionRepositoryInterface
@@ -54,19 +53,19 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
-        if($filter['addresses']){
-            $addresses = implode(',', array_map(function($item){
-                return "'" .   preg_replace("/\W/", '', $item)  .  "'";}, $filter['addresses']));
+        if ($filter['addresses']) {
+            $addresses = implode(',', array_map(function ($item) {
+                return "'" . preg_replace("/\W/", '', $item) . "'";
+            }, $filter['addresses']));
 
-            $query->where(function ($query) use ($addresses){
+            $query->where(function ($query) use ($addresses) {
                 $query
-                    ->whereRaw('transactions.from ilike any (array['.$addresses.']) ')
-                    ->orWhereRaw('transactions.to ilike any (array['.$addresses.']) ');
+                    ->whereRaw('transactions.from ilike any (array[' . $addresses . ']) ')
+                    ->orWhereRaw('transactions.to ilike any (array[' . $addresses . ']) ');
             });
 
-        }
-        elseif($filter['address']){
-            $query->where(function ($query) use ($filter){
+        } elseif ($filter['address']) {
+            $query->where(function ($query) use ($filter) {
                 $query->where('transactions.from', 'ilike', $filter['address'])
                     ->orWhere('transactions.to', 'ilike', $filter['address']);
             });
@@ -84,10 +83,10 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function getTransactionsPerDayCount(\DateTime $dateTime = null): int
     {
-        if (!$dateTime){
+        if (!$dateTime) {
             $dt = new \DateTime();
             $date = $dt->sub(new \DateInterval('PT24H'));
-        }else{
+        } else {
             $date = $dateTime->format('Y-m-d');
         }
 
@@ -104,5 +103,36 @@ class TransactionRepository implements TransactionRepositoryInterface
         $txs = DB::selectOne($query);
 
         return $txs->cnt ?? 0;
+    }
+
+    /**
+     * Количество транзакций
+     * @return int
+     */
+    public function getTotalTransactionsCount(): int
+    {
+        return Transaction::count();
+    }
+
+    /**
+     * Получить количество транзакций за последние 24 часа
+     * @return int
+     * @throws \Exception
+     */
+    public function get24hTransactionsCount(): int
+    {
+
+        //TODO: Возможно стоит брать транзакции на начало часа, что позволит кэшировать данные на час
+
+        $sql = "
+            select count(t.id)
+            from blocks as b
+              join transactions t on b.id = t.block_id
+            where b.timestamp::TIMESTAMP >= now() - '24 Hour'::INTERVAL;
+        ";
+
+        $result = DB::selectOne($sql);
+
+        return $result->count ?? 0;
     }
 }
