@@ -80,4 +80,18 @@ class BlockRepository implements BlockRepositoryInterface
 
         return Block::whereDate('created_at', '>=', $dt->sub($di)->format('Y-m-d'))->count();
     }
+
+    /**
+     * Получить среднее время обработки блока за период в секундах
+     * @param \DateTime|null $startDate
+     * @return float
+     * @throws \Exception
+     */
+    public function getAverageBlockTime(\DateTime $startDate = null): float
+    {
+        $start = new \DateTime();
+        $start->sub(new \DateInterval('PT24H'));
+
+        return Block::where('timestamp', '>=', $start->format('Y-m-d h:i:s'))->avg('block_time');
+    }
 }

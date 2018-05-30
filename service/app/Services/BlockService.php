@@ -5,18 +5,19 @@ namespace App\Services;
 use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Cache;
 
 class BlockService implements BlockServiceInterface
 {
 
-    /** @var Client */
-    private $client;
+    protected const DEFAULT_BLOCK_TIME = 5;
 
     /** @var BlockRepositoryInterface */
     protected $blockRepository;
-
     /** @var TransactionServiceInterface */
     protected $transactionService;
+    /** @var Client */
+    private $client;
 
     /**
      * BlockService constructor.
@@ -70,7 +71,6 @@ class BlockService implements BlockServiceInterface
      */
     public function saveFromApiData(array $blockData): void
     {
-
         $blockTime = $this->prepareDate($blockData['block']['header']['time']);
 
         $block = new Block();
@@ -79,7 +79,7 @@ class BlockService implements BlockServiceInterface
         $block->tx_count = $blockData['block']['header']['num_txs'];
         $block->hash = $blockData['block_meta']['block_id']['hash'];
         $block->block_reward = $this->getBlockReward($block->height);
-        $block->block_time = 5; //TODO: добаить вычисление
+        $block->block_time = $this->calculateBlockTime($blockTime->getTimestamp());
 
         $transactions = null;
 
@@ -92,44 +92,17 @@ class BlockService implements BlockServiceInterface
 
         $this->blockRepository->save($block, $transactions);
 
-    }
-
-    /**
-     * Получить размер блока
-     * @param array $blockData
-     * @return int
-     */
-    private function getBlockSize(array $blockData): int
-    {
-        $txs = '';
-
-        foreach ($blockData['block']['data']['txs'] as $transaction) {
-            $txs .= $transaction;
+        $expiresAt = new \DateTime();
+        try {
+            $expiresAt->add(new \DateInterval('PT4S'));
+        } catch (\Exception $e) {
         }
 
-        return \mb_strlen($txs);
-    }
+        Cache::forget('last_block_time');
+        Cache::forget('last_block_height');
 
-    /**
-     * Поучить награду за блок
-     * @param int $blockHeight
-     * @return int
-     */
-    private function getBlockReward(int $blockHeight): int
-    {
-        //TODO: добавить реализацию
-        return 1;
-    }
-
-    /**
-     * @param int $currentBlockHeight
-     * @param string $timestamp
-     * @return int
-     */
-    private function calculateBlockTime(int $currentBlockHeight, string $timestamp)
-    {
-        //TODO: добавить реализацию
-        return 5;
+        Cache::put('last_block_time', $blockTime->getTimestamp(), $expiresAt);
+        Cache::put('last_block_height', $block->height, $expiresAt);
     }
 
     /**
@@ -147,6 +120,33 @@ class BlockService implements BlockServiceInterface
         $result = str_replace(".{$nano}Z", '.' . substr($nano, 0, 6) . 'Z', $stringSateTime);
 
         return new \Carbon\Carbon($result);
+    }
+
+    /**
+     * Поучить награду за блок
+     * @param int $blockHeight
+     * @return int
+     */
+    private function getBlockReward(int $blockHeight): int
+    {
+        //TODO: добавить реализацию
+        return 1;
+    }
+
+    /**
+     * Получить размер блока
+     * @param array $blockData
+     * @return int
+     */
+    private function getBlockSize(array $blockData): int
+    {
+        $txs = '';
+
+        foreach ($blockData['block']['data']['txs'] as $transaction) {
+            $txs .= $transaction;
+        }
+
+        return \mb_strlen($txs);
     }
 
     /**
@@ -172,4 +172,18 @@ class BlockService implements BlockServiceInterface
         return round($blocks / 86400, 8);
     }
 
+    /**
+     * @param int $currentBlockTime
+     * @return int
+     */
+    private function calculateBlockTime(int $currentBlockTime): int
+    {
+        $lastBlockTime = Cache::get('last_block_time', null);
+
+        if ($lastBlockTime && $currentBlockTime > $lastBlockTime) {
+            return $currentBlockTime - $lastBlockTime;
+        }
+
+        return $this::DEFAULT_BLOCK_TIME;
+    }
 }

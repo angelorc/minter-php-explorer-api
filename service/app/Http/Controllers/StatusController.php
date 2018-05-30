@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TxCountCollection;
-use App\Models\Transaction;
 use App\Models\TxPerDay;
 use App\Services\BlockServiceInterface;
 use App\Services\StatusServiceInterface;
@@ -91,7 +90,7 @@ class StatusController extends Controller
             'bipPriceChange' => 10,
             'marketCap' => 10000000000 * 0.00007453,
             'latestBlockHeight' => $this->statusService->getLastBlockHeight(),
-            'totalTransactions' => Transaction::count(),
+            'totalTransactions' => $this->transactionService->getTotalTransactionsCount(),
             'transactionsPerSecond' => $this->transactionService->getTransactionsSpeed(),
             'averageBlockTime' => $this->statusService->getAverageBlockTime(),
         ];
@@ -176,7 +175,7 @@ class StatusController extends Controller
                 'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
                 'uptime' => $this->statusService->getUpTime(),
                 'numberOfBlocks' => $this->statusService->getLastBlockHeight(),
-                'blockSpeed24h' => $this->blockService->blockSpeed24h(),
+                'blockSpeed24h' => $this->statusService->getAverageBlockTime(),
                 'txTotalCount' => $this->transactionService->getTotalTransactionsCount(),
                 'tx24hCount' => $this->transactionService->get24hTransactionsCount(),
                 'txPerSecond' => $this->transactionService->getTransactionsSpeed(),

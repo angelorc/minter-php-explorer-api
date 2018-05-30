@@ -44,4 +44,11 @@ interface BlockRepositoryInterface
      */
     public function getBlocksCountByPeriod(int $periodSec, \DateTime $endDate = null): int;
 
+    /**
+     * Получить среднее время обработки блока за период в секундах
+     * @param \DateTime|null $startDate
+     * @return float
+     */
+    public function getAverageBlockTime(\DateTime $startDate = null): float;
+
 }

@@ -65,12 +65,12 @@ class StatusService implements StatusServiceInterface
 
     /**
      * Получить среднее время обработки блока в секундах
-     * @return int
+     * @return float
+     * @throws \Exception
      */
-    public function getAverageBlockTime(): int
+    public function getAverageBlockTime(): float
     {
-        //TODO: добавить реализацию
-        return 5;
+        return $this->blockRepository->getAverageBlockTime();
     }
 
     /**

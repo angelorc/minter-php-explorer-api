@@ -20,7 +20,7 @@ interface StatusServiceInterface
      * Получить среднее время обработки блока в секундах
      * @return int
      */
-    public function getAverageBlockTime(): int;
+    public function getAverageBlockTime(): float;
 
     /**
      * Получить статус
