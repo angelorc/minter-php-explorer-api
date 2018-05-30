@@ -1,7 +1,7 @@
 <?php
 
 
-$router->group([/*'middleware' => 'api_response', */ 'prefix' => 'api'], function () use ($router) {
+$router->group(['middleware' => 'cors', 'prefix' => 'api'], function () use ($router) {
 
     /**
      * @SWG\Info(title="Minter Explorer API", version="1.0")
