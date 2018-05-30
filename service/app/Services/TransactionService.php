@@ -104,4 +104,37 @@ class TransactionService implements TransactionServiceInterface
     {
         return round($this->get24hTransactionsCount() / (24 * 3600), 8);
     }
+
+    /**
+     * Получить сумму комиссии за транзакции с даты
+     * @param \DateTime $startTime
+     * @return float
+     */
+    public function getCommission(\DateTime $startTime = null): float
+    {
+        $transactions = $this->transactionRepository->get24hTransactions();
+
+        return $transactions->reduce(function ($carry, $transaction) {
+            /** @var Transaction $transaction */
+            return $carry + $transaction->fee;
+        });
+    }
+
+    /**
+     * Получить среднюю комиссиию за транзакции с даты
+     * @param \DateTime $startTime
+     * @return float
+     */
+    public function getAverageCommission(\DateTime $startTime = null): float
+    {
+
+        $transactions = $this->transactionRepository->get24hTransactions();
+
+        $fee = $transactions->reduce(function ($carry, $transaction) {
+            /** @var Transaction $transaction */
+            return $carry + $transaction->fee;
+        });
+
+        return $transactions / $fee;
+    }
 }

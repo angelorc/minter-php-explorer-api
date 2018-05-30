@@ -57,4 +57,10 @@ interface TransactionRepositoryInterface
      */
     public function get24hTransactionsCount(): int;
 
+    /**
+     * Получить транзакции за последние 24 часа
+     * @return Collection
+     */
+    public function get24hTransactions(): Collection;
+
 }

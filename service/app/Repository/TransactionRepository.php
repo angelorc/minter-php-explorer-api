@@ -4,6 +4,8 @@ namespace App\Repository;
 
 
 use App\Models\Transaction;
+use function FastRoute\TestFixtures\empty_options_cached;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TransactionRepository implements TransactionRepositoryInterface
@@ -47,13 +49,19 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         $query = Transaction::query();
 
-        if ($filter['block']) {
+        if (!empty($filter['block'])) {
             $query->whereHas('block', function ($query) use ($filter) {
                 $query->where('blocks.height', $filter['block']);
             });
         }
 
-        if ($filter['addresses']) {
+        if (isset($filter['startTime'])){
+            $query->whereHas('block', function ($query) use ($filter) {
+                $query->where('blocks.timestamp', '>=', $filter['startTime']);
+            });
+        }
+
+        if (!empty($filter['addresses'])) {
             $addresses = implode(',', array_map(function ($item) {
                 return "'" . preg_replace("/\W/", '', $item) . "'";
             }, $filter['addresses']));
@@ -64,7 +72,7 @@ class TransactionRepository implements TransactionRepositoryInterface
                     ->orWhereRaw('transactions.to ilike any (array[' . $addresses . ']) ');
             });
 
-        } elseif ($filter['address']) {
+        } elseif (!empty($filter['address'])) {
             $query->where(function ($query) use ($filter) {
                 $query->where('transactions.from', 'ilike', $filter['address'])
                     ->orWhere('transactions.to', 'ilike', $filter['address']);
@@ -131,7 +139,6 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
 
         //TODO: Возможно стоит брать транзакции на начало часа, что позволит кэшировать данные на час
-
         $sql = "
             select count(t.id)
             from blocks as b
@@ -143,4 +150,19 @@ class TransactionRepository implements TransactionRepositoryInterface
 
         return $result->count ?? 0;
     }
+
+    /**
+     * Получить количество транзакций за последние 24 часа
+     * @return Collection
+     * @throws \Exception
+     */
+    public function get24hTransactions(): Collection
+    {
+
+        $dt = new \DateTime();
+        $dt->sub(new \DateInterval('PT24H'));
+
+        return $this->getAllQuery(['startTime' => $dt->format('Y-m-d H:i:s')])->get();
+    }
+
 }

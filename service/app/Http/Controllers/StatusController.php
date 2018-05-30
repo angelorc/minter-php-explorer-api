@@ -181,8 +181,8 @@ class StatusController extends Controller
                 'txPerSecond' => $this->transactionService->getTransactionsSpeed(),
                 'activeValidators' => 1,
                 'totalValidatorsCount' => 1,
-                'averageTxCommission' => 0.2,
-                'totalCommission' => 1000,
+                'averageTxCommission' => $this->transactionService->getAverageCommission(),
+                'totalCommission' => $this->transactionService->getCommission(),
             ]
         ];
     }
