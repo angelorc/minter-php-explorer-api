@@ -32,10 +32,4 @@ interface StatusServiceInterface
      * @return int
      */
     public function getUpTime(): int;
-
-    /**
-     * @param int $periodInSeconds
-     * @return int
-     */
-    public function getSpeedOfBlocks(int $periodInSeconds = 86400): int;
 }

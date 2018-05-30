@@ -76,7 +76,6 @@ class StatusService implements StatusServiceInterface
     /**
      * Получить статус
      * @return bool
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function isActiveStatus(): bool
     {
@@ -107,14 +106,5 @@ class StatusService implements StatusServiceInterface
         }
 
         return round($theoryBlocks / $count / 30);
-    }
-
-    /**
-     * @param int $periodInSeconds
-     * @return int
-     */
-    public function getSpeedOfBlocks(int $periodInSeconds = 86400): int
-    {
-        // TODO: Implement getSpeedOfBlocks() method.
     }
 }

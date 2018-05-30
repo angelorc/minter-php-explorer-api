@@ -7,6 +7,7 @@ use App\Models\TxPerDay;
 use App\Services\BlockServiceInterface;
 use App\Services\StatusServiceInterface;
 use App\Services\TransactionServiceInterface;
+use Illuminate\Support\Facades\Cache;
 
 class StatusController extends Controller
 {
@@ -90,6 +91,7 @@ class StatusController extends Controller
             'bipPriceChange' => 10,
             'marketCap' => 10000000000 * 0.00007453,
             'latestBlockHeight' => $this->statusService->getLastBlockHeight(),
+            'latestBlockTime' => Cache::get('last_block_time', null),
             'totalTransactions' => $this->transactionService->getTotalTransactionsCount(),
             'transactionsPerSecond' => $this->transactionService->getTransactionsSpeed(),
             'averageBlockTime' => $this->statusService->getAverageBlockTime(),
