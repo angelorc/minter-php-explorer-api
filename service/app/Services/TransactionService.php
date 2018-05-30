@@ -70,11 +70,12 @@ class TransactionService implements TransactionServiceInterface
 
     /**
      * Количество транзакций
+     * @param string|null $address
      * @return int
      */
-    public function getTotalTransactionsCount(): int
+    public function getTotalTransactionsCount(string $address = null): int
     {
-        return $this->transactionRepository->getTotalTransactionsCount();
+        return $this->transactionRepository->getTransactionsCount($address);
     }
 
     /**

@@ -46,9 +46,10 @@ interface TransactionRepositoryInterface
 
     /**
      * Количество транзакций
+     * @param string|null $address
      * @return int
      */
-    public function getTotalTransactionsCount(): int;
+    public function getTransactionsCount(string $address = null): int;
 
     /**
      * Получить количество транзакций за последние 24 часа

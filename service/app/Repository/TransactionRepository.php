@@ -107,11 +107,19 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     /**
      * Количество транзакций
+     * @param string|null $address
      * @return int
      */
-    public function getTotalTransactionsCount(): int
+    public function getTransactionsCount(string $address = null): int
     {
-        return Transaction::count();
+        $query = Transaction::query();
+
+        if ($address){
+            $query->where('from', 'like', $address)
+                ->orWhere('to', 'like', $address);
+        }
+
+        return $query->count();
     }
 
     /**

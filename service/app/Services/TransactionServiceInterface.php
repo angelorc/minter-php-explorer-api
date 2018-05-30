@@ -16,9 +16,10 @@ interface TransactionServiceInterface
 
     /**
      * Количество транзакций
+     * @param string $address
      * @return int
      */
-    public function getTotalTransactionsCount(): int;
+    public function getTotalTransactionsCount(string $address = null): int;
 
     /**
      * Количество транзакций за последние 24 часа

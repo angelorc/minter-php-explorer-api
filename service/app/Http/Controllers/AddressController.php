@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
-use App\Services\StatusServiceInterface;
+use App\Services\TransactionServiceInterface;
 
 class AddressController extends Controller
 {
-    private $statusService;
+    private $transactionService;
 
     /**
      * Create a new controller instance.
      *
-     * @param StatusServiceInterface $statusService
+     * @param TransactionServiceInterface $transactionService
      */
-    public function __construct(StatusServiceInterface $statusService)
+    public function __construct(TransactionServiceInterface $transactionService)
     {
-        $this->statusService = $statusService;
+        $this->transactionService = $transactionService;
     }
 
     /**
@@ -43,15 +42,16 @@ class AddressController extends Controller
      */
     /**
      * Статут сети
+     * @param string $address
      * @return array
      */
-    public function address($address): array
+    public function address(string $address): array
     {
         //TODO: поменять значения, как станет ясно откуда брать
         return [
             'bipBalace' => 0,
             'bipBalanceUsd' => 0,
-            'txCount' => 0,
+            'txCount' => $this->transactionService->getTotalTransactionsCount($address),
         ];
     }
 
