@@ -135,6 +135,6 @@ class TransactionService implements TransactionServiceInterface
             return $carry + $transaction->fee;
         });
 
-        return $transactions / $fee;
+        return $transactions->count() / $fee;
     }
 }
