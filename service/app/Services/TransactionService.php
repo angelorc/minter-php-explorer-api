@@ -114,10 +114,14 @@ class TransactionService implements TransactionServiceInterface
     {
         $transactions = $this->transactionRepository->get24hTransactions();
 
-        return $transactions->reduce(function ($carry, $transaction) {
-            /** @var Transaction $transaction */
-            return $carry + $transaction->fee;
-        });
+        if($transactions->count()){
+            return $transactions->reduce(function ($carry, $transaction) {
+                /** @var Transaction $transaction */
+                return $carry + $transaction->fee;
+            });
+        }
+
+        return 0;
     }
 
     /**
