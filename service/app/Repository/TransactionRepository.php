@@ -93,7 +93,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         if (!$dateTime) {
             $dt = new \DateTime();
-            $date = $dt->sub(new \DateInterval('PT24H'));
+            $date = $dt->sub(new \DateInterval('PT24H'))->format('Y-m-d');
         } else {
             $date = $dateTime->format('Y-m-d');
         }

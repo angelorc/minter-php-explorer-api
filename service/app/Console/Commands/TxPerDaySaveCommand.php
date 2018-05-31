@@ -49,9 +49,10 @@ class TxPerDaySaveCommand extends Command
         $count = $this->transactionRepository->getTransactionsPerDayCount();
 
         $date = new \DateTime();
+        $date->sub( new \DateInterval('PT24H') );
 
         $txCount = new TxPerDay();
-        $txCount->date = $date->sub(new \DateInterval('PT24H'))->format('Y-m-d');
+        $txCount->date = $date->format('Y-m-d');
         $txCount->transactions_count = $count;
 
         $txCount->save();
