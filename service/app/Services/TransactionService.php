@@ -55,6 +55,7 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->to = $minterTx->data['to'];
                 $transaction->value = $minterTx->data['value'];
                 $transaction->hash = bin2hex(base64_decode($tx));
+                $transaction->payload = $minterTx->payload;
 
                 //TODO: как появится админка с валидаторами поменять
                 $transaction->validator_id = 1;

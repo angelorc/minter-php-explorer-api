@@ -49,15 +49,22 @@ use Illuminate\Database\Eloquent\Model;
  * @property string from
  * @property string to
  * @property string coin
+ * @property string payload
  */
 class Transaction extends Model
 {
+    public const PIP = 0.00000001;
+
     public const TYPE_SEND = 1;
     public const TYPE_CONVERT = 2;
     public const TYPE_CREATE_COIN = 3;
     public const TYPE_DECLARE_CANDIDACY = 4;
     public const TYPE_DELEGATE = 5;
     public const TYPE_UNBOND = 6;
+    public const TYPE_REDEEM_CHECK = 7;
+
+    public const PAYLOAD = 8;
+    public const TOGGLE_CANDIDATES_STATUS = 9;
 
     protected $dateFormat = 'Y-m-d H:i:sO';
 
@@ -70,15 +77,17 @@ class Transaction extends Model
     }
 
     /**
-     * @return int
+     * Коммисия за транзакцию
+     * @return float
      */
-    public function getFeeAttribute(): int
+    public function getFeeAttribute(): float
     {
-        return $this->gas_price * $this->getBasePrice($this->type);
+        return $this->gas_price * $this->getBasePrice($this->type) * $this::PIP;
     }
 
     /**
-     * @return int
+     * Статус
+     * @return string
      */
     public function getStatusAttribute(): string
     {
@@ -87,7 +96,8 @@ class Transaction extends Model
     }
 
     /**
-     * @return int
+     * Тип транзакции
+     * @return string
      */
     public function getTypeStringAttribute(): string
     {
@@ -110,29 +120,29 @@ class Transaction extends Model
     }
 
     /**
+     * Базовая стоимость
      * @param int $type
      * @return int
      */
     private function getBasePrice(int $type): int
     {
         switch ($type){
+            case $this::PAYLOAD:
+                return 500;
+                break;
             case $this::TYPE_SEND:
+            case $this::TYPE_REDEEM_CHECK:
+            case $this::TOGGLE_CANDIDATES_STATUS:
                 return 1000;
                 break;
             case $this::TYPE_CONVERT:
-                return 10000;
-                break;
-            case $this::TYPE_CREATE_COIN:
-                return 100000;
-                break;
-            case $this::TYPE_DECLARE_CANDIDACY:
-                return 100000;
-                break;
+            case $this::TYPE_UNBOND:
             case $this::TYPE_DELEGATE:
                 return 10000;
                 break;
-            case $this::TYPE_UNBOND:
-                return 1; // TODO: узнать цену
+            case $this::TYPE_CREATE_COIN:
+            case $this::TYPE_DECLARE_CANDIDACY:
+                return 100000;
                 break;
             default:
                 return 0;

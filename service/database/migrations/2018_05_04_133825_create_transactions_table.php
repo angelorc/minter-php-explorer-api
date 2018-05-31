@@ -24,6 +24,7 @@ class CreateTransactionsTable extends Migration
             $table->string('to');
             $table->string('coin');
             $table->string('hash');
+            $table->string('payload');
             $table->decimal('value', 20, 8);
             $table->timestampsTz();
 

@@ -4,7 +4,6 @@ namespace App\Repository;
 
 
 use App\Models\Transaction;
-use function FastRoute\TestFixtures\empty_options_cached;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -55,7 +54,7 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
-        if (isset($filter['startTime'])){
+        if (isset($filter['startTime'])) {
             $query->whereHas('block', function ($query) use ($filter) {
                 $query->where('blocks.timestamp', '>=', $filter['startTime']);
             });
@@ -122,7 +121,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         $query = Transaction::query();
 
-        if ($address){
+        if ($address) {
             $query->where('from', 'like', $address)
                 ->orWhere('to', 'like', $address);
         }
