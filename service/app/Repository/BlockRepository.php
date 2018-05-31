@@ -92,6 +92,6 @@ class BlockRepository implements BlockRepositoryInterface
         $start = new \DateTime();
         $start->sub(new \DateInterval('PT24H'));
 
-        return Block::where('timestamp', '>=', $start->format('Y-m-d h:i:s'))->avg('block_time');
+        return Block::where('timestamp', '>=', $start->format('Y-m-d h:i:s'))->avg('block_time') ?? 0;
     }
 }
