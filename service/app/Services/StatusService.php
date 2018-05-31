@@ -105,6 +105,6 @@ class StatusService implements StatusServiceInterface
             return 0;
         }
 
-        return $theoryBlocks / $count / 30;
+        return $theoryBlocks / $count;
     }
 }
