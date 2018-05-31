@@ -82,7 +82,14 @@ class Transaction extends Model
      */
     public function getFeeAttribute(): float
     {
-        return $this->gas_price * $this->getBasePrice($this->type) * $this::PIP;
+
+        $payloadPrice = 0;
+
+        if ( \strlen($this->payload) ){
+            $payloadPrice = $this->getBasePrice($this::PAYLOAD) * \strlen($this->payload);
+        }
+
+        return ($this->gas_price * $this->getBasePrice($this->type) + $payloadPrice) * $this::PIP;
     }
 
     /**
