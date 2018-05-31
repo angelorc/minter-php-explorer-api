@@ -49,6 +49,7 @@ class TransactionCollection extends ResourceCollection
                    'fee' => $item->fee,
                    'type' => $item->typeString,
                    'status' => $item->status,
+                   'payload' => $item->payload,
                    'data' => [
                        'from' => $item->from,
                        'to' => $item->to,
