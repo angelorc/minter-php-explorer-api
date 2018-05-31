@@ -98,7 +98,7 @@ class StatusService implements StatusServiceInterface
 
         if ($now->diff($firstBlockDate)->d < 30){
             //Теоретическое кол-во блоков от времени первого блока
-            $theoryBlocks = 60 / 5 * 60 * 24 * $now->diff($firstBlockDate)->d;
+            $theoryBlocks = (time() - $firstBlockDate->getTimestamp()) / 5;
         }else{
             //Теоретическое кол-во блоков в месяц
             $theoryBlocks = 60 / 5 * 60 * 24 * 30;
