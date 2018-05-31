@@ -159,7 +159,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
 
         $dt = new \DateTime();
-        $dt->sub(new \DateInterval('PT24H'));
+        $dt->sub(new \DateInterval('PT324H'));
 
         return $this->getAllQuery(['startTime' => $dt->format('Y-m-d H:i:s')])->get();
     }
