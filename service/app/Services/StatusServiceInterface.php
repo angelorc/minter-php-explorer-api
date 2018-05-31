@@ -31,5 +31,5 @@ interface StatusServiceInterface
     /**
      * @return int
      */
-    public function getUpTime(): int;
+    public function getUpTime(): float;
 }

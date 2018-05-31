@@ -88,9 +88,9 @@ class StatusService implements StatusServiceInterface
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getUpTime(): int
+    public function getUpTime(): float
     {
         //Период 30 дней в секундах
         $period = 30 * 24 * 3600;
@@ -105,6 +105,6 @@ class StatusService implements StatusServiceInterface
             return 0;
         }
 
-        return round($theoryBlocks / $count / 30);
+        return $theoryBlocks / $count / 30;
     }
 }
