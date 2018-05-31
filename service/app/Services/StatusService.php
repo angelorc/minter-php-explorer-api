@@ -92,11 +92,20 @@ class StatusService implements StatusServiceInterface
      */
     public function getUpTime(): float
     {
+        $now = new \DateTime();
+        $firstBlock = $this->blockRepository->findById(1);
+        $firstBlockDate = $firstBlock ? new \DateTime($firstBlock->timestamp) : new \DateTime();
+
+        if ($now->diff($firstBlockDate)->d < 30){
+            //Теоретическое кол-во блоков от времени первого блока
+            $theoryBlocks = 60 / 5 * 60 * 24 * $now->diff($firstBlockDate)->d;
+        }else{
+            //Теоретическое кол-во блоков в месяц
+            $theoryBlocks = 60 / 5 * 60 * 24 * 30;
+        }
+
         //Период 30 дней в секундах
         $period = 30 * 24 * 3600;
-
-        //Теоретическое кол-во блоков в месяц
-        $theoryBlocks = 60 / 5 * 60 * 24 * 30;
 
         //Реальное кол-во блоков за месяц
         $count = $this->blockRepository->getBlocksCountByPeriod($period);
