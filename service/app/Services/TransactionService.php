@@ -54,8 +54,9 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->from = $minterTx->from;
                 $transaction->to = $minterTx->data['to'];
                 $transaction->value = $minterTx->data['value'];
-                $transaction->hash = bin2hex(base64_decode($tx));
+                $transaction->hash = $minterTx->getHash();
                 $transaction->payload = $minterTx->payload;
+                $transaction->fee = $minterTx->getFee();
 
                 //TODO: как появится админка с валидаторами поменять
                 $transaction->validator_id = 1;
@@ -118,7 +119,7 @@ class TransactionService implements TransactionServiceInterface
         if($transactions->count()){
             return $transactions->reduce(function ($carry, $transaction) {
                 /** @var Transaction $transaction */
-                return $carry + $transaction->fee;
+                return $carry + $transaction->feeMnt;
             });
         }
 
@@ -137,7 +138,7 @@ class TransactionService implements TransactionServiceInterface
 
         $fee = $transactions->reduce(function ($carry, $transaction) {
             /** @var Transaction $transaction */
-            return $carry + $transaction->fee;
+            return $carry + $transaction->feeMnt;
         });
 
         if ($fee){

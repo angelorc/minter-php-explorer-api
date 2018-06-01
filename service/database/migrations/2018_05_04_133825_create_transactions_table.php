@@ -25,7 +25,9 @@ class CreateTransactionsTable extends Migration
             $table->string('coin');
             $table->string('hash');
             $table->string('payload');
-            $table->decimal('value', 20, 8);
+            $table->string('service_data');
+            $table->integer('fee');
+            $table->decimal('value', 30, 18);
             $table->timestampsTz();
 
             $table->foreign('block_id')->references('id')->on('blocks');

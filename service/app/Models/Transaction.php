@@ -45,6 +45,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int validator_id
  * @property int gas_price
  * @property float value
+ * @property float fee
  * @property string hash
  * @property string from
  * @property string to
@@ -80,16 +81,9 @@ class Transaction extends Model
      * Коммисия за транзакцию
      * @return float
      */
-    public function getFeeAttribute(): float
+    public function getFeeMntAttribute(): float
     {
-
-        $payloadPrice = 0;
-
-        if ( \strlen($this->payload) ){
-            $payloadPrice = $this->getBasePrice($this::PAYLOAD) * \strlen($this->payload);
-        }
-
-        return ($this->gas_price * $this->getBasePrice($this->type) + $payloadPrice) * $this::PIP;
+        return $this->fee * $this::PIP;
     }
 
     /**

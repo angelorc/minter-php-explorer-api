@@ -15,7 +15,7 @@ class TransactionResource extends JsonResource
                     'nonce' => $this->nonce,
                     'block' => $this->block->height,
                     'timestamp' => $this->block->timestamp,
-                    'fee' => $this->fee,
+                    'fee' => $this->feeMnt,
                     'type' => $this->typeString,
                     'status' => $this->status,
                     'payload' => $this->payload,

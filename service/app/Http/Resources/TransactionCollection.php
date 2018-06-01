@@ -46,7 +46,7 @@ class TransactionCollection extends ResourceCollection
                    'nonce' => $item->nonce,
                    'block' => $item->block->height,
                    'timestamp' => $item->block->timestamp,
-                   'fee' => $item->fee,
+                   'fee' => $item->feeMnt,
                    'type' => $item->typeString,
                    'status' => $item->status,
                    'payload' => $item->payload,
