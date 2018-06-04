@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Service" default="config.build">
+
+    <target name="config.build" description="Собираем все конфигурационные файлы"
+            depends="validate.variables,config.build.env,config.build.phpunit_xml,config.build.supervisord_conf"/>
+
+    <target name="config.build.env" description="Собираем .env файл для фреймворка">
+        <copy file="${project.basedir}/config/dist.env" tofile="${project.basedir}/../service/.env" overwrite="true">
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+    </target>
+
+    <target name="config.build.phpunit_xml" description="Собираем phpunit.xml" depends="validate.variables">
+        <copy file="${project.basedir}/config/phpunit.xml" tofile="${project.basedir}/../service/phpunit.xml"
+              overwrite="true">
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+    </target>
+
+    <target name="config.build.supervisord_conf" description="Собираем supervisord.conf" depends="validate.variables">
+        <copy file="${project.basedir}/config/supervisord.conf" tofile="${project.basedir}/../service/supervisord.conf"
+              overwrite="true">
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+    </target>
+
+    <target name="validate.variables" description="Проверяем все ли переменные определены">
+        <fail unless="env.app_env" message="app_env environment variable is not set"/>
+        <fail unless="env.app_debug" message="app_debug environment variable is not set"/>
+        <fail unless="env.app_name" message="app_name environment variable is not set"/>
+        <fail unless="env.app_timezone" message="app_timezone environment variable is not set"/>
+        <fail unless="env.app_url" message="app_url environment variable is not set"/>
+        <fail unless="env.db_host" message="db_host environment variable is not set"/>
+        <fail unless="env.db_port" message="db_port environment variable is not set"/>
+        <fail unless="env.db_database" message="db_database environment variable is not set"/>
+        <fail unless="env.db_username" message="db_username environment variable is not set"/>
+        <fail unless="env.db_password" message="db_password environment variable is not set"/>
+        <fail unless="env.cache_driver" message="cache_driver environment variable is not set"/>
+        <fail unless="env.session_driver" message="session_driver environment variable is not set"/>
+        <fail unless="env.session_lifetime" message="session_lifetime environment variable is not set"/>
+        <fail unless="env.redis_host" message="redis_host environment variable is not set"/>
+        <fail unless="env.redis_password" message="redis_password environment variable is not set"/>
+        <fail unless="env.redis_port" message="redis_port environment variable is not set"/>
+        <fail unless="env.rmq_host" message="rmq_host environment variable is not set"/>
+        <fail unless="env.rmq_port" message="rmq_port environment variable is not set"/>
+        <fail unless="env.rmq_username" message="rmq_username environment variable is not set"/>
+        <fail unless="env.rmq_password" message="rmq_password environment variable is not set"/>
+        <fail unless="env.rmq_vhost" message="rmq_vhost environment variable is not set"/>
+        <fail unless="env.minter_api" message="minter_api environment variable is not set"/>
+    </target>
+</project>
