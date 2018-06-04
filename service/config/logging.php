@@ -34,6 +34,11 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
         ],
+        'transactions' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/transactions.log'),
+            'level' => 'debug',
+        ],
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

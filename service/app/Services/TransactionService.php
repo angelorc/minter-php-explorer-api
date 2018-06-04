@@ -41,7 +41,6 @@ class TransactionService implements TransactionServiceInterface
         $txs = $data['block']['data']['txs'];
 
         foreach ($txs as $tx) {
-
             try{
                 $t = 'Mx' . bin2hex(base64_decode($tx));
                 $transaction = new Transaction();
@@ -64,7 +63,12 @@ class TransactionService implements TransactionServiceInterface
 
                 $transactions[] = $transaction;
             }catch (\Exception $exception){
-                Log::error( $exception->getFile(). ' ' .$exception->getLine() . ': ' . $exception->getMessage() );
+                Log::channel('transactions')->error(
+                    $exception->getFile() . ' ' .
+                    $exception->getLine() . ': ' .
+                    $exception->getMessage() .
+                    ' Transaction: ' . $tx
+                );
             }
         }
 
