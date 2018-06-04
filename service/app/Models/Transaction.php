@@ -47,6 +47,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float value
  * @property float fee
  * @property string hash
+ * @property string service_data
  * @property string from
  * @property string to
  * @property string coin

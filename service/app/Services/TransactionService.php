@@ -57,13 +57,14 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->hash = $minterTx->getHash();
                 $transaction->payload = $minterTx->payload;
                 $transaction->fee = $minterTx->getFee();
+                $transaction->service_data =  $minterTx->serviceData ?? '';
 
                 //TODO: как появится админка с валидаторами поменять
                 $transaction->validator_id = 1;
 
                 $transactions[] = $transaction;
             }catch (\Exception $exception){
-                Log::error($exception->getMessage());
+                Log::error( $exception->getFile(). ' ' .$exception->getLine() . ': ' . $exception->getMessage() );
             }
         }
 
