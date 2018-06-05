@@ -28,7 +28,7 @@ class BlockService implements BlockServiceInterface
         BlockRepositoryInterface $blockRepository,
         TransactionServiceInterface $transactionService
     ) {
-        $this->client = new Client(['base_uri' => env('MINTER_API')]);
+        $this->client = new Client(['base_uri' => 'http://' . env('MINTER_API')]);
 
         $this->blockRepository = $blockRepository;
 
