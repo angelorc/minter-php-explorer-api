@@ -16,7 +16,8 @@
     "guzzlehttp/guzzle": "^6.3",
     "predis/predis": "^1.1",
     "illuminate/redis": "^5.6",
-    "illuminate/contracts": "^5.6"
+    "illuminate/contracts": "^5.6",
+    "wrench/wrench": "~3.0"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
