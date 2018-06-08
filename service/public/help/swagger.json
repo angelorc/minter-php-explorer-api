@@ -295,13 +295,13 @@
         },
         "AddressBalance": {
             "properties": {
-                "bipBalace": {
+                "balace": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Coins"
                     }
                 },
-                "bipBalanceUsd": {
+                "balanceUsd": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/Coins"
@@ -310,6 +310,14 @@
                 "txCount": {
                     "type": "integer",
                     "example": "40"
+                },
+                "bipTotal": {
+                    "type": "float",
+                    "example": "402.87"
+                },
+                "usdTotal": {
+                    "type": "float",
+                    "example": "402.87"
                 }
             },
             "type": "object"

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Coin;
 use App\Services\BalanceServiceInterface;
 use App\Services\TransactionServiceInterface;
+use Illuminate\Support\Collection;
 
 class AddressController extends Controller
 {
@@ -46,9 +47,11 @@ class AddressController extends Controller
      *     definition="AddressBalance",
      *     type="object",
      *
-     *     @SWG\Property(property="bipBalace", type="array",  @SWG\Items(ref="#/definitions/Coins")),
-     *     @SWG\Property(property="bipBalanceUsd", type="array", @SWG\Items(ref="#/definitions/Coins")),
-     *     @SWG\Property(property="txCount",       type="integer", example="40")
+     *     @SWG\Property(property="balace",     type="array",  @SWG\Items(ref="#/definitions/Coins")),
+     *     @SWG\Property(property="balanceUsd", type="array",  @SWG\Items(ref="#/definitions/Coins")),
+     *     @SWG\Property(property="txCount",    type="integer", example="40"),
+     *     @SWG\Property(property="bipTotal",   type="float", example="402.87"),
+     *     @SWG\Property(property="usdTotal",   type="float", example="402.87")
      * )
      */
 
@@ -81,7 +84,7 @@ class AddressController extends Controller
     {
         $balance = $this->balanceService->getAddressBalance($address);
 
-        $pipBalance = $balance->map(function ($item) {
+        $bipBalance = $balance->map(function ($item) {
             /** @var Coin $item */
             return [$item->getName() => $item->getAmount()];
         });
@@ -93,10 +96,22 @@ class AddressController extends Controller
 
         return [
             'data' => [
-                'bipBalace' => $pipBalance,
-                'bipBalanceUsd' => $bipBalanceUsd,
+                'balace' => $bipBalance,
+                'balanceUsd' => $bipBalanceUsd,
+                'bipTotal' => $this->getTotalBalance($bipBalance),
+                'usdTotal' => $this->getTotalBalance($bipBalanceUsd),
                 'txCount' => $this->transactionService->getTotalTransactionsCount($address),
             ]
         ];
+    }
+
+    private function getTotalBalance(Collection $coins): float
+    {
+        return $coins->reduce(function ($sum, $item) {
+            foreach ($item as $amount) {
+                $sum += $amount;
+            }
+            return $sum;
+        }, 0);
     }
 }
