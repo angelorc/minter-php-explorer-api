@@ -24,17 +24,8 @@
                         "description": "Success",
                         "schema": {
                             "properties": {
-                                "bipBalace": {
-                                    "type": "integer",
-                                    "example": "10"
-                                },
-                                "bipBalanceUsd": {
-                                    "type": "integer",
-                                    "example": "1244"
-                                },
-                                "txCount": {
-                                    "type": "integer",
-                                    "example": "40"
+                                "data": {
+                                    "$ref": "#/definitions/AddressBalance"
                                 }
                             }
                         }
@@ -293,6 +284,44 @@
         }
     },
     "definitions": {
+        "Coins": {
+            "properties": {
+                "coin": {
+                    "type": "float",
+                    "example": "12.987"
+                }
+            },
+            "type": "object"
+        },
+        "AddressBalance": {
+            "properties": {
+                "balace": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Coins"
+                    }
+                },
+                "balanceUsd": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Coins"
+                    }
+                },
+                "txCount": {
+                    "type": "integer",
+                    "example": "40"
+                },
+                "bipTotal": {
+                    "type": "float",
+                    "example": "402.87"
+                },
+                "usdTotal": {
+                    "type": "float",
+                    "example": "402.87"
+                }
+            },
+            "type": "object"
+        },
         "Status": {
             "properties": {
                 "bipPriceUsd": {
