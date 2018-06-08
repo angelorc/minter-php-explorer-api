@@ -87,7 +87,6 @@ class BlockController extends Controller
      */
     public function getBlockByHeight(string $height): BlockResource
     {
-
         $block = $this->blockRepository->findByHeight($height);
 
         return new BlockResource($block, $this->statusService->getLastBlockHeight());
