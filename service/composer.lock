@@ -131,16 +131,16 @@
         },
         {
             "name": "dragonmantank/cron-expression",
-            "version": "v2.1.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dragonmantank/cron-expression.git",
-                "reference": "3f00985deec8df53d4cc1e5c33619bda1ee309a5"
+                "reference": "92a2c3768d50e21a1f26a53cb795ce72806266c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/3f00985deec8df53d4cc1e5c33619bda1ee309a5",
-                "reference": "3f00985deec8df53d4cc1e5c33619bda1ee309a5",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/92a2c3768d50e21a1f26a53cb795ce72806266c5",
+                "reference": "92a2c3768d50e21a1f26a53cb795ce72806266c5",
                 "shasum": ""
             },
             "require": {
@@ -176,7 +176,7 @@
                 "cron",
                 "schedule"
             ],
-            "time": "2018-04-06T15:51:55+00:00"
+            "time": "2018-06-06T03:12:17+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1736,12 +1736,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MinterTeam/minter-php-sdk.git",
-                "reference": "988c469b60fd6a22e7c2a10e2a1e40464ae2dfe5"
+                "reference": "ed02b9fa2abe3416b7410e5ca5a96da56840984d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MinterTeam/minter-php-sdk/zipball/988c469b60fd6a22e7c2a10e2a1e40464ae2dfe5",
-                "reference": "988c469b60fd6a22e7c2a10e2a1e40464ae2dfe5",
+                "url": "https://api.github.com/repos/MinterTeam/minter-php-sdk/zipball/ed02b9fa2abe3416b7410e5ca5a96da56840984d",
+                "reference": "ed02b9fa2abe3416b7410e5ca5a96da56840984d",
                 "shasum": ""
             },
             "require": {
@@ -1763,7 +1763,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2018-06-02T14:40:51+00:00"
+            "time": "2018-06-08T09:53:09+00:00"
         },
         {
             "name": "monolog/monolog",

@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Balance;
-use Faker\Provider\DateTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Wrench\Client;
@@ -14,7 +13,7 @@ use Wrench\Exception\SocketException;
 class AddressBalanceClientCommand extends Command
 {
 
-    protected const ENDPOINT =  '/api/balanceWS';
+    protected const ENDPOINT = '/api/balanceWS';
 
     /**
      * @var string
@@ -31,7 +30,7 @@ class AddressBalanceClientCommand extends Command
         try {
 
             $client = new Client('ws://' . env('MINTER_API') . $this::ENDPOINT,
-                'http://' . env('MINTER_API') .  $this::ENDPOINT);
+                'http://' . env('MINTER_API') . $this::ENDPOINT);
 
             $client->connect();
 

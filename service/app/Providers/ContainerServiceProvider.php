@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
+use App\Repository\BalanceRepository;
+use App\Repository\BalanceRepositoryInterface;
 use App\Repository\BlockRepository;
 use App\Repository\BlockRepositoryInterface;
 use App\Repository\TransactionRepository;
 use App\Repository\TransactionRepositoryInterface;
+use App\Services\BalanceService;
+use App\Services\BalanceServiceInterface;
 use App\Services\BlockService;
 use App\Services\BlockServiceInterface;
 use App\Services\StatusService;
@@ -28,10 +32,17 @@ class ContainerServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+
+        /** Repositories */
+        $this->app->singleton(BalanceRepositoryInterface::class, BalanceRepository::class);
         $this->app->singleton(BlockRepositoryInterface::class, BlockRepository::class);
-        $this->app->singleton(BlockServiceInterface::class, BlockService::class);
         $this->app->singleton(TransactionRepositoryInterface::class, TransactionRepository::class);
-        $this->app->singleton(TransactionServiceInterface::class, TransactionService::class);
+
+        /** Services */
+        $this->app->singleton(BalanceServiceInterface::class, BalanceService::class);
+        $this->app->singleton(BlockServiceInterface::class, BlockService::class);
         $this->app->singleton(StatusServiceInterface::class, StatusService::class);
+        $this->app->singleton(TransactionServiceInterface::class, TransactionService::class);
+
     }
 }
