@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AddressBalanceClientCommand;
+use App\Console\Commands\FillBalanceTableCommand;
 use App\Console\Commands\FillTxPerDayTableCommand;
 use App\Console\Commands\PullBlockDataCommand;
 use App\Console\Commands\TxPerDaySaveCommand;
@@ -21,6 +22,7 @@ class Kernel extends ConsoleKernel
         FillTxPerDayTableCommand::class,
         TxPerDaySaveCommand::class,
         AddressBalanceClientCommand::class,
+        FillBalanceTableCommand::class,
     ];
 
     /**
