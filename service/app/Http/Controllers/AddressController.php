@@ -31,6 +31,27 @@ class AddressController extends Controller
         $this->balanceService = $balanceService;
     }
 
+
+    /**
+     * @SWG\Definition(
+     *     definition="Coins",
+     *     type="object",
+     *
+     *     @SWG\Property(property="coin",   type="float",  example="12.987"),
+     * )
+     */
+
+    /**
+     * @SWG\Definition(
+     *     definition="AddressBalance",
+     *     type="object",
+     *
+     *     @SWG\Property(property="bipBalace", type="array",  @SWG\Items(ref="#/definitions/Coins")),
+     *     @SWG\Property(property="bipBalanceUsd", type="array", @SWG\Items(ref="#/definitions/Coins")),
+     *     @SWG\Property(property="txCount",       type="integer", example="40")
+     * )
+     */
+
     /**
      * @SWG\Get(
      *     path="/api/v1/address/{address}",
@@ -44,9 +65,7 @@ class AddressController extends Controller
      *         response=200,
      *         description="Success",
      *         @SWG\Schema(
-     *             @SWG\Property(property="bipBalace",      type="integer", example="10"),
-     *             @SWG\Property(property="bipBalanceUsd",  type="integer", example="1244"),
-     *             @SWG\Property(property="txCount",        type="integer", example="40")
+     *              @SWG\Property(property="data", ref="#/definitions/AddressBalance")
      *         )
      *     )
      * )
