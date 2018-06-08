@@ -55,8 +55,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Transaction extends Model
 {
-    public const PIP = 0.00000001;
-
     public const TYPE_SEND = 1;
     public const TYPE_CONVERT = 2;
     public const TYPE_CREATE_COIN = 3;
@@ -84,7 +82,7 @@ class Transaction extends Model
      */
     public function getFeeMntAttribute(): float
     {
-        return $this->fee * $this::PIP;
+        return $this->fee * Coin::PIP;
     }
 
     /**

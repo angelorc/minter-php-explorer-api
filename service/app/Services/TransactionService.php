@@ -35,7 +35,6 @@ class TransactionService implements TransactionServiceInterface
      */
     public function decodeTransactionsFromApiData(array $data): Collection
     {
-
         $transactions = [];
 
         $txs = $data['block']['data']['txs'];
@@ -67,6 +66,7 @@ class TransactionService implements TransactionServiceInterface
                     $exception->getFile() . ' ' .
                     $exception->getLine() . ': ' .
                     $exception->getMessage() .
+                    ' Block: ' . $data['block']['header']['height'] .
                     ' Transaction: ' . $tx
                 );
             }

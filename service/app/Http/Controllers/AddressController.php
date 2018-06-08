@@ -2,20 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coin;
+use App\Services\BalanceServiceInterface;
 use App\Services\TransactionServiceInterface;
 
 class AddressController extends Controller
 {
+    /**
+     * @var TransactionServiceInterface
+     */
     private $transactionService;
+    /**
+     * @var BalanceServiceInterface
+     */
+    private $balanceService;
 
     /**
      * Create a new controller instance.
      *
      * @param TransactionServiceInterface $transactionService
+     * @param BalanceServiceInterface $balanceService
      */
-    public function __construct(TransactionServiceInterface $transactionService)
-    {
+    public function __construct(
+        TransactionServiceInterface $transactionService,
+        BalanceServiceInterface $balanceService
+    ) {
         $this->transactionService = $transactionService;
+        $this->balanceService = $balanceService;
     }
 
     /**
@@ -47,12 +60,24 @@ class AddressController extends Controller
      */
     public function address(string $address): array
     {
-        //TODO: поменять значения, как станет ясно откуда брать
+        $balance = $this->balanceService->getAddressBalance($address);
+
+        $pipBalance = $balance->map(function ($item) {
+            /** @var Coin $item */
+            return [$item->getName() => $item->getAmount()];
+        });
+
+        $bipBalanceUsd = $balance->map(function ($item) {
+            /** @var Coin $item */
+            return [$item->getName() => $item->getUsdAmount()];
+        });
+
         return [
-            'bipBalace' => 0,
-            'bipBalanceUsd' => 0,
-            'txCount' => $this->transactionService->getTotalTransactionsCount($address),
+            'data' => [
+                'bipBalace' => $pipBalance,
+                'bipBalanceUsd' => $bipBalanceUsd,
+                'txCount' => $this->transactionService->getTotalTransactionsCount($address),
+            ]
         ];
     }
-
 }
