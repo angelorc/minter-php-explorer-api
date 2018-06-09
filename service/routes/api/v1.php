@@ -15,3 +15,4 @@ $router->get('transactions', TransactionController::class. '@getList');
 $router->get('transaction/{hash}', TransactionController::class. '@getTransactionByHash');
 
 $router->get('address/{address}', AddressController::class. '@address');
+$router->get('address', AddressController::class. '@addresses');
