@@ -115,7 +115,7 @@ class AddressController extends Controller
     {
         $this->validate($request, [
             'addresses' => 'required|array',
-            'addresses.*' => 'string'
+            'addresses.*' => 'string|size:43'
         ]);
 
         $result = [];
