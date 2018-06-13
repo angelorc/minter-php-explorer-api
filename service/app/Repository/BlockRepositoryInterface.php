@@ -11,9 +11,10 @@ interface BlockRepositoryInterface
     /**
      * Сохранить блок
      * @param Block $block
-     * @param Collection $transactions
+     * @param Collection|null $transactions
+     * @param Collection|null $validators
      */
-    public function save(Block $block, Collection $transactions = null): void;
+    public function save(Block $block, Collection $transactions = null, Collection $validators = null): void;
 
     /**
      * Найти блок по Id

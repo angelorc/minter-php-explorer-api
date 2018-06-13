@@ -16,6 +16,8 @@ use App\Services\StatusService;
 use App\Services\StatusServiceInterface;
 use App\Services\TransactionService;
 use App\Services\TransactionServiceInterface;
+use App\Services\ValidatorService;
+use App\Services\ValidatorServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -43,6 +45,7 @@ class ContainerServiceProvider extends ServiceProvider
         $this->app->singleton(BlockServiceInterface::class, BlockService::class);
         $this->app->singleton(StatusServiceInterface::class, StatusService::class);
         $this->app->singleton(TransactionServiceInterface::class, TransactionService::class);
+        $this->app->singleton(ValidatorServiceInterface::class, ValidatorService::class);
 
     }
 }

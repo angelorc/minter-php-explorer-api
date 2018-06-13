@@ -7,6 +7,7 @@ use App\Models\TxPerDay;
 use App\Services\BlockServiceInterface;
 use App\Services\StatusServiceInterface;
 use App\Services\TransactionServiceInterface;
+use App\Services\ValidatorServiceInterface;
 use Illuminate\Support\Facades\Cache;
 
 class StatusController extends Controller
@@ -15,6 +16,7 @@ class StatusController extends Controller
      * @var StatusServiceInterface
      */
     protected $statusService;
+
     /**
      * @var TransactionServiceInterface
      */
@@ -26,20 +28,28 @@ class StatusController extends Controller
     protected $blockService;
 
     /**
+     * @var ValidatorServiceInterface
+     */
+    private $validatorService;
+
+    /**
      * Create a new controller instance.
      *
      * @param StatusServiceInterface $statusService
      * @param TransactionServiceInterface $transactionService
      * @param BlockServiceInterface $blockService
+     * @param ValidatorServiceInterface $validatorService
      */
     public function __construct(
         StatusServiceInterface $statusService,
         TransactionServiceInterface $transactionService,
-        BlockServiceInterface $blockService
+        BlockServiceInterface $blockService,
+        ValidatorServiceInterface $validatorService
     ) {
         $this->statusService = $statusService;
         $this->transactionService = $transactionService;
         $this->blockService = $blockService;
+        $this->validatorService = $validatorService;
     }
 
     /**
@@ -181,8 +191,8 @@ class StatusController extends Controller
                 'txTotalCount' => $this->transactionService->getTotalTransactionsCount(),
                 'tx24hCount' => $this->transactionService->get24hTransactionsCount(),
                 'txPerSecond' => $this->transactionService->getTransactionsSpeed(),
-                'activeValidators' => 4,
-                'totalValidatorsCount' => 4,
+                'activeValidators' => $this->validatorService->getActiveValidatorsCount(),
+                'totalValidatorsCount' => $this->validatorService->getTotalValidatorsCount(),
                 'averageTxCommission' => $this->transactionService->getAverageCommission(),
                 'totalCommission' => $this->transactionService->getCommission(),
             ]
