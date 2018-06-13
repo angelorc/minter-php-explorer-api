@@ -82,9 +82,12 @@ class StatusService implements StatusServiceInterface
         /** @var Block $lastBlock */
         $lastBlock = Block::orderByDesc('id')->first();
 
-        $lastBlockTime = new \DateTime($lastBlock->timestamp);
+        if ($lastBlock) {
+            $lastBlockTime = new \DateTime($lastBlock->timestamp);
+            return time() - $lastBlockTime->getTimestamp() <= $this::IS_ACTIVE_PERIOD;
+        }
 
-        return time() - $lastBlockTime->getTimestamp() <= $this::IS_ACTIVE_PERIOD;
+        return false;
     }
 
     /**
