@@ -15,9 +15,8 @@ class CreateValidatorsTable extends Migration
     {
         Schema::create('validators', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->default('');
             $table->string('address');
-            $table->string('public_key');
             $table->timestampsTz();
         });
     }

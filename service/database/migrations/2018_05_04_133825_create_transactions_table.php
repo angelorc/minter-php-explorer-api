@@ -16,7 +16,6 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('block_id');
-            $table->integer('validator_id');
             $table->integer('type');
             $table->integer('nonce');
             $table->integer('gas_price');
@@ -26,12 +25,11 @@ class CreateTransactionsTable extends Migration
             $table->string('hash');
             $table->string('payload');
             $table->string('service_data');
-            $table->integer('fee');
+            $table->decimal('fee', 30, 0);
             $table->decimal('value', 30, 18);
             $table->timestampsTz();
 
             $table->foreign('block_id')->references('id')->on('blocks');
-            $table->foreign('validator_id')->references('id')->on('validators');
         });
     }
 

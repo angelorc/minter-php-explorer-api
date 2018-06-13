@@ -17,22 +17,28 @@ class BlockService implements BlockServiceInterface
     /** @var TransactionServiceInterface */
     protected $transactionService;
     /** @var Client */
-    private $client;
+    protected $client;
+    /** @var ValidatorServiceInterface */
+    protected $validatorService;
 
     /**
      * BlockService constructor.
      * @param BlockRepositoryInterface $blockRepository
      * @param TransactionServiceInterface $transactionService
+     * @param ValidatorServiceInterface $validatorService
      */
     public function __construct(
         BlockRepositoryInterface $blockRepository,
-        TransactionServiceInterface $transactionService
+        TransactionServiceInterface $transactionService,
+        ValidatorServiceInterface $validatorService
     ) {
         $this->client = new Client(['base_uri' => 'http://' . env('MINTER_API')]);
 
         $this->blockRepository = $blockRepository;
 
         $this->transactionService = $transactionService;
+
+        $this->validatorService = $validatorService;
     }
 
     /**
@@ -82,6 +88,7 @@ class BlockService implements BlockServiceInterface
         $block->block_time = $this->calculateBlockTime($blockTime->getTimestamp());
 
         $transactions = null;
+        $validators = null;
 
         if ($block->tx_count > 0) {
             $transactions = $this->transactionService->decodeTransactionsFromApiData($blockData);
@@ -90,7 +97,9 @@ class BlockService implements BlockServiceInterface
             $block->size = 0;
         }
 
-        $this->blockRepository->save($block, $transactions);
+        $validators = $this->validatorService->saveValidatorsFromApiData($blockData);
+
+        $this->blockRepository->save($block, $transactions, $validators);
 
         $expiresAt = new \DateTime();
         try {
@@ -100,9 +109,11 @@ class BlockService implements BlockServiceInterface
 
         Cache::forget('last_block_time');
         Cache::forget('last_block_height');
+        Cache::forget('last_active_validators');
 
         Cache::put('last_block_time', $blockTime->getTimestamp(), $expiresAt);
         Cache::put('last_block_height', $block->height, $expiresAt);
+        Cache::put('last_active_validators', $validators->count(), $expiresAt);
     }
 
     /**

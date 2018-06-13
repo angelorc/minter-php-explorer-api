@@ -11,15 +11,18 @@ class BlockRepository implements BlockRepositoryInterface
     /**
      * @param Block $block
      * @param Collection|null $transactions
+     * @param Collection|null $validators
      */
-    public function save(Block $block, Collection $transactions = null): void
+    public function save(Block $block, Collection $transactions = null, Collection $validators = null): void
     {
         $block->save();
 
-        $block->validators()->sync(1);
-
         if ($transactions){
             $block->transactions()->saveMany($transactions);
+        }
+
+        if ($validators) {
+            $block->validators()->saveMany($validators);
         }
 
     }
