@@ -50,8 +50,8 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->type = $minterTx->type;
                 $transaction->coin = $minterTx->data['coin'] ?? '';
                 $transaction->from = $minterTx->from;
-                $transaction->to = $minterTx->data['to'];
-                $transaction->value = $minterTx->data['value'];
+                $transaction->to = $minterTx->data['to'] ?? '';
+                $transaction->value = $minterTx->data['value'] ?? 0;
                 $transaction->hash = $minterTx->getHash();
                 $transaction->payload = $minterTx->payload;
                 $transaction->fee = $minterTx->getFee();
