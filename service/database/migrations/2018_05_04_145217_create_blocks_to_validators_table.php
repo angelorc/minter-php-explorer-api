@@ -17,7 +17,6 @@ class CreateBlocksToValidatorsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('block_id');
             $table->bigInteger('validator_id');
-            $table->timestampsTz();
 
             $table->foreign('block_id')->references('id')->on('blocks');
             $table->foreign('validator_id')->references('id')->on('validators');

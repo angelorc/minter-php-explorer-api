@@ -48,7 +48,7 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->nonce = $minterTx->nonce;
                 $transaction->gas_price = $minterTx->gasPrice;
                 $transaction->type = $minterTx->type;
-                $transaction->coin = $minterTx->data['coin'];
+                $transaction->coin = $minterTx->data['coin'] ?? '';
                 $transaction->from = $minterTx->from;
                 $transaction->to = $minterTx->data['to'];
                 $transaction->value = $minterTx->data['value'];
@@ -56,9 +56,6 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->payload = $minterTx->payload;
                 $transaction->fee = $minterTx->getFee();
                 $transaction->service_data =  $minterTx->serviceData ?? '';
-
-                //TODO: как появится админка с валидаторами поменять
-                $transaction->validator_id = 1;
 
                 $transactions[] = $transaction;
             }catch (\Exception $exception){
