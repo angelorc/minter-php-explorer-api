@@ -59,19 +59,19 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//    App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    \Barryvdh\Cors\HandleCors::class,
+]);
 
  $app->routeMiddleware([
      'api_response' => App\Http\Middleware\ApiResponseMiddleware::class,
-     'cors' => \App\Http\Middleware\Cors::class,
  ]);
 
 $app->configure('app');
 $app->configure('cache');
 $app->configure('database');
 $app->configure('logging');
+$app->configure('cors');
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +89,7 @@ $app->configure('logging');
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(App\Providers\ContainerServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
+$app->register(Barryvdh\Cors\ServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
