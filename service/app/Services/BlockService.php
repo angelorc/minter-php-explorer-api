@@ -6,6 +6,7 @@ use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
+use Minter\SDK\MinterReward;
 
 class BlockService implements BlockServiceInterface
 {
@@ -140,8 +141,7 @@ class BlockService implements BlockServiceInterface
      */
     private function getBlockReward(int $blockHeight): int
     {
-        //TODO: добавить реализацию
-        return 1;
+        return MinterReward::get($blockHeight);
     }
 
     /**
@@ -157,7 +157,7 @@ class BlockService implements BlockServiceInterface
             $txs .= $transaction;
         }
 
-        return \mb_strlen($txs);
+        return \strlen($txs);
     }
 
     /**
