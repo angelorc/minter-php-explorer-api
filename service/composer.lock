@@ -1849,12 +1849,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/MinterTeam/minter-php-sdk.git",
-              "reference": "5ec108db57afb1da77b633cf45fdedd0c537829f"
+              "reference": "7a7c389616cec6353f01c9f40a9fddbc74318fb9"
             },
             "dist": {
                 "type": "zip",
-              "url": "https://api.github.com/repos/MinterTeam/minter-php-sdk/zipball/5ec108db57afb1da77b633cf45fdedd0c537829f",
-              "reference": "5ec108db57afb1da77b633cf45fdedd0c537829f",
+              "url": "https://api.github.com/repos/MinterTeam/minter-php-sdk/zipball/7a7c389616cec6353f01c9f40a9fddbc74318fb9",
+              "reference": "7a7c389616cec6353f01c9f40a9fddbc74318fb9",
                 "shasum": ""
             },
             "require": {
@@ -1876,7 +1876,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-          "time": "2018-06-14T08:58:49+00:00"
+          "time": "2018-06-14T11:46:41+00:00"
         },
         {
             "name": "monolog/monolog",

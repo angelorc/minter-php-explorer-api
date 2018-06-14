@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Resources;
 
+use App\Models\Coin;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
@@ -28,7 +29,6 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
  *     @SWG\Property(property="next",  type="string", example="http://localhost:8000/api/v1/blocks?page=2")
  * )
 **/
-
 class BlockCollection extends ResourceCollection
 {
     /**
@@ -46,7 +46,7 @@ class BlockCollection extends ResourceCollection
                     'height' => $item->height,
                     'timestamp' => $item->timestamp,
                     'txCount' => $item->tx_count,
-                    'reward' => $item->block_reward,
+                    'reward' => bcmul($item->block_reward, Coin::PIP_STR, 18),
                     'size' => $item->size,
                     'hash' => $item->hash,
                     'blockTime' => $item->block_time,

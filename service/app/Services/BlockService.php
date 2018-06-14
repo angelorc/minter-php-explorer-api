@@ -137,9 +137,9 @@ class BlockService implements BlockServiceInterface
     /**
      * Поучить награду за блок
      * @param int $blockHeight
-     * @return int
+     * @return string
      */
-    private function getBlockReward(int $blockHeight): int
+    private function getBlockReward(int $blockHeight): string
     {
         return MinterReward::get($blockHeight);
     }

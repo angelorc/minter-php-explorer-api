@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Block;
+use App\Models\Coin;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BlockResource extends JsonResource
@@ -29,7 +30,7 @@ class BlockResource extends JsonResource
             'height' => $this->height,
             'timestamp' => $this->timestamp,
             'txCount' => $this->tx_count,
-            'reward' => $this->block_reward,
+            'reward' => bcmul($this->block_reward, Coin::PIP_STR, 18),
             'size' => $this->size,
             'hash' => $this->hash,
             'validators' => ValidatorResource::collection($this->validators)
