@@ -97,7 +97,7 @@ class AddressController extends Controller
 
         return [
             'data' => [
-                'balace' => $bipBalance,
+                'balance' => $bipBalance,
                 'balanceUsd' => $bipBalanceUsd,
                 'bipTotal' => $this->getTotalBalance($bipBalance),
                 'usdTotal' => $this->getTotalBalance($bipBalanceUsd),
