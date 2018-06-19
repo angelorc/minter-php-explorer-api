@@ -71,8 +71,6 @@ class BlocksQueueWorkerCommand extends AbstractQueueWorkerCommand
     {
         $data = \GuzzleHttp\json_decode($message->getBody(), true);
 
-        $this->info($data['blockHeight']);
-
         try {
             if (isset($data['blockHeight'])) {
                 $blockData = $this->blockService->pullBlockData($data['blockHeight']);

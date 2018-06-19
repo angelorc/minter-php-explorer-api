@@ -56,7 +56,6 @@ class PullBlockDataCommand extends Command
                 if ($lastBlockHeight > $explorerLastBlockHeight) {
                     $message = ['blockHeight' => $explorerLastBlockHeight];
                     $this->rmqHelper->publish(\GuzzleHttp\json_encode($message), BlocksQueueWorkerCommand::QUEUE_NAME);
-                    $this->info($explorerLastBlockHeight);
                     $explorerLastBlockHeight++;
                 } else {
                     usleep($this::SLEEP_TIME);
