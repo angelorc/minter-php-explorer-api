@@ -72,6 +72,7 @@ $app->configure('cache');
 $app->configure('database');
 $app->configure('logging');
 $app->configure('cors');
+$app->configure('rmq');
 
 /*
 |--------------------------------------------------------------------------

@@ -145,6 +145,21 @@ class BlockService implements BlockServiceInterface
     }
 
     /**
+     * @param int $currentBlockTime
+     * @return int
+     */
+    private function calculateBlockTime(int $currentBlockTime): int
+    {
+        $lastBlockTime = Cache::get('last_block_time', null);
+
+        if ($lastBlockTime && $currentBlockTime > $lastBlockTime) {
+            return $currentBlockTime - $lastBlockTime;
+        }
+
+        return $this::DEFAULT_BLOCK_TIME;
+    }
+
+    /**
      * Получить размер блока
      * @param array $blockData
      * @return int
@@ -167,7 +182,7 @@ class BlockService implements BlockServiceInterface
      */
     public function getExplorerLatestBlockHeight(): int
     {
-        $block = Block::orderByDesc('id')->first();
+        $block = Block::orderByDesc('height')->first();
 
         return $block->height ?? 0;
     }
@@ -181,20 +196,5 @@ class BlockService implements BlockServiceInterface
         $blocks = $this->blockRepository->getBlocksCountByPeriod(86400);
 
         return round($blocks / 86400, 8);
-    }
-
-    /**
-     * @param int $currentBlockTime
-     * @return int
-     */
-    private function calculateBlockTime(int $currentBlockTime): int
-    {
-        $lastBlockTime = Cache::get('last_block_time', null);
-
-        if ($lastBlockTime && $currentBlockTime > $lastBlockTime) {
-            return $currentBlockTime - $lastBlockTime;
-        }
-
-        return $this::DEFAULT_BLOCK_TIME;
     }
 }

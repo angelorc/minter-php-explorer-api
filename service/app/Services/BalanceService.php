@@ -34,8 +34,6 @@ class BalanceService implements BalanceServiceInterface
             return new Coin($item->coin, $item->amount);
         });
 
-
-
         return $result;
     }
 }

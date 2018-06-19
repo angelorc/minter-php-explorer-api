@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Helpers\RmqHelper;
 use App\Repository\BalanceRepository;
 use App\Repository\BalanceRepositoryInterface;
 use App\Repository\BlockRepository;
@@ -46,6 +47,10 @@ class ContainerServiceProvider extends ServiceProvider
         $this->app->singleton(StatusServiceInterface::class, StatusService::class);
         $this->app->singleton(TransactionServiceInterface::class, TransactionService::class);
         $this->app->singleton(ValidatorServiceInterface::class, ValidatorService::class);
+
+        $this->app->singleton(RmqHelper::class, function () {
+            return new RmqHelper(config('rmq.explorer.general'));
+        });
 
     }
 }
