@@ -7,7 +7,6 @@ use App\Models\Transaction;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Minter\SDK\MinterTx;
 
@@ -41,7 +40,7 @@ class TransactionService implements TransactionServiceInterface
         $txs = $data['block']['data']['txs'];
 
         foreach ($txs as $tx) {
-            try{
+            try {
                 $t = 'Mx' . bin2hex(base64_decode($tx));
                 $transaction = new Transaction();
                 $minterTx = new MinterTx($t);
@@ -56,10 +55,10 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->hash = $minterTx->getHash();
                 $transaction->payload = $minterTx->payload;
                 $transaction->fee = $minterTx->getFee();
-                $transaction->service_data =  $minterTx->serviceData ?? '';
+                $transaction->service_data = $minterTx->serviceData ?? '';
 
                 $transactions[] = $transaction;
-            }catch (\Exception $exception){
+            } catch (\Exception $exception) {
                 Log::channel('transactions')->error(
                     $exception->getFile() . ' ' .
                     $exception->getLine() . ': ' .
@@ -84,6 +83,15 @@ class TransactionService implements TransactionServiceInterface
     }
 
     /**
+     * Скорость обработки транзакций
+     * @return float
+     */
+    public function getTransactionsSpeed(): float
+    {
+        return round($this->get24hTransactionsCount() / (24 * 3600), 8);
+    }
+
+    /**
      * Количество транзакций за последние 24 часа
      * @return int
      */
@@ -91,21 +99,12 @@ class TransactionService implements TransactionServiceInterface
     {
         $count = Cache::get('24hTransactionsCount', null);
 
-        if (!$count){
+        if (!$count) {
             $count = $this->transactionRepository->get24hTransactionsCount();
             Cache::put('24hTransactionsCount', $count, 1);
         }
 
-       return $count;
-    }
-
-    /**
-     * Скорость обработки транзакций
-     * @return float
-     */
-    public function getTransactionsSpeed(): float
-    {
-        return round($this->get24hTransactionsCount() / (24 * 3600), 8);
+        return $count;
     }
 
     /**

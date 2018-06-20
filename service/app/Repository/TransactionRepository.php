@@ -4,6 +4,7 @@ namespace App\Repository;
 
 
 use App\Models\Block;
+use App\Models\Coin;
 use App\Models\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -38,48 +39,6 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function findByHash(string $hash): ?Transaction
     {
         return Transaction::where('hash', $hash)->first();
-    }
-
-    /**
-     * Получить все транзакции
-     * @param array $filter
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function getAllQuery(array $filter = []): \Illuminate\Database\Eloquent\Builder
-    {
-        $query = Transaction::query();
-
-        if (!empty($filter['block'])) {
-            $query->whereHas('block', function ($query) use ($filter) {
-                $query->where('blocks.height', $filter['block']);
-            });
-        }
-
-        if (isset($filter['startTime'])) {
-            $query->whereHas('block', function ($query) use ($filter) {
-                $query->where('blocks.timestamp', '>=', $filter['startTime']);
-            });
-        }
-
-        if (!empty($filter['addresses'])) {
-            $addresses = implode(',', array_map(function ($item) {
-                return "'" . preg_replace("/\W/", '', $item) . "'";
-            }, $filter['addresses']));
-
-            $query->where(function ($query) use ($addresses) {
-                $query
-                    ->whereRaw('transactions.from ilike any (array[' . $addresses . ']) ')
-                    ->orWhereRaw('transactions.to ilike any (array[' . $addresses . ']) ');
-            });
-
-        } elseif (!empty($filter['address'])) {
-            $query->where(function ($query) use ($filter) {
-                $query->where('transactions.from', 'ilike', $filter['address'])
-                    ->orWhere('transactions.to', 'ilike', $filter['address']);
-            });
-        }
-
-        return $query;
     }
 
     /**
@@ -162,7 +121,7 @@ class TransactionRepository implements TransactionRepositoryInterface
 
         $result = DB::selectOne($sql);
 
-        return $result->fee ?? 0;
+        return bcmul($result->fee, Coin::PIP_STR, 18) ?? 0;
     }
 
     /**
@@ -175,6 +134,48 @@ class TransactionRepository implements TransactionRepositoryInterface
         $dt = new \DateTime();
         $dt->modify('-1 day');
         return $this->getAllQuery(['startTime' => $dt->format('Y-m-d H:i:s')])->get();
+    }
+
+    /**
+     * Получить все транзакции
+     * @param array $filter
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getAllQuery(array $filter = []): \Illuminate\Database\Eloquent\Builder
+    {
+        $query = Transaction::query();
+
+        if (!empty($filter['block'])) {
+            $query->whereHas('block', function ($query) use ($filter) {
+                $query->where('blocks.height', $filter['block']);
+            });
+        }
+
+        if (isset($filter['startTime'])) {
+            $query->whereHas('block', function ($query) use ($filter) {
+                $query->where('blocks.timestamp', '>=', $filter['startTime']);
+            });
+        }
+
+        if (!empty($filter['addresses'])) {
+            $addresses = implode(',', array_map(function ($item) {
+                return "'" . preg_replace("/\W/", '', $item) . "'";
+            }, $filter['addresses']));
+
+            $query->where(function ($query) use ($addresses) {
+                $query
+                    ->whereRaw('transactions.from ilike any (array[' . $addresses . ']) ')
+                    ->orWhereRaw('transactions.to ilike any (array[' . $addresses . ']) ');
+            });
+
+        } elseif (!empty($filter['address'])) {
+            $query->where(function ($query) use ($filter) {
+                $query->where('transactions.from', 'ilike', $filter['address'])
+                    ->orWhere('transactions.to', 'ilike', $filter['address']);
+            });
+        }
+
+        return $query;
     }
 
     /**
@@ -195,6 +196,6 @@ class TransactionRepository implements TransactionRepositoryInterface
 
         $result = DB::selectOne($sql);
 
-        return $result->fee ?? 0;
+        return bcmul($result->fee, Coin::PIP_STR, 18) ?? 0;
     }
 }
