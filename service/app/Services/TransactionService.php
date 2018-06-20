@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Minter\SDK\MinterTx;
 
@@ -91,9 +92,7 @@ class TransactionService implements TransactionServiceInterface
         $count = Cache::get('24hTransactionsCount', null);
 
         if (!$count){
-
             $count = $this->transactionRepository->get24hTransactionsCount();
-
             Cache::put('24hTransactionsCount', $count, 1);
         }
 
@@ -116,16 +115,7 @@ class TransactionService implements TransactionServiceInterface
      */
     public function getCommission(\DateTime $startTime = null): float
     {
-        $transactions = $this->transactionRepository->get24hTransactions();
-
-        if($transactions->count()){
-            return $transactions->reduce(function ($carry, $transaction) {
-                /** @var Transaction $transaction */
-                return $carry + $transaction->feeMnt;
-            });
-        }
-
-        return 0;
+        return $this->transactionRepository->get24hTransactionsCommission();
     }
 
     /**
@@ -135,18 +125,6 @@ class TransactionService implements TransactionServiceInterface
      */
     public function getAverageCommission(\DateTime $startTime = null): float
     {
-
-        $transactions = $this->transactionRepository->get24hTransactions();
-
-        $fee = $transactions->reduce(function ($carry, $transaction) {
-            /** @var Transaction $transaction */
-            return $carry + $transaction->feeMnt;
-        });
-
-        if ($fee){
-            return  $fee / $transactions->count();
-        }
-
-        return 0;
+        return $this->transactionRepository->get24hTransactionsAverageCommission();
     }
 }

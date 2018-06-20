@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 
+use App\Models\Block;
 use App\Models\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -136,32 +137,64 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function get24hTransactionsCount(): int
     {
-
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
         //TODO: Возможно стоит брать транзакции на начало часа, что позволит кэшировать данные на час
-        $sql = "
-            select count(t.id)
-            from blocks as b
-              join transactions t on b.id = t.block_id
-            where b.timestamp::TIMESTAMP >= now() - '24 Hour'::INTERVAL;
-        ";
-
-        $result = DB::selectOne($sql);
-
-        return $result->count ?? 0;
+        return Block::whereDate('timestamp', '>=', $dt->format('Y-m-d H:i:s'))->sum('tx_count');
     }
 
     /**
      * Получить количество транзакций за последние 24 часа
+     * @return int
+     * @throws \Exception
+     */
+    public function get24hTransactionsAverageCommission(): string
+    {
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
+
+        $sql = "
+            select avg(t.fee) as fee
+            from blocks as b
+              join transactions t on b.id = t.block_id
+            where b.timestamp >= '{$dt->format('Y-m-d H:i:s')}';
+        ";
+
+        $result = DB::selectOne($sql);
+
+        return $result->fee ?? 0;
+    }
+
+    /**
+     * Получить транзакции за последние 24 часа
      * @return Collection
      * @throws \Exception
      */
     public function get24hTransactions(): Collection
     {
-
         $dt = new \DateTime();
-        $dt->sub(new \DateInterval('PT324H'));
-
+        $dt->modify('-1 day');
         return $this->getAllQuery(['startTime' => $dt->format('Y-m-d H:i:s')])->get();
     }
 
+    /**
+     * Получить коммисию транзакции за последние 24 часа
+     * @return Collection
+     */
+    public function get24hTransactionsCommission(): string
+    {
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
+
+        $sql = "
+            select sum(t.fee) as fee
+            from blocks as b
+              join transactions t on b.id = t.block_id
+            where b.timestamp >= '{$dt->format('Y-m-d H:i:s')}';
+        ";
+
+        $result = DB::selectOne($sql);
+
+        return $result->fee ?? 0;
+    }
 }
