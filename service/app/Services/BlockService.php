@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\DateTimeHelper;
 use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
 use GuzzleHttp\Client;
@@ -78,13 +79,14 @@ class BlockService implements BlockServiceInterface
      */
     public function saveFromApiData(array $blockData): void
     {
-        $blockTime = $this->prepareDate($blockData['block']['header']['time']);
+        $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($blockData['block']['header']['time']);
 
         $block = new Block();
         $block->height = $blockData['block']['header']['height'];
         $block->timestamp = $blockTime->format('Y-m-d H:i:sO');
+        $block->created_at = $blockTime->format('Y-m-d H:i:sO');
         $block->tx_count = $blockData['block']['header']['num_txs'];
-        $block->hash = $blockData['block_meta']['block_id']['hash'];
+        $block->hash = 'Mh' . mb_strtoupper($blockData['block_meta']['block_id']['hash']);
         $block->block_reward = $this->getBlockReward($block->height);
         $block->block_time = $this->calculateBlockTime($blockTime->getTimestamp());
 
@@ -115,23 +117,6 @@ class BlockService implements BlockServiceInterface
         Cache::put('last_block_time', $blockTime->getTimestamp(), $expiresAt);
         Cache::put('last_block_height', $block->height, $expiresAt);
         Cache::put('last_active_validators', $validators->count(), $expiresAt);
-    }
-
-    /**
-     * @param string $stringSateTime
-     * @return \Carbon\Carbon
-     */
-    private function prepareDate(string $stringSateTime): \Carbon\Carbon
-    {
-        $nano = preg_replace('/(.*)\.(.*)Z/', '$2', $stringSateTime);
-
-        if (!$nano) {
-            return \Carbon\Carbon::now();
-        }
-
-        $result = str_replace(".{$nano}Z", '.' . substr($nano, 0, 6) . 'Z', $stringSateTime);
-
-        return new \Carbon\Carbon($result);
     }
 
     /**

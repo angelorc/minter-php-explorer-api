@@ -75,7 +75,6 @@ class BlocksQueueWorkerCommand extends AbstractQueueWorkerCommand
             if (isset($data['blockHeight'])) {
                 $blockData = $this->blockService->pullBlockData($data['blockHeight']);
                 $this->blockService->saveFromApiData($blockData);
-                $this->info($data['blockHeight']);
             }
         } catch (\Exception $e) {
             Log::error($e->getMessage() . $e->getTraceAsString());

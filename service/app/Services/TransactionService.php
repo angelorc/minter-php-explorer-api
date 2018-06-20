@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Helpers\DateTimeHelper;
 use App\Models\Transaction;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -39,9 +40,11 @@ class TransactionService implements TransactionServiceInterface
 
         $txs = $data['block']['data']['txs'];
 
+        $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($data['block']['header']['time']);
+
         foreach ($txs as $tx) {
             try {
-                $t = 'Mx' . bin2hex(base64_decode($tx));
+                $t = bin2hex(base64_decode($tx));
                 $transaction = new Transaction();
                 $minterTx = new MinterTx($t);
 
@@ -56,6 +59,7 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->payload = $minterTx->payload;
                 $transaction->fee = $minterTx->getFee();
                 $transaction->service_data = $minterTx->serviceData ?? '';
+                $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
 
                 $transactions[] = $transaction;
             } catch (\Exception $exception) {

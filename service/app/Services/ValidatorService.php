@@ -64,7 +64,7 @@ class ValidatorService implements ValidatorServiceInterface
                 if (!$validator && $validatorAddress) {
                     $validator = new Validator();
                     $validator->name = '';
-                    $validator->address = mb_strtoupper($validatorData['validator_address']);
+                    $validator->address = 'Mp' . mb_strtoupper($validatorData['validator_address']);
                     $validator->save();
                 }
 
