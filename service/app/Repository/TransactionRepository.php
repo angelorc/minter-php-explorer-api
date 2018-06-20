@@ -52,24 +52,13 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         if (!$dateTime) {
             $dt = new \DateTime();
-            $date = $dt->sub(new \DateInterval('PT24H'))->format('Y-m-d');
+            $dt->modify('-1 day');
+            $date = $dt->format('Y-m-d');
         } else {
             $date = $dateTime->format('Y-m-d');
         }
 
-        $query = "
-                WITH tx_per_day AS (
-                    select count(t.id) as tx_count
-                    from blocks b
-                      left join transactions t on b.id = t.block_id
-                    where b.timestamp::date = '{$date}'
-                    group by b.id
-                )
-                select sum(tx_count) as cnt from tx_per_day;
-            ";
-        $txs = DB::selectOne($query);
-
-        return $txs->cnt ?? 0;
+        return Transaction::whereDate('created_at', $date)->count();
     }
 
     /**
@@ -112,16 +101,8 @@ class TransactionRepository implements TransactionRepositoryInterface
         $dt = new \DateTime();
         $dt->modify('-1 day');
 
-        $sql = "
-            select avg(t.fee) as fee
-            from blocks as b
-              join transactions t on b.id = t.block_id
-            where b.timestamp >= '{$dt->format('Y-m-d H:i:s')}';
-        ";
+        return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->avg('fee');
 
-        $result = DB::selectOne($sql);
-
-        return bcmul($result->fee, Coin::PIP_STR, 18) ?? 0;
     }
 
     /**
@@ -133,7 +114,8 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         $dt = new \DateTime();
         $dt->modify('-1 day');
-        return $this->getAllQuery(['startTime' => $dt->format('Y-m-d H:i:s')])->get();
+
+        return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->get();
     }
 
     /**
@@ -187,15 +169,6 @@ class TransactionRepository implements TransactionRepositoryInterface
         $dt = new \DateTime();
         $dt->modify('-1 day');
 
-        $sql = "
-            select sum(t.fee) as fee
-            from blocks as b
-              join transactions t on b.id = t.block_id
-            where b.timestamp >= '{$dt->format('Y-m-d H:i:s')}';
-        ";
-
-        $result = DB::selectOne($sql);
-
-        return bcmul($result->fee, Coin::PIP_STR, 18) ?? 0;
+        return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->sum('fee');
     }
 }
