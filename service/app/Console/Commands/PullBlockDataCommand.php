@@ -12,7 +12,7 @@ use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 class PullBlockDataCommand extends Command
 {
 
-    protected const SLEEP_TIME = 2500000;
+    protected const SLEEP_TIME = 1500000;
 
     /**
      * @var string
