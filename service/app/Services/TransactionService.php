@@ -43,8 +43,6 @@ class TransactionService implements TransactionServiceInterface
 
         $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($data['block']['header']['time']);
 
-        $startTime = time();
-
         foreach ($txs as $tx) {
             try {
                 $t = bin2hex(base64_decode($tx));
@@ -75,12 +73,6 @@ class TransactionService implements TransactionServiceInterface
                 );
             }
         }
-
-        $str = 'Block ' . $data['block']['header']['height'];
-        $str .= ' tx: ' . $data['block']['header']['num_txs'];
-        $str .= 'TIME: ' . (time() - $startTime) . 's';
-
-        Log::error($str);
 
         return collect($transactions);
     }
