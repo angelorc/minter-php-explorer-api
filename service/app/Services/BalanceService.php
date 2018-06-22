@@ -30,9 +30,18 @@ class BalanceService implements BalanceServiceInterface
      */
     public function getAddressBalance(string $address): Collection
     {
-        $result = $this->balanceRepository->getBalanceByAddress($address)->map(function($item){
-            return new Coin($item->coin, $item->amount);
+        $result = $this->balanceRepository->getBalanceByAddress($address)->map(function ($item) {
+
+            $coin = new Coin($item->coin, $item->amount);
+
+            return [
+                'coin' => $coin->getName(),
+                'amount' => $coin->getAmount(),
+                'baseCoinAmount' => $coin->getAmount(),
+                'usdAmount' => $coin->getUsdAmount(),
+            ];
         });
+
 
         return $result;
     }

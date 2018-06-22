@@ -17,7 +17,7 @@ class CreateValidatorsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->default('');
             $table->string('public_key')->default('');
-            $table->string('address');
+            $table->string('address')->unique();
             $table->timestampsTz();
         });
     }

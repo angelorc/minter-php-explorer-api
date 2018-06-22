@@ -12,7 +12,7 @@ use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 class PullBlockDataCommand extends Command
 {
 
-    protected const SLEEP_TIME = 1500000;
+    protected const SLEEP_TIME = 1000000;
 
     /**
      * @var string
@@ -54,8 +54,8 @@ class PullBlockDataCommand extends Command
 
             while (true) {
                 if ($lastBlockHeight > $explorerLastBlockHeight) {
-                    $message = ['blockHeight' => $explorerLastBlockHeight];
-                    $this->rmqHelper->publish(\GuzzleHttp\json_encode($message), BlocksQueueWorkerCommand::QUEUE_NAME);
+                    $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
+                    $this->blockService->saveFromApiData($blockData);
                     $explorerLastBlockHeight++;
                 } else {
                     usleep($this::SLEEP_TIME);

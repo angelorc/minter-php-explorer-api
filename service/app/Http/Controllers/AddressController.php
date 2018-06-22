@@ -83,25 +83,10 @@ class AddressController extends Controller
      */
     public function address(string $address): array
     {
-        $balance = $this->balanceService->getAddressBalance($address);
-
-        $bipBalance = $balance->map(function ($item) {
-            /** @var Coin $item */
-            return [$item->getName() => $item->getAmount()];
-        });
-
-        $bipBalanceUsd = $balance->map(function ($item) {
-            /** @var Coin $item */
-            return [$item->getName() => $item->getUsdAmount()];
-        });
-
         return [
             'data' => [
-                'balance' => $bipBalance,
-                'balanceUsd' => $bipBalanceUsd,
-                'bipTotal' => $this->getTotalBalance($bipBalance),
-                'usdTotal' => $this->getTotalBalance($bipBalanceUsd),
                 'txCount' => $this->transactionService->getTotalTransactionsCount($address),
+                'coins' => $this->balanceService->getAddressBalance($address) ?? []
             ]
         ];
     }
