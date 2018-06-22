@@ -4,11 +4,26 @@ namespace App\Services;
 
 
 use App\Models\Validator;
+use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
+
 class ValidatorService implements ValidatorServiceInterface
 {
+    /**
+     * @var Client
+     */
+    protected $httpClient;
+
+    /**
+     * ValidatorService constructor.
+     * @param Client $client
+     */
+    public function __construct(Client $client)
+    {
+        $this->httpClient = $client;
+    }
 
     /**
      * Get Active Validators Count
@@ -40,14 +55,21 @@ class ValidatorService implements ValidatorServiceInterface
 
     /**
      * Save Validators to DB
-     * @param array $data
+     * @param int $blockHeigth
      * @return Collection
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function saveValidatorsFromApiData(array $data): Collection
+    public function saveValidatorsFromApiData(int $blockHeigth): Collection
     {
         $validators = [];
 
-        $validatorsData = $data['block']['last_commit']['precommits'];
+        $data = $this->httpClient->request('GET', '/api/validators', [
+            'query' => ['height' => $blockHeigth]
+        ]);
+
+        $validatorsData = \GuzzleHttp\json_decode($data->getBody()->getContents(), true);
+
+        $validatorsData = $validatorsData['result'];
 
         if ($validatorsData) {
 
@@ -55,16 +77,18 @@ class ValidatorService implements ValidatorServiceInterface
 
                 $validator = null;
 
-                $validatorAddress = $validatorData['validator_address'] ?? '';
+                $validatorAddress = $validatorData['candidate_address'] ?? '';
+                $validatorPubKey = $validatorData['pub_key'] ?? '';
 
                 if ($validatorAddress) {
-                    $validator = Validator::where('address', $validatorAddress)->first();
+                    $validator = Validator::where('address', 'ilike', $validatorAddress)->first();
                 }
 
                 if (!$validator && $validatorAddress) {
                     $validator = new Validator();
                     $validator->name = '';
-                    $validator->address = 'Mp' . mb_strtoupper($validatorData['validator_address']);
+                    $validator->address = $validatorAddress;
+                    $validator->public_key = $validatorPubKey;
                     $validator->save();
                 }
 

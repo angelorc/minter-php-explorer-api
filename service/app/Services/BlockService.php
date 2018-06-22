@@ -100,7 +100,7 @@ class BlockService implements BlockServiceInterface
             $block->size = 0;
         }
 
-        $validators = $this->validatorService->saveValidatorsFromApiData($blockData);
+        $validators = $this->validatorService->saveValidatorsFromApiData($block->height);
 
         $this->blockRepository->save($block, $transactions, $validators);
 

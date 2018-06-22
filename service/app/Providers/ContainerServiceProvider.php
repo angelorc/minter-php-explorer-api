@@ -19,6 +19,7 @@ use App\Services\TransactionService;
 use App\Services\TransactionServiceInterface;
 use App\Services\ValidatorService;
 use App\Services\ValidatorServiceInterface;
+use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -50,6 +51,10 @@ class ContainerServiceProvider extends ServiceProvider
 
         $this->app->singleton(RmqHelper::class, function () {
             return new RmqHelper(config('rmq.explorer.general'));
+        });
+
+        $this->app->singleton(Client::class, function () {
+            return new Client(['base_uri' => 'http://' . env('MINTER_API')]);
         });
 
     }
