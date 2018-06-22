@@ -2,15 +2,17 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\RmqHelper;
 use App\Services\BlockServiceInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 
 class PullBlockDataCommand extends Command
 {
 
-    protected const SLEEP_TIME = 2500000;
+    protected const SLEEP_TIME = 1500000;
 
     /**
      * @var string
@@ -26,6 +28,11 @@ class PullBlockDataCommand extends Command
     private $blockService;
 
     /**
+     * @var RmqHelper
+     */
+    private $rmqHelper;
+
+    /**
      * PullBlockDataCommand constructor.
      * @param BlockServiceInterface $blockService
      */
@@ -34,6 +41,8 @@ class PullBlockDataCommand extends Command
         parent::__construct();
 
         $this->blockService = $blockService;
+
+        $this->rmqHelper = new RmqHelper(config('rmq.explorer.general'));
     }
 
     public function handle(): void
@@ -45,8 +54,8 @@ class PullBlockDataCommand extends Command
 
             while (true) {
                 if ($lastBlockHeight > $explorerLastBlockHeight) {
-                    $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
-                    $this->blockService->saveFromApiData($blockData);
+                    $message = ['blockHeight' => $explorerLastBlockHeight];
+                    $this->rmqHelper->publish(\GuzzleHttp\json_encode($message), BlocksQueueWorkerCommand::QUEUE_NAME);
                     $explorerLastBlockHeight++;
                 } else {
                     usleep($this::SLEEP_TIME);
@@ -55,6 +64,7 @@ class PullBlockDataCommand extends Command
             }
 
         } catch (GuzzleException $e) {
+        } catch (AMQPProtocolChannelException $e) {
             Log::error($e->getMessage());
         }
 
