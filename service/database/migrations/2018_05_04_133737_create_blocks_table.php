@@ -23,6 +23,7 @@ class CreateBlocksTable extends Migration
             $table->string('hash');
             $table->decimal('block_reward', 30, 0);
             $table->timestampsTz();
+            $table->softDeletesTz();
         });
     }
 

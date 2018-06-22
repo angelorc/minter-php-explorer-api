@@ -28,13 +28,19 @@ class PullBlockDataCommand extends Command
     }
     public function handle(): void
     {
+        $this->info('start');
+
         try {
             $lastBlockHeight = $this->blockService->getLatestBlockHeight();
             $explorerLastBlockHeight = $this->blockService->getExplorerLatestBlockHeight() + 1;
             while (true) {
+
                 if ($lastBlockHeight > $explorerLastBlockHeight) {
+
                     $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
                     $this->blockService->saveFromApiData($blockData);
+
+                    $this->info($explorerLastBlockHeight);
                     $explorerLastBlockHeight++;
                 } else {
                     usleep($this::SLEEP_TIME);

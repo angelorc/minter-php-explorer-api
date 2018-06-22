@@ -19,6 +19,7 @@ class CreateValidatorsTable extends Migration
             $table->string('public_key')->default('');
             $table->string('address')->unique();
             $table->timestampsTz();
+            $table->softDeletesTz();
         });
     }
 

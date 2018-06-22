@@ -5,8 +5,10 @@ namespace App\Services;
 
 use App\Models\Validator;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 
 class ValidatorService implements ValidatorServiceInterface
@@ -57,19 +59,24 @@ class ValidatorService implements ValidatorServiceInterface
      * Save Validators to DB
      * @param int $blockHeigth
      * @return Collection
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function saveValidatorsFromApiData(int $blockHeigth): Collection
     {
         $validators = [];
 
-        $data = $this->httpClient->request('GET', '/api/validators', [
-            'query' => ['height' => $blockHeigth]
-        ]);
+        $validatorsData = null;
 
-        $validatorsData = \GuzzleHttp\json_decode($data->getBody()->getContents(), true);
+        try {
+            $data = $this->httpClient->request('GET', '/api/validators', [
+                'query' => ['height' => $blockHeigth]
+            ]);
 
-        $validatorsData = $validatorsData['result'];
+            $validatorsData = \GuzzleHttp\json_decode($data->getBody()->getContents(), true);
+
+            $validatorsData = $validatorsData['result'];
+        } catch (GuzzleException $e) {
+            Log::error($e->getMessage());
+        }
 
         if ($validatorsData) {
 

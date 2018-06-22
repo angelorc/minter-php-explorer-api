@@ -116,7 +116,7 @@ class BlockService implements BlockServiceInterface
 
         Cache::put('last_block_time', $blockTime->getTimestamp(), $expiresAt);
         Cache::put('last_block_height', $block->height, $expiresAt);
-        Cache::put('last_active_validators', $validators->count(), $expiresAt);
+//        Cache::put('last_active_validators', $validators->count(), $expiresAt);
     }
 
     /**

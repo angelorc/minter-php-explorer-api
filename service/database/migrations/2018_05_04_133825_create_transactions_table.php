@@ -28,6 +28,7 @@ class CreateTransactionsTable extends Migration
             $table->decimal('fee', 30, 0);
             $table->decimal('value', 30, 18);
             $table->timestampsTz();
+            $table->softDeletesTz();
 
             $table->foreign('block_id')->references('id')->on('blocks');
         });
