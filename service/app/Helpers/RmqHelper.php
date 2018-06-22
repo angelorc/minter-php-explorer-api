@@ -105,8 +105,6 @@ class RmqHelper
             $message = json_encode($message);
         }
 
-        Log::error($message);
-
         $message = $this->makeMessage($message);
 
         $this->channel->basic_publish($message, $queueName, $queueName);
