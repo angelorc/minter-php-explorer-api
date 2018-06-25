@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 class PullBlockDataCommand extends Command
 {
-    protected const SLEEP_TIME = 1000000;
+    protected const SLEEP_TIME = 2500000;
     /**
      * @var string
      */
@@ -39,8 +39,6 @@ class PullBlockDataCommand extends Command
 
                     $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
                     $this->blockService->saveFromApiData($blockData);
-
-                    $this->info($explorerLastBlockHeight);
                     $explorerLastBlockHeight++;
                 } else {
                     usleep($this::SLEEP_TIME);
