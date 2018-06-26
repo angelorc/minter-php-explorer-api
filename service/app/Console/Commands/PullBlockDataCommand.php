@@ -36,7 +36,6 @@ class PullBlockDataCommand extends Command
             while (true) {
 
                 if ($lastBlockHeight > $explorerLastBlockHeight) {
-
                     $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
                     $this->blockService->saveFromApiData($blockData);
                     $explorerLastBlockHeight++;

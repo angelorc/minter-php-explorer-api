@@ -10,7 +10,6 @@ use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Minter\SDK\MinterTx;
 
 class TransactionService implements TransactionServiceInterface
 {
@@ -39,27 +38,28 @@ class TransactionService implements TransactionServiceInterface
     {
         $transactions = [];
 
-        $txs = $data['block']['data']['txs'];
+        $txs = $data['block']['data']['transactions'];
 
-        $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($data['block']['header']['time']);
+        $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($data['time']);
 
         foreach ($txs as $tx) {
             try {
-                $t = bin2hex(base64_decode($tx));
                 $transaction = new Transaction();
-                $minterTx = new MinterTx($t);
 
-                $transaction->nonce = $minterTx->nonce;
-                $transaction->gas_price = $minterTx->gasPrice;
-                $transaction->type = $minterTx->type;
-                $transaction->coin = $minterTx->data['coin'] ?? '';
-                $transaction->from = $minterTx->from;
-                $transaction->to = $minterTx->data['to'] ?? '';
-                $transaction->value = $minterTx->data['value'] ?? 0;
-                $transaction->hash = $minterTx->getHash();
-                $transaction->payload = $minterTx->payload;
-                $transaction->fee = $minterTx->getFee();
-                $transaction->service_data = $minterTx->serviceData ?? '';
+                $transaction->nonce = $tx['nonce'];
+                $transaction->gas_price = $tx['gasPrice'];
+                $transaction->type = $tx['type'];
+                $transaction->coin = $tx['data']['coin'] ?? '';
+                $transaction->from = $tx['from'];
+                $transaction->to = $tx['data']['to'] ?? '';
+                $transaction->address = $tx['data']['address'] ?? null;
+                $transaction->commission = $tx['data']['commission'] ?? null;
+                $transaction->stake = $tx['data']['stake'] ?? null;
+                $transaction->value = $tx['data']['value'] ?? 0;
+                $transaction->hash = $tx['hash'];
+                $transaction->payload = $tx['payload'];
+                $transaction->fee = $tx['gas'];
+                $transaction->service_data = $tx['serviceData'] ?? '';
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
 
                 $transactions[] = $transaction;
@@ -68,7 +68,7 @@ class TransactionService implements TransactionServiceInterface
                     $exception->getFile() . ' ' .
                     $exception->getLine() . ': ' .
                     $exception->getMessage() .
-                    ' Block: ' . $data['block']['header']['height'] .
+                    ' Block: ' . $data['height'] .
                     ' Transaction: ' . $tx
                 );
             }

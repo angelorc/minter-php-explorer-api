@@ -79,14 +79,14 @@ class BlockService implements BlockServiceInterface
      */
     public function saveFromApiData(array $blockData): void
     {
-        $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($blockData['block']['header']['time']);
+        $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($blockData['time']);
 
         $block = new Block();
-        $block->height = $blockData['block']['header']['height'];
+        $block->height = $blockData['height'];
         $block->timestamp = $blockTime->format('Y-m-d H:i:sO');
         $block->created_at = $blockTime->format('Y-m-d H:i:sO');
-        $block->tx_count = $blockData['block']['header']['num_txs'];
-        $block->hash = 'Mh' . mb_strtoupper($blockData['block_meta']['block_id']['hash']);
+        $block->tx_count = $blockData['num_txs'];
+        $block->hash = 'Mh' . mb_strtoupper($blockData['hash']);
         $block->block_reward = $this->getBlockReward($block->height);
         $block->block_time = $this->calculateBlockTime($blockTime->getTimestamp());
 
