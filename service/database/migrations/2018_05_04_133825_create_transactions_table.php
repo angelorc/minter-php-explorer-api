@@ -26,10 +26,11 @@ class CreateTransactionsTable extends Migration
             $table->string('payload');
             $table->string('service_data');
             $table->string('pub_key')->nullable();
-            $table->decimal('fee', 30, 0);
-            $table->decimal('value', 30, 18);
-            $table->decimal('stake', 30, 18)->nullable();
-            $table->decimal('commission', 30, 18)->nullable();
+            $table->string('address')->nullable();
+            $table->decimal('fee', 50, 0);
+            $table->decimal('value', 50, 18);
+            $table->decimal('stake', 50, 0)->nullable();
+            $table->decimal('commission', 50, 0)->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
 

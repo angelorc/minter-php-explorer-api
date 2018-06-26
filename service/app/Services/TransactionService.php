@@ -38,7 +38,7 @@ class TransactionService implements TransactionServiceInterface
     {
         $transactions = [];
 
-        $txs = $data['block']['data']['transactions'];
+        $txs = $data['transactions'];
 
         $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($data['time']);
 

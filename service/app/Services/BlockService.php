@@ -151,13 +151,9 @@ class BlockService implements BlockServiceInterface
      */
     private function getBlockSize(array $blockData): int
     {
-        $txs = '';
+        //TODO: получать из API
 
-        foreach ($blockData['block']['data']['txs'] as $transaction) {
-            $txs .= $transaction;
-        }
-
-        return \strlen($txs);
+        return 0;
     }
 
     /**
