@@ -23,8 +23,8 @@ class CreateTransactionsTable extends Migration
             $table->string('to');
             $table->string('coin');
             $table->string('hash');
-            $table->string('payload');
-            $table->string('service_data');
+            $table->string('payload')->nullable();
+            $table->string('service_data')->nullable();
             $table->string('pub_key')->nullable();
             $table->string('address')->nullable();
             $table->string('from_coin_symbol')->nullable();

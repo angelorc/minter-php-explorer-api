@@ -52,17 +52,26 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->coin = $tx['data']['coin'] ?? '';
                 $transaction->from = $tx['from'];
                 $transaction->to = $tx['data']['to'] ?? '';
-                $transaction->address = $tx['data']['address'] ?? null;
-                $transaction->commission = $tx['data']['commission'] ?? null;
-                $transaction->stake = $tx['data']['stake'] ?? null;
                 $transaction->hash = $tx['hash'];
-                $transaction->payload = $tx['payload'];
+                $transaction->payload = $tx['payload'] ?? null;
                 $transaction->fee = $tx['gas'];
-                $transaction->service_data = $tx['serviceData'] ?? '';
+                $transaction->service_data = $tx['serviceData'] ?? null;
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
 
+                $transaction->pub_key = $tx['data']['pubkey'] ?? null;
                 $val = $tx['data']['value'] ?? 0;
                 $transaction->value = bcmul($val, Coin::PIP_STR, 18);
+
+                if ($transaction->type === 4) {
+                    $transaction->address = $tx['data']['Address'] ?? null;
+                    $transaction->commission = $tx['data']['Commission'] ?? null;
+                }
+
+                if ($transaction->type === 4 || $transaction->type === 5) {
+                    $transaction->pub_key = $tx['data']['PubKey'] ?? null;
+                    $transaction->coin = $tx['data']['Coin'] ?? '';
+                    $transaction->stake = $tx['data']['Stake'] ?? null;
+                }
 
                 $transactions[] = $transaction;
             } catch (\Exception $exception) {
