@@ -122,6 +122,12 @@ class Transaction extends Model
                 return 'delegate';
             case $this::TYPE_UNBOND:
                 return 'unbond';
+            case $this::TYPE_REDEEM_CHECK:
+                return 'redeemCheckData';
+            case $this::TYPE_SET_CANDIDATE_ONLINE:
+                return 'setCandidateOnData';
+            case $this::TYPE_SET_CANDIDATE_OFFLINE:
+                return 'setCandidateOffData';
             default:
                 return '';
         }
