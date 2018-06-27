@@ -55,12 +55,14 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->address = $tx['data']['address'] ?? null;
                 $transaction->commission = $tx['data']['commission'] ?? null;
                 $transaction->stake = $tx['data']['stake'] ?? null;
-                $transaction->value = $tx['data']['value'] ?? 0;
                 $transaction->hash = $tx['hash'];
                 $transaction->payload = $tx['payload'];
                 $transaction->fee = $tx['gas'];
                 $transaction->service_data = $tx['serviceData'] ?? '';
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
+
+                $val = $tx['data']['value'] ?? 0;
+                $transaction->value = bcmul($val, Coin::PIP_STR, 18);
 
                 $transactions[] = $transaction;
             } catch (\Exception $exception) {
