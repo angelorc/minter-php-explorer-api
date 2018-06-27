@@ -30,6 +30,7 @@ class CreateTransactionsTable extends Migration
             $table->string('from_coin_symbol')->nullable();
             $table->string('to_coin_symbol')->nullable();
             $table->string('raw_check')->nullable();
+            $table->string('proof')->nullable();
             $table->string('name')->nullable();
             $table->string('symbol')->nullable();
             $table->decimal('fee', 50, 0);

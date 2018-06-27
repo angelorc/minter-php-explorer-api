@@ -46,41 +46,47 @@ class TransactionService implements TransactionServiceInterface
             try {
                 $transaction = new Transaction();
 
-                $transaction->nonce = $tx['nonce'];
-                $transaction->gas_price = $tx['gasPrice'];
                 $transaction->type = $tx['type'];
-                $transaction->coin = $tx['data']['coin'] ?? '';
-                $transaction->from = $tx['from'];
-                $transaction->to = $tx['data']['to'] ?? '';
+                $transaction->nonce = $tx['nonce'];
                 $transaction->hash = $tx['hash'];
-                $transaction->payload = $tx['payload'] ?? null;
+                $transaction->gas_price = $tx['gasPrice'];
                 $transaction->fee = $tx['gas'];
+                $transaction->payload = $tx['payload'] ?? null;
                 $transaction->service_data = $tx['serviceData'] ?? null;
+                $transaction->from = mb_convert_case(mb_strtolower($tx['from']), MB_CASE_TITLE, "UTF-8");
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
 
-                $transaction->pub_key = $tx['data']['pubkey'] ?? null;
                 $val = $tx['data']['value'] ?? 0;
                 $transaction->value = bcmul($val, Coin::PIP_STR, 18);
+                $transaction->coin = mb_strtoupper($tx['data']['coin'] ?? '');
+                $transaction->to = ucfirst($tx['data']['to'] ?? '');
 
-                if ($transaction->type === 4) {
-                    $transaction->address = $tx['data']['Address'] ?? null;
+                $pubKey = $tx['data']['pubkey'] ?? null;
+                $transaction->pub_key = $pubKey ? ucfirst($pubKey) : null;
+
+                if ($transaction->type === Transaction::TYPE_DECLARE_CANDIDACY) {
+                    $address = $tx['data']['Address'] ?? null;
+                    $transaction->address = $address ? ucfirst($address) : null;
                     $transaction->commission = $tx['data']['Commission'] ?? null;
                 }
 
-                if ($transaction->type === 4 || $transaction->type === 5) {
-                    $transaction->pub_key = $tx['data']['PubKey'] ?? null;
-                    $transaction->coin = $tx['data']['Coin'] ?? '';
+                if (\in_array($transaction->type, [Transaction::TYPE_DECLARE_CANDIDACY, Transaction::TYPE_DELEGATE],
+                    true)) {
+                    $pubKey = $tx['data']['PubKey'] ?? null;
+                    $transaction->pub_key = $pubKey ? ucfirst($pubKey) : null;
+                    $transaction->coin = mb_strtoupper($tx['data']['Coin'] ?? '');
                     $transaction->stake = $tx['data']['Stake'] ?? null;
                 }
 
                 $transactions[] = $transaction;
+
             } catch (\Exception $exception) {
                 Log::channel('transactions')->error(
                     $exception->getFile() . ' ' .
                     $exception->getLine() . ': ' .
                     $exception->getMessage() .
                     ' Block: ' . $data['height'] .
-                    ' Transaction: ' . $tx
+                    ' Transaction: ' . $tx['hash']
                 );
             }
         }

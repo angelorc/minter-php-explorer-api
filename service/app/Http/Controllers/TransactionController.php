@@ -34,7 +34,9 @@ class TransactionController extends Controller
      *
      *     @SWG\Parameter(in="query", name="block", type="integer", description="Высота блока"),
      *     @SWG\Parameter(in="query", name="address", type="string", description="Адрес"),
-     *     @SWG\Parameter(in="query", name="addresses", type="string", description="Список адресов"),
+     *     @SWG\Parameter(in="query", name="addresses", type="string", description="Список адресов  (addresses[]=Mx...&addresses[]=Mx...)"),
+     *     @SWG\Parameter(in="query", name="hash", type="string", description="Хэш"),
+     *     @SWG\Parameter(in="query", name="hashes", type="string", description="Список хэшей (hashes[]=Mt...&hashes[]=Mt...)"),
      *     @SWG\Parameter(in="query", name="page", type="integer", description="Номер страницы"),
      *
      *     @SWG\Response(
@@ -61,6 +63,8 @@ class TransactionController extends Controller
             'block' =>  $request->get('block'),
             'address' =>  $request->get('address'),
             'addresses' =>  $request->get('addresses'),
+            'hash' => $request->get('hash'),
+            'hashes' => $request->get('hashes'),
         ];
 
         $query = $this->transactionRepository->getAllQuery($filter);

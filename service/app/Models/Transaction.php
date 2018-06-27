@@ -44,6 +44,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int nonce
  * @property int validator_id
  * @property int gas_price
+ * @property int commission
+ * @property int stake
  * @property float value
  * @property float fee
  * @property string hash
@@ -52,6 +54,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string to
  * @property string coin
  * @property string payload
+ * @property string pub_key
+ * @property string address
+ * @property string created_at
  */
 class Transaction extends Model
 {
@@ -62,9 +67,12 @@ class Transaction extends Model
     public const TYPE_DELEGATE = 5;
     public const TYPE_UNBOND = 6;
     public const TYPE_REDEEM_CHECK = 7;
+    public const TYPE_SET_CANDIDATE_ONLINE = 8;
+    public const TYPE_SET_CANDIDATE_OFFLINE = 9;
 
-    public const PAYLOAD = 8;
-    public const TOGGLE_CANDIDATES_STATUS = 9;
+
+    public const PAYLOAD = 'payload';
+    public const TOGGLE_CANDIDATES_STATUS = 'toggle_status';
 
     protected $dateFormat = 'Y-m-d H:i:sO';
 

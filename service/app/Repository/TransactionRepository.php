@@ -157,6 +157,21 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
+        if (!empty($filter['hashes'])) {
+            $hashes = implode(',', array_map(function ($item) {
+                return "'" . preg_replace("/\W/", '', $item) . "'";
+            }, $filter['hashes']));
+
+            $query->where(function ($query) use ($hashes) {
+                $query->whereRaw('transactions.hash ilike any (array[' . $hashes . ']) ');
+            });
+
+        } elseif (!empty($filter['hash'])) {
+            $query->where(function ($query) use ($filter) {
+                $query->where('transactions.hash', 'ilike', $filter['hash']);
+            });
+        }
+
         return $query;
     }
 
