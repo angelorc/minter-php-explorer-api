@@ -114,7 +114,7 @@ class BlockService implements BlockServiceInterface
         Cache::forget('last_block_height');
         Cache::forget('last_active_validators');
 
-        Cache::put('last_block_time', $blockTime->getTimestamp(), $expiresAt);
+        Cache::put('last_block_time', $blockTime->getTimestamp(), 1);
         Cache::put('last_block_height', $block->height, $expiresAt);
 //        Cache::put('last_active_validators', $validators->count(), $expiresAt);
     }
@@ -135,6 +135,7 @@ class BlockService implements BlockServiceInterface
      */
     private function calculateBlockTime(int $currentBlockTime): int
     {
+        //TODO: проверить расчет
         $lastBlockTime = Cache::get('last_block_time', null);
 
         if ($lastBlockTime && $currentBlockTime > $lastBlockTime) {

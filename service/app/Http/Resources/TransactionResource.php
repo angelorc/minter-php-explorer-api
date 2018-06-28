@@ -99,7 +99,7 @@ class TransactionResource extends JsonResource
 //                    break;
 //            }
 //
-//            return $data;
+            return $data;
         }
 
         return [];
