@@ -64,6 +64,10 @@ class FillBalanceTableCommand extends Command
 
         foreach ($addresses as $address) {
 
+            if (!$address) {
+                continue;
+            }
+
             try {
                 $res = $this->client->request('GET', 'api/balance/' . ucfirst($address));
 

@@ -63,4 +63,17 @@ interface TransactionRepositoryInterface
      */
     public function get24hTransactions(): Collection;
 
+    /**
+     * Получить среднюю коммисию транзакции за последние 24 часа
+     * @return Collection
+     */
+    public function get24hTransactionsAverageCommission(): string;
+
+
+    /**
+     * Получить коммисию транзакции за последние 24 часа
+     * @return Collection
+     */
+    public function get24hTransactionsCommission(): string;
+
 }

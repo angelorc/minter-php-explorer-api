@@ -3,12 +3,13 @@
 namespace App\Services;
 
 
+use App\Helpers\DateTimeHelper;
+use App\Models\Coin;
 use App\Models\Transaction;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Minter\SDK\MinterTx;
 
 class TransactionService implements TransactionServiceInterface
 {
@@ -37,34 +38,55 @@ class TransactionService implements TransactionServiceInterface
     {
         $transactions = [];
 
-        $txs = $data['block']['data']['txs'];
+        $txs = $data['transactions'];
+
+        $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($data['time']);
 
         foreach ($txs as $tx) {
-            try{
-                $t = 'Mx' . bin2hex(base64_decode($tx));
+            try {
                 $transaction = new Transaction();
-                $minterTx = new MinterTx($t);
 
-                $transaction->nonce = $minterTx->nonce;
-                $transaction->gas_price = $minterTx->gasPrice;
-                $transaction->type = $minterTx->type;
-                $transaction->coin = $minterTx->data['coin'] ?? '';
-                $transaction->from = $minterTx->from;
-                $transaction->to = $minterTx->data['to'] ?? '';
-                $transaction->value = $minterTx->data['value'] ?? 0;
-                $transaction->hash = $minterTx->getHash();
-                $transaction->payload = $minterTx->payload;
-                $transaction->fee = $minterTx->getFee();
-                $transaction->service_data =  $minterTx->serviceData ?? '';
+                $transaction->type = $tx['type'];
+                $transaction->nonce = $tx['nonce'];
+                $transaction->hash = $tx['hash'];
+                $transaction->gas_price = $tx['gasPrice'];
+                $transaction->fee = $tx['gas'];
+                $transaction->payload = $tx['payload'] ?? null;
+                $transaction->service_data = $tx['serviceData'] ?? null;
+                $transaction->from = mb_convert_case(mb_strtolower($tx['from']), MB_CASE_TITLE, "UTF-8");
+                $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
+
+                $val = $tx['data']['value'] ?? 0;
+                $transaction->value = bcmul($val, Coin::PIP_STR, 18);
+                $transaction->coin = mb_strtoupper($tx['data']['coin'] ?? '');
+                $transaction->to = ucfirst($tx['data']['to'] ?? '');
+
+                $pubKey = $tx['data']['pubkey'] ?? null;
+                $transaction->pub_key = $pubKey ? ucfirst($pubKey) : null;
+
+                if ($transaction->type === Transaction::TYPE_DECLARE_CANDIDACY) {
+                    $address = $tx['data']['Address'] ?? null;
+                    $transaction->address = $address ? ucfirst($address) : null;
+                    $transaction->commission = $tx['data']['Commission'] ?? null;
+                }
+
+                if (\in_array($transaction->type, [Transaction::TYPE_DECLARE_CANDIDACY, Transaction::TYPE_DELEGATE],
+                    true)) {
+                    $pubKey = $tx['data']['PubKey'] ?? null;
+                    $transaction->pub_key = $pubKey ? ucfirst($pubKey) : null;
+                    $transaction->coin = mb_strtoupper($tx['data']['Coin'] ?? '');
+                    $transaction->stake = $tx['data']['Stake'] ?? null;
+                }
 
                 $transactions[] = $transaction;
-            }catch (\Exception $exception){
+
+            } catch (\Exception $exception) {
                 Log::channel('transactions')->error(
                     $exception->getFile() . ' ' .
                     $exception->getLine() . ': ' .
                     $exception->getMessage() .
-                    ' Block: ' . $data['block']['header']['height'] .
-                    ' Transaction: ' . $tx
+                    ' Block: ' . $data['height'] .
+                    ' Transaction: ' . $tx['hash']
                 );
             }
         }
@@ -83,24 +105,6 @@ class TransactionService implements TransactionServiceInterface
     }
 
     /**
-     * Количество транзакций за последние 24 часа
-     * @return int
-     */
-    public function get24hTransactionsCount(): int
-    {
-        $count = Cache::get('24hTransactionsCount', null);
-
-        if (!$count){
-
-            $count = $this->transactionRepository->get24hTransactionsCount();
-
-            Cache::put('24hTransactionsCount', $count, 1);
-        }
-
-       return $count;
-    }
-
-    /**
      * Скорость обработки транзакций
      * @return float
      */
@@ -110,22 +114,29 @@ class TransactionService implements TransactionServiceInterface
     }
 
     /**
+     * Количество транзакций за последние 24 часа
+     * @return int
+     */
+    public function get24hTransactionsCount(): int
+    {
+        $count = Cache::get('24hTransactionsCount', null);
+
+        if (!$count) {
+            $count = $this->transactionRepository->get24hTransactionsCount();
+            Cache::put('24hTransactionsCount', $count, 1);
+        }
+
+        return $count;
+    }
+
+    /**
      * Получить сумму комиссии за транзакции с даты
      * @param \DateTime $startTime
      * @return float
      */
     public function getCommission(\DateTime $startTime = null): float
     {
-        $transactions = $this->transactionRepository->get24hTransactions();
-
-        if($transactions->count()){
-            return $transactions->reduce(function ($carry, $transaction) {
-                /** @var Transaction $transaction */
-                return $carry + $transaction->feeMnt;
-            });
-        }
-
-        return 0;
+        return bcmul($this->transactionRepository->get24hTransactionsCommission(), Coin::PIP_STR, 18);
     }
 
     /**
@@ -135,18 +146,6 @@ class TransactionService implements TransactionServiceInterface
      */
     public function getAverageCommission(\DateTime $startTime = null): float
     {
-
-        $transactions = $this->transactionRepository->get24hTransactions();
-
-        $fee = $transactions->reduce(function ($carry, $transaction) {
-            /** @var Transaction $transaction */
-            return $carry + $transaction->feeMnt;
-        });
-
-        if ($fee){
-            return  $fee / $transactions->count();
-        }
-
-        return 0;
+        return bcmul($this->transactionRepository->get24hTransactionsAverageCommission(), Coin::PIP_STR, 18);
     }
 }

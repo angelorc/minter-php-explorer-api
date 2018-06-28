@@ -5,6 +5,7 @@ namespace App\Repository;
 
 use App\Models\Block;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class BlockRepository implements BlockRepositoryInterface
 {
@@ -17,12 +18,20 @@ class BlockRepository implements BlockRepositoryInterface
     {
         $block->save();
 
+        /** Collections $transactions */
         if ($transactions){
-            $block->transactions()->saveMany($transactions);
+            $chunks = $transactions->chunk(300);
+            foreach ($chunks as $chunk) {
+                DB::transaction(function () use ($block, $chunk) {
+                    $block->transactions()->saveMany($chunk);
+                });
+            }
         }
 
         if ($validators) {
-            $block->validators()->saveMany($validators);
+            DB::transaction(function () use ($block, $validators) {
+                $block->validators()->saveMany($validators);
+            });
         }
 
     }

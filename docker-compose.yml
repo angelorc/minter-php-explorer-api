@@ -8,9 +8,11 @@ services:
         depends_on:
             - postgres
             - redis
+            - rabbitmq
         links:
             - postgres
             - redis
+            - rabbitmq
     nginx:
         container_name: "minter_explorer_web_server"
         build: ./docker/nginx
@@ -43,6 +45,14 @@ services:
         restart: always
         ports:
             - 6379:6379
+    rabbitmq:
+         image: rabbitmq:3-management
+         ports:
+            - 4369:4369
+            - 5671:5671
+            - 5672:5672
+            - 15672:15672
+            - 8088:15672
     composer:
         container_name: "minter_explorer_composer"
         build: ./docker/composer

@@ -19,6 +19,7 @@ class CreateBalancesTable extends Migration
             $table->string('coin');
             $table->decimal('amount',100,0);
             $table->timestampsTz();
+            $table->softDeletesTz();
         });
     }
 

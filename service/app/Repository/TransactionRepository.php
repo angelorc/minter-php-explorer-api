@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 
+use App\Models\Block;
+use App\Models\Coin;
 use App\Models\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +38,84 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function findByHash(string $hash): ?Transaction
     {
-        return Transaction::where('hash', $hash)->first();
+        return Transaction::where('hash', 'ilike', $hash)->first();
+    }
+
+    /**
+     * Получить количество транзакций за сутки
+     * Если дата не передается, возвращается количество за предыдущие сутки
+     * @param \DateTime|null $dateTime
+     * @return int
+     * @throws \Exception
+     */
+    public function getTransactionsPerDayCount(\DateTime $dateTime = null): int
+    {
+        if (!$dateTime) {
+            $dt = new \DateTime();
+            $dt->modify('-1 day');
+            $date = $dt->format('Y-m-d');
+        } else {
+            $date = $dateTime->format('Y-m-d');
+        }
+
+        return Transaction::whereDate('created_at', $date)->count();
+    }
+
+    /**
+     * Количество транзакций
+     * @param string|null $address
+     * @return int
+     */
+    public function getTransactionsCount(string $address = null): int
+    {
+        $query = Transaction::query();
+
+        if ($address) {
+            $query->where('from', 'like', $address)
+                ->orWhere('to', 'like', $address);
+        }
+
+        return $query->count();
+    }
+
+    /**
+     * Получить количество транзакций за последние 24 часа
+     * @return int
+     * @throws \Exception
+     */
+    public function get24hTransactionsCount(): int
+    {
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
+        //TODO: Возможно стоит брать транзакции на начало часа, что позволит кэшировать данные на час
+        return Block::whereDate('timestamp', '>=', $dt->format('Y-m-d H:i:s'))->sum('tx_count');
+    }
+
+    /**
+     * Получить количество транзакций за последние 24 часа
+     * @return int
+     * @throws \Exception
+     */
+    public function get24hTransactionsAverageCommission(): string
+    {
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
+
+        return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->avg('fee') ?? 0;
+
+    }
+
+    /**
+     * Получить транзакции за последние 24 часа
+     * @return Collection
+     * @throws \Exception
+     */
+    public function get24hTransactions(): Collection
+    {
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
+
+        return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->get();
     }
 
     /**
@@ -78,90 +157,33 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
+        if (!empty($filter['hashes'])) {
+            $hashes = implode(',', array_map(function ($item) {
+                return "'" . preg_replace("/\W/", '', $item) . "'";
+            }, $filter['hashes']));
+
+            $query->where(function ($query) use ($hashes) {
+                $query->whereRaw('transactions.hash ilike any (array[' . $hashes . ']) ');
+            });
+
+        } elseif (!empty($filter['hash'])) {
+            $query->where(function ($query) use ($filter) {
+                $query->where('transactions.hash', 'ilike', $filter['hash']);
+            });
+        }
+
         return $query;
     }
 
     /**
-     * Получить количество транзакций за сутки
-     * Если дата не передается, возвращается количество за предыдущие сутки
-     * @param \DateTime|null $dateTime
-     * @return int
-     * @throws \Exception
-     */
-    public function getTransactionsPerDayCount(\DateTime $dateTime = null): int
-    {
-        if (!$dateTime) {
-            $dt = new \DateTime();
-            $date = $dt->sub(new \DateInterval('PT24H'))->format('Y-m-d');
-        } else {
-            $date = $dateTime->format('Y-m-d');
-        }
-
-        $query = "
-                WITH tx_per_day AS (
-                    select count(t.id) as tx_count
-                    from blocks b
-                      left join transactions t on b.id = t.block_id
-                    where b.timestamp::date = '{$date}'
-                    group by b.id
-                )
-                select sum(tx_count) as cnt from tx_per_day;
-            ";
-        $txs = DB::selectOne($query);
-
-        return $txs->cnt ?? 0;
-    }
-
-    /**
-     * Количество транзакций
-     * @param string|null $address
-     * @return int
-     */
-    public function getTransactionsCount(string $address = null): int
-    {
-        $query = Transaction::query();
-
-        if ($address) {
-            $query->where('from', 'like', $address)
-                ->orWhere('to', 'like', $address);
-        }
-
-        return $query->count();
-    }
-
-    /**
-     * Получить количество транзакций за последние 24 часа
-     * @return int
-     * @throws \Exception
-     */
-    public function get24hTransactionsCount(): int
-    {
-
-        //TODO: Возможно стоит брать транзакции на начало часа, что позволит кэшировать данные на час
-        $sql = "
-            select count(t.id)
-            from blocks as b
-              join transactions t on b.id = t.block_id
-            where b.timestamp::TIMESTAMP >= now() - '24 Hour'::INTERVAL;
-        ";
-
-        $result = DB::selectOne($sql);
-
-        return $result->count ?? 0;
-    }
-
-    /**
-     * Получить количество транзакций за последние 24 часа
+     * Получить коммисию транзакции за последние 24 часа
      * @return Collection
-     * @throws \Exception
      */
-    public function get24hTransactions(): Collection
+    public function get24hTransactionsCommission(): string
     {
-
         $dt = new \DateTime();
-        $dt->sub(new \DateInterval('PT324H'));
+        $dt->modify('-1 day');
 
-        return $this->getAllQuery(['startTime' => $dt->format('Y-m-d H:i:s')])->get();
+        return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->sum('fee');
     }
-
 }

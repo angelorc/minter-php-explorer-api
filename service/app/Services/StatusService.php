@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Cache;
 class StatusService implements StatusServiceInterface
 {
     /**
-     * Время от последнего блока при котором статус счетается активным
-     * в секундах
+     * Время от последнего блока при котором статус счетается активным в секундах
      */
     public const IS_ACTIVE_PERIOD = 15;
 

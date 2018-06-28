@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Helpers\DateTimeHelper;
 use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
+use Minter\SDK\MinterReward;
 
 class BlockService implements BlockServiceInterface
 {
@@ -77,13 +79,14 @@ class BlockService implements BlockServiceInterface
      */
     public function saveFromApiData(array $blockData): void
     {
-        $blockTime = $this->prepareDate($blockData['block']['header']['time']);
+        $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($blockData['time']);
 
         $block = new Block();
-        $block->height = $blockData['block']['header']['height'];
+        $block->height = $blockData['height'];
         $block->timestamp = $blockTime->format('Y-m-d H:i:sO');
-        $block->tx_count = $blockData['block']['header']['num_txs'];
-        $block->hash = $blockData['block_meta']['block_id']['hash'];
+        $block->created_at = $blockTime->format('Y-m-d H:i:sO');
+        $block->tx_count = $blockData['num_txs'];
+        $block->hash = 'Mh' . mb_strtoupper($blockData['hash']);
         $block->block_reward = $this->getBlockReward($block->height);
         $block->block_time = $this->calculateBlockTime($blockTime->getTimestamp());
 
@@ -97,7 +100,7 @@ class BlockService implements BlockServiceInterface
             $block->size = 0;
         }
 
-        $validators = $this->validatorService->saveValidatorsFromApiData($blockData);
+        $validators = $this->validatorService->saveValidatorsFromApiData($block->height);
 
         $this->blockRepository->save($block, $transactions, $validators);
 
@@ -111,37 +114,35 @@ class BlockService implements BlockServiceInterface
         Cache::forget('last_block_height');
         Cache::forget('last_active_validators');
 
-        Cache::put('last_block_time', $blockTime->getTimestamp(), $expiresAt);
+        Cache::put('last_block_time', $blockTime->getTimestamp(), 1);
         Cache::put('last_block_height', $block->height, $expiresAt);
-        Cache::put('last_active_validators', $validators->count(), $expiresAt);
-    }
-
-    /**
-     * @param string $stringSateTime
-     * @return \Carbon\Carbon
-     */
-    private function prepareDate(string $stringSateTime): \Carbon\Carbon
-    {
-        $nano = preg_replace('/(.*)\.(.*)Z/', '$2', $stringSateTime);
-
-        if (!$nano) {
-            return \Carbon\Carbon::now();
-        }
-
-        $result = str_replace(".{$nano}Z", '.' . substr($nano, 0, 6) . 'Z', $stringSateTime);
-
-        return new \Carbon\Carbon($result);
+//        Cache::put('last_active_validators', $validators->count(), $expiresAt);
     }
 
     /**
      * Поучить награду за блок
      * @param int $blockHeight
+     * @return string
+     */
+    private function getBlockReward(int $blockHeight): string
+    {
+        return MinterReward::get($blockHeight);
+    }
+
+    /**
+     * @param int $currentBlockTime
      * @return int
      */
-    private function getBlockReward(int $blockHeight): int
+    private function calculateBlockTime(int $currentBlockTime): int
     {
-        //TODO: добавить реализацию
-        return 1;
+        //TODO: проверить расчет
+        $lastBlockTime = Cache::get('last_block_time', null);
+
+        if ($lastBlockTime && $currentBlockTime > $lastBlockTime) {
+            return $currentBlockTime - $lastBlockTime;
+        }
+
+        return $this::DEFAULT_BLOCK_TIME;
     }
 
     /**
@@ -151,13 +152,9 @@ class BlockService implements BlockServiceInterface
      */
     private function getBlockSize(array $blockData): int
     {
-        $txs = '';
+        //TODO: получать из API
 
-        foreach ($blockData['block']['data']['txs'] as $transaction) {
-            $txs .= $transaction;
-        }
-
-        return \mb_strlen($txs);
+        return 0;
     }
 
     /**
@@ -167,7 +164,7 @@ class BlockService implements BlockServiceInterface
      */
     public function getExplorerLatestBlockHeight(): int
     {
-        $block = Block::orderByDesc('id')->first();
+        $block = Block::orderByDesc('height')->first();
 
         return $block->height ?? 0;
     }
@@ -181,20 +178,5 @@ class BlockService implements BlockServiceInterface
         $blocks = $this->blockRepository->getBlocksCountByPeriod(86400);
 
         return round($blocks / 86400, 8);
-    }
-
-    /**
-     * @param int $currentBlockTime
-     * @return int
-     */
-    private function calculateBlockTime(int $currentBlockTime): int
-    {
-        $lastBlockTime = Cache::get('last_block_time', null);
-
-        if ($lastBlockTime && $currentBlockTime > $lastBlockTime) {
-            return $currentBlockTime - $lastBlockTime;
-        }
-
-        return $this::DEFAULT_BLOCK_TIME;
     }
 }

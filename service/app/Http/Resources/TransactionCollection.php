@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Transaction;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
@@ -18,6 +19,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
  *     @SWG\Property(property="total",        type="integer", example="130")
  * )
  **/
+
 /**
  * @SWG\Definition(
  *     definition="TransactionLinksData",
@@ -40,23 +42,94 @@ class TransactionCollection extends ResourceCollection
     public function toArray($request): array
     {
         return [
-            'data'  => $this->collection->map(function ($item) {
-               return [
-                   'hash' => $item->hash,
-                   'nonce' => $item->nonce,
-                   'block' => $item->block->height,
-                   'timestamp' => $item->block->timestamp,
-                   'fee' => $item->feeMnt,
-                   'type' => $item->typeString,
-                   'status' => $item->status,
-                   'payload' => $item->payload,
-                   'data' => [
-                       'from' => $item->from,
-                       'to' => $item->to,
-                       'coin' => $item->coin,
-                       'amount' => (float)$item->value
-                   ]
-               ];
+            'data' => $this->collection->map(function ($item) {
+
+                $result = [
+                    'hash' => $item->hash,
+                    'nonce' => $item->nonce,
+                    'block' => $item->block->height,
+                    'timestamp' => $item->block->timestamp,
+                    'fee' => $item->feeMnt,
+                    'type' => $item->typeString,
+                    'status' => $item->status,
+                    'payload' => $item->payload,
+                    'data' => []
+                ];
+
+                //TODO: как будет поддержка на фронте вернуть
+                $result['data'] = [
+                    'from' => $item->from,
+                    'to' => $item->to,
+                    'coin' => $item->coin,
+                    'amount' => (float)$item->value
+                ];
+
+//                switch ($item->type) {
+//                    case Transaction::TYPE_SEND:
+//                        $result['data'] = [
+//                            'from' => $item->from,
+//                            'to' => $item->to,
+//                            'coin' => $item->coin,
+//                            'amount' => (float)$item->value
+//                        ];
+//                        break;
+//                    case Transaction::TYPE_CONVERT:
+//                        $result['data'] = [
+//                            'from_coin_symbol' => $item->from_coin_symbol,
+//                            'to_coin_symbol' => $item->to_coin_symbol,
+//                            'value' => (float)$item->value
+//                        ];
+//                        break;
+//                    case Transaction::TYPE_CREATE_COIN:
+//                        $result['data'] = [
+//                            'name' => $item->name,
+//                            'symbol' => $item->symbol,
+//                            'initial_amount' => $item->initial_amount,
+//                            'initial_reserve' => $item->initial_reserve,
+//                            'constant_reserve_ratio' => $item->constant_reserve_ratio,
+//                        ];
+//                        break;
+//                    case Transaction::TYPE_DECLARE_CANDIDACY:
+//                        $result['data'] = [
+//                            'address' => $item->address,
+//                            'pub_key' => $item->pub_key,
+//                            'commission' => $item->commission,
+//                            'coin' => $item->coin,
+//                            'stake' => $item->stake
+//                        ];
+//                        break;
+//                    case Transaction::TYPE_DELEGATE:
+//                        $result['data'] = [
+//                            'pub_key' => $item->pub_key,
+//                            'coin' => $item->coin,
+//                            'stake' => $item->stake
+//                        ];
+//                        break;
+//                    case Transaction::TYPE_UNBOND:
+//                        $result['data'] = [
+//                            'pub_key' => $item->pub_key,
+//                            'coin' => $item->coin,
+//                            'value' => (float)$item->value
+//                        ];
+//                        break;
+//                    case Transaction::TYPE_REDEEM_CHECK:
+//                        $result['data'] = [
+//                            'raw_check' => $item->raw_check,
+//                            'proof' => $item->proof
+//                        ];
+//                        break;
+//                    case Transaction::TYPE_SET_CANDIDATE_ONLINE:
+//                    case Transaction::TYPE_SET_CANDIDATE_OFFLINE:
+//                        $result['data'] = [
+//                            'pub_key' => $item->pub_key,
+//                        ];
+//                        break;
+//                    default:
+//                        $result['data'] = [];
+//                        break;
+//                }
+
+                return $result;
             }),
         ];
     }
