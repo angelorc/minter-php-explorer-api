@@ -59,7 +59,6 @@ class TransactionCollection extends ResourceCollection
                 switch ($item->type) {
                     case Transaction::TYPE_SEND:
                         $result['data'] = [
-                            'from' => $item->from,
                             'to' => $item->to,
                             'coin' => $item->coin,
                             'amount' => (float)$item->value
@@ -120,6 +119,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [];
                         break;
                 }
+                $result['data']['from'] = $item->from ?? '';
 
                 return $result;
             }),

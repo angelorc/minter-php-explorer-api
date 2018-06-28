@@ -26,7 +26,6 @@ class TransactionResource extends JsonResource
             switch ($this->type) {
                 case Transaction::TYPE_SEND:
                     $data['data']['data'] = [
-                        'from' => $this->from,
                         'to' => $this->to,
                         'coin' => $this->coin,
                         'amount' => (float)$this->value
@@ -87,6 +86,8 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [];
                     break;
             }
+
+            $data['data']['data']['from'] = $this->from ?? '';
 
             return $data;
         }
