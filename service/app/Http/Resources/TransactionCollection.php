@@ -56,78 +56,70 @@ class TransactionCollection extends ResourceCollection
                     'data' => []
                 ];
 
-                //TODO: как будет поддержка на фронте вернуть
-                $result['data'] = [
-                    'from' => $item->from,
-                    'to' => $item->to,
-                    'coin' => $item->coin,
-                    'amount' => (float)$item->value
-                ];
-
-//                switch ($item->type) {
-//                    case Transaction::TYPE_SEND:
-//                        $result['data'] = [
-//                            'from' => $item->from,
-//                            'to' => $item->to,
-//                            'coin' => $item->coin,
-//                            'amount' => (float)$item->value
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_CONVERT:
-//                        $result['data'] = [
-//                            'from_coin_symbol' => $item->from_coin_symbol,
-//                            'to_coin_symbol' => $item->to_coin_symbol,
-//                            'value' => (float)$item->value
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_CREATE_COIN:
-//                        $result['data'] = [
-//                            'name' => $item->name,
-//                            'symbol' => $item->symbol,
-//                            'initial_amount' => $item->initial_amount,
-//                            'initial_reserve' => $item->initial_reserve,
-//                            'constant_reserve_ratio' => $item->constant_reserve_ratio,
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_DECLARE_CANDIDACY:
-//                        $result['data'] = [
-//                            'address' => $item->address,
-//                            'pub_key' => $item->pub_key,
-//                            'commission' => $item->commission,
-//                            'coin' => $item->coin,
-//                            'stake' => $item->stake
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_DELEGATE:
-//                        $result['data'] = [
-//                            'pub_key' => $item->pub_key,
-//                            'coin' => $item->coin,
-//                            'stake' => $item->stake
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_UNBOND:
-//                        $result['data'] = [
-//                            'pub_key' => $item->pub_key,
-//                            'coin' => $item->coin,
-//                            'value' => (float)$item->value
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_REDEEM_CHECK:
-//                        $result['data'] = [
-//                            'raw_check' => $item->raw_check,
-//                            'proof' => $item->proof
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_SET_CANDIDATE_ONLINE:
-//                    case Transaction::TYPE_SET_CANDIDATE_OFFLINE:
-//                        $result['data'] = [
-//                            'pub_key' => $item->pub_key,
-//                        ];
-//                        break;
-//                    default:
-//                        $result['data'] = [];
-//                        break;
-//                }
+                switch ($item->type) {
+                    case Transaction::TYPE_SEND:
+                        $result['data'] = [
+                            'from' => $item->from,
+                            'to' => $item->to,
+                            'coin' => $item->coin,
+                            'amount' => (float)$item->value
+                        ];
+                        break;
+                    case Transaction::TYPE_CONVERT:
+                        $result['data'] = [
+                            'from_coin_symbol' => $item->from_coin_symbol,
+                            'to_coin_symbol' => $item->to_coin_symbol,
+                            'value' => (float)$item->value
+                        ];
+                        break;
+                    case Transaction::TYPE_CREATE_COIN:
+                        $result['data'] = [
+                            'name' => $item->name,
+                            'symbol' => $item->symbol,
+                            'initial_amount' => $item->initial_amount,
+                            'initial_reserve' => $item->initial_reserve,
+                            'constant_reserve_ratio' => $item->constant_reserve_ratio,
+                        ];
+                        break;
+                    case Transaction::TYPE_DECLARE_CANDIDACY:
+                        $result['data'] = [
+                            'address' => $item->address,
+                            'pub_key' => $item->pub_key,
+                            'commission' => $item->commission,
+                            'coin' => $item->coin,
+                            'stake' => $item->stake
+                        ];
+                        break;
+                    case Transaction::TYPE_DELEGATE:
+                        $result['data'] = [
+                            'pub_key' => $item->pub_key,
+                            'coin' => $item->coin,
+                            'stake' => $item->stake
+                        ];
+                        break;
+                    case Transaction::TYPE_UNBOND:
+                        $result['data'] = [
+                            'pub_key' => $item->pub_key,
+                            'coin' => $item->coin,
+                            'value' => (float)$item->value
+                        ];
+                        break;
+                    case Transaction::TYPE_REDEEM_CHECK:
+                        $result['data'] = [
+                            'raw_check' => $item->raw_check,
+                            'proof' => $item->proof
+                        ];
+                        break;
+                    case Transaction::TYPE_SET_CANDIDATE_ONLINE:
+                    case Transaction::TYPE_SET_CANDIDATE_OFFLINE:
+                        $result['data'] = [
+                            'pub_key' => $item->pub_key,
+                        ];
+                        break;
+                    default:
+                        $result['data'] = [];
+                        break;
+                }
 
                 return $result;
             }),
