@@ -42,17 +42,7 @@ class ValidatorService implements ValidatorServiceInterface
      */
     public function getTotalValidatorsCount(): int
     {
-        $total = Cache::get('last_total_validators', null);
-
-        if (!$total) {
-
-            $total = Validator::count();
-
-            Cache::put('last_total_validators', $total, 1);
-        }
-
-
-        return $total;
+        return Validator::count();
     }
 
     /**
@@ -105,7 +95,7 @@ class ValidatorService implements ValidatorServiceInterface
             }
         }
 
-        Cache::put('last_active_validators', \count($validators), 1);
+        Cache::put('last_active_validators', \count($validatorsData), 1);
 
         return collect($validators);
     }
