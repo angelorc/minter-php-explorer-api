@@ -64,6 +64,10 @@ class ValidatorService implements ValidatorServiceInterface
             $validatorsData = \GuzzleHttp\json_decode($data->getBody()->getContents(), true);
 
             $validatorsData = $validatorsData['result'];
+
+            Cache::forget('last_active_validators');
+            Cache::put('last_active_validators', \count($validatorsData), 1);
+
         } catch (GuzzleException $e) {
             Log::error($e->getMessage());
         }
@@ -94,8 +98,6 @@ class ValidatorService implements ValidatorServiceInterface
                 }
             }
         }
-
-        Cache::put('last_active_validators', \count($validatorsData), 1);
 
         return collect($validators);
     }
