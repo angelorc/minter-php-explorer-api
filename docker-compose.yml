@@ -9,10 +9,12 @@ services:
             - postgres
             - redis
             - rabbitmq
+            - centrifugo
         links:
             - postgres
             - redis
             - rabbitmq
+            - centrifugo
     nginx:
         container_name: "minter_explorer_web_server"
         build: ./docker/nginx
@@ -59,3 +61,10 @@ services:
         volumes:
             - ./service:/app
         command: install
+
+    centrifugo:
+        image: centrifugo/centrifugo
+        volumes:
+          - ./docker/centrifugo:/centrifugo
+        ports:
+          - 8800:8000

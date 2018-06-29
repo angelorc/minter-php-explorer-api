@@ -27,6 +27,9 @@ class AddressBalanceClientCommand extends Command
 
     public function handle(): void
     {
+        $centrifugo = new \phpcent\Client(env('CENTRIFUGE_URL', 'http://localhost:8000'));
+        $centrifugo->setSecret(env('CENTRIFUGE_SECRET', null));
+
         try {
 
             $client = new Client('ws://' . env('MINTER_API') . $this::ENDPOINT,
@@ -50,6 +53,12 @@ class AddressBalanceClientCommand extends Command
                         ['address' => ucfirst($data->address), 'coin' => mb_strtolower($data->coin)],
                         ['amount' => $data->balance]
                     );
+
+                    $centrifugo->publish(mb_strtolower($data->address), [
+                        'address' => ucfirst($data->address),
+                        'coin' => mb_strtolower($data->coin),
+                        'amount' => $data->balance
+                    ]);
 
                 }
 
