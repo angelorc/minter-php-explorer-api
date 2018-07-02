@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Models\Block;
 use App\Models\Validator;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -33,7 +34,14 @@ class ValidatorService implements ValidatorServiceInterface
      */
     public function getActiveValidatorsCount(): int
     {
-        return Cache::get('last_active_validators', 2);
+
+        $block = Block::with('validators')->orderByDesc('height')->first();
+
+        if ($block) {
+            return $block->validators->count();
+        }
+
+        return 0;
     }
 
     /**
@@ -65,9 +73,6 @@ class ValidatorService implements ValidatorServiceInterface
 
             $validatorsData = $validatorsData['result'];
 
-            Cache::forget('last_active_validators');
-            Cache::put('last_active_validators', \count($validatorsData), 1);
-
         } catch (GuzzleException $e) {
             Log::error($e->getMessage());
         }
@@ -82,10 +87,10 @@ class ValidatorService implements ValidatorServiceInterface
                 $validatorPubKey = $validatorData['pub_key'] ?? '';
 
                 if ($validatorAddress) {
-                    $validator = Validator::where('address', 'ilike', $validatorAddress)->first();
+                    $validator = Validator::where('public_key', 'ilike', $validatorPubKey)->first();
                 }
 
-                if (!$validator && $validatorAddress) {
+                if (!$validator && $validatorPubKey) {
                     $validator = new Validator();
                     $validator->name = '';
                     $validator->address = $validatorAddress;

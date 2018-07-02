@@ -19,7 +19,7 @@ class BlockRepository implements BlockRepositoryInterface
         $block->save();
 
         /** Collections $transactions */
-        if ($transactions){
+        if ($transactions) {
             $chunks = $transactions->chunk(300);
             foreach ($chunks as $chunk) {
                 DB::transaction(function () use ($block, $chunk) {
@@ -28,6 +28,7 @@ class BlockRepository implements BlockRepositoryInterface
             }
         }
 
+        /** Collections $validators */
         if ($validators) {
             DB::transaction(function () use ($block, $validators) {
                 $block->validators()->saveMany($validators);

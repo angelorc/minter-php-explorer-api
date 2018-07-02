@@ -112,11 +112,9 @@ class BlockService implements BlockServiceInterface
 
         Cache::forget('last_block_time');
         Cache::forget('last_block_height');
-        Cache::forget('last_active_validators');
 
         Cache::put('last_block_time', $blockTime->getTimestamp(), 1);
         Cache::put('last_block_height', $block->height, $expiresAt);
-//        Cache::put('last_active_validators', $validators->count(), $expiresAt);
     }
 
     /**
@@ -160,7 +158,6 @@ class BlockService implements BlockServiceInterface
     /**
      * Получить высоту последнего блока из Базы
      * @return int
-     * @throws \RuntimeException
      */
     public function getExplorerLatestBlockHeight(): int
     {
