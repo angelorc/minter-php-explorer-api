@@ -27,6 +27,9 @@ class AddressBalanceClientCommand extends Command
 
     public function handle(): void
     {
+        $centrifuge = new \phpcent\Client(env('CENTRIFUGE_URL', 'http://localhost:8000'));
+        $centrifuge->setSecret(env('CENTRIFUGE_SECRET', null));
+
         try {
 
             $client = new Client('ws://' . env('MINTER_API') . $this::ENDPOINT,
@@ -51,6 +54,11 @@ class AddressBalanceClientCommand extends Command
                         ['amount' => $data->balance]
                     );
 
+                    $centrifuge->publish(mb_strtolower($data->address), [
+                        'address' => ucfirst($data->address),
+                        'coin' => mb_strtolower($data->coin),
+                        'amount' => $data->balance
+                    ]);
                 }
 
                 // при подключении первым приходит пустой массив, поэтому проверяем
