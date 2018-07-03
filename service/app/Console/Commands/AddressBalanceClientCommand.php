@@ -25,11 +25,26 @@ class AddressBalanceClientCommand extends Command
      */
     protected $description = 'Listen balance data form Minter API';
 
+    /**
+     * @var \phpcent\Client
+     */
+    protected $centrifuge;
+
+
+    /**
+     * AddressBalanceClientCommand constructor.
+     * @param \phpcent\Client $centrifuge
+     */
+    public function __construct(\phpcent\Client $centrifuge)
+    {
+        parent::__construct();
+
+        $this->centrifuge = $centrifuge;
+    }
+
+
     public function handle(): void
     {
-        $centrifuge = new \phpcent\Client(env('CENTRIFUGE_URL', 'http://localhost:8000'));
-        $centrifuge->setSecret(env('CENTRIFUGE_SECRET', null));
-
         try {
 
             $client = new Client('ws://' . env('MINTER_API') . $this::ENDPOINT,
@@ -54,7 +69,7 @@ class AddressBalanceClientCommand extends Command
                         ['amount' => $data->balance]
                     );
 
-                    $centrifuge->publish(mb_strtolower($data->address), [
+                    $this->centrifuge->publish('test', [
                         'address' => ucfirst($data->address),
                         'coin' => mb_strtolower($data->coin),
                         'amount' => $data->balance
