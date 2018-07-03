@@ -57,5 +57,11 @@ class ContainerServiceProvider extends ServiceProvider
             return new Client(['base_uri' => 'http://' . env('MINTER_API')]);
         });
 
+        $this->app->singleton(\phpcent\Client::class, function () {
+            $centrifuge = new \phpcent\Client(env('CENTRIFUGE_URL', 'http://localhost:8000'));
+            $centrifuge->setSecret(env('CENTRIFUGE_SECRET', null));
+            return $centrifuge;
+        });
+
     }
 }

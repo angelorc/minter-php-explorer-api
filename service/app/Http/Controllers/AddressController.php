@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Coin;
+use App\Models\BalanceChannel;
 use App\Services\BalanceServiceInterface;
 use App\Services\TransactionServiceInterface;
 use Illuminate\Http\Request;
@@ -18,19 +18,26 @@ class AddressController extends Controller
      * @var BalanceServiceInterface
      */
     private $balanceService;
+    /**
+     * @var \phpcent\Client
+     */
+    private $centrifuge;
 
     /**
      * Create a new controller instance.
      *
      * @param TransactionServiceInterface $transactionService
      * @param BalanceServiceInterface $balanceService
+     * @param \phpcent\Client $centrifuge
      */
     public function __construct(
         TransactionServiceInterface $transactionService,
-        BalanceServiceInterface $balanceService
+        BalanceServiceInterface $balanceService,
+        \phpcent\Client $centrifuge
     ) {
         $this->transactionService = $transactionService;
         $this->balanceService = $balanceService;
+        $this->centrifuge = $centrifuge;
     }
 
 
@@ -76,20 +83,6 @@ class AddressController extends Controller
      *
      * @return array
      */
-    /**
-     * Статут сети
-     * @param string $address
-     * @return array
-     */
-    public function address(string $address): array
-    {
-        return [
-            'data' => [
-                'txCount' => $this->transactionService->getTotalTransactionsCount($address),
-                'coins' => $this->balanceService->getAddressBalance($address) ?? []
-            ]
-        ];
-    }
 
     /**
      * @param Request $request
@@ -105,7 +98,7 @@ class AddressController extends Controller
 
         $result = [];
 
-        foreach ($request->get('addresses') as $address){
+        foreach ($request->get('addresses') as $address) {
             $data = $this->address($address);
             $data = $data['data'];
             $data['address'] = $address;
@@ -149,6 +142,59 @@ class AddressController extends Controller
      *
      * @return array
      */
+
+    /**
+     * Статут сети
+     * @param string $address
+     * @return array
+     */
+    public function address(string $address): array
+    {
+        return [
+            'data' => [
+                'txCount' => $this->transactionService->getTotalTransactionsCount($address),
+                'coins' => $this->balanceService->getAddressBalance($address) ?? []
+            ]
+        ];
+    }
+
+    /**
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Exception
+     */
+    public function getBalanceWsChannel(Request $request): array
+    {
+        $this->validate($request, [
+            'addresses' => 'required|array',
+            'addresses.*' => 'string|size:42'
+        ]);
+
+        $addresses = $request->get('addresses', []);
+
+        $timestamp = time();
+
+        $token = $this->centrifuge->generateClientToken('1', $timestamp);
+
+        $channel = substr(base64_encode(implode(';', [$timestamp, $token, random_bytes(5)])), random_int(0, 10), 20);
+
+        foreach ($addresses as $address) {
+            BalanceChannel::create([
+                'name' => $channel,
+                'address' => mb_strtolower($address)
+            ]);
+        }
+
+        return [
+            'data' => [
+                'channel' => $channel,
+                'timestamp' => $timestamp,
+                'token' => $token,
+            ]
+        ];
+    }
 
     /**
      * Посчитать суммарный баланс адреса
