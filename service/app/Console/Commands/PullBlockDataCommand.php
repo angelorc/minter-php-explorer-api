@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Console\Commands;
+
 use App\Services\BlockServiceInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+
 class PullBlockDataCommand extends Command
 {
     protected const SLEEP_TIME = 2500000;
@@ -17,6 +20,7 @@ class PullBlockDataCommand extends Command
     protected $description = 'Pull last block data';
     /** @var BlockServiceInterface */
     private $blockService;
+
     /**
      * PullBlockDataCommand constructor.
      * @param BlockServiceInterface $blockService
@@ -26,6 +30,7 @@ class PullBlockDataCommand extends Command
         parent::__construct();
         $this->blockService = $blockService;
     }
+
     public function handle(): void
     {
         $this->info('start');

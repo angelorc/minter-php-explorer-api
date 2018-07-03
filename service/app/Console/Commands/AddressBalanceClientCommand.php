@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Balance;
+use App\Models\BalanceChannel;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Wrench\Client;
 use Wrench\Exception\FrameException;
@@ -60,20 +62,38 @@ class AddressBalanceClientCommand extends Command
 
                 $data = null;
 
+                $channels = [];
+
                 foreach ($response as $r) {
 
                     $data = \GuzzleHttp\json_decode($r->getPayload());
 
-                    Balance::updateOrCreate(
+                    $balance = Balance::updateOrCreate(
                         ['address' => ucfirst($data->address), 'coin' => mb_strtolower($data->coin)],
                         ['amount' => $data->balance]
                     );
 
-                    $this->centrifuge->publish('test', [
-                        'address' => ucfirst($data->address),
-                        'coin' => mb_strtolower($data->coin),
-                        'amount' => $data->balance
-                    ]);
+                    /** @var Collection $bl */
+                    $balanceChannelList = BalanceChannel::where('address', 'ilike', $data->address)->get();
+
+                    foreach ($balanceChannelList as $balanceChannel) {
+                        /** BalanceChannel $balanceChannel */
+                        $channels[$balanceChannel->name][] = $balance;
+                    }
+
+                }
+
+                if (\count($channels)) {
+                    foreach ($channels as $name => $balances) {
+                        foreach ($balances as $balance) {
+                            $this->centrifuge->publish($name, [
+                                'address' => mb_strtolower($balance->address),
+                                'coin' => mb_strtolower($balance->coin),
+                                'amount' => $balance->amount
+                            ]);
+                        }
+
+                    }
                 }
 
                 // при подключении первым приходит пустой массив, поэтому проверяем
