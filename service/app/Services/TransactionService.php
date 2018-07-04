@@ -53,28 +53,28 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->fee = $tx['gas'];
                 $transaction->payload = $tx['payload'] ?? null;
                 $transaction->service_data = $tx['serviceData'] ?? null;
-                $transaction->from = mb_convert_case(mb_strtolower($tx['from']), MB_CASE_TITLE, "UTF-8");
+                $transaction->from = mb_strtolower($tx['from']);
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
 
                 $val = $tx['data']['value'] ?? 0;
                 $transaction->value = bcmul($val, Coin::PIP_STR, 18);
-                $transaction->coin = mb_strtoupper($tx['data']['coin'] ?? '');
-                $transaction->to = ucfirst($tx['data']['to'] ?? '');
+                $transaction->coin = mb_strtolower($tx['data']['coin'] ?? '');
+                $transaction->to = mb_strtolower($tx['data']['to'] ?? '');
 
                 $pubKey = $tx['data']['pubkey'] ?? null;
-                $transaction->pub_key = $pubKey ? ucfirst($pubKey) : null;
+                $transaction->pub_key = $pubKey ? mb_strtolower($pubKey) : null;
 
                 if ($transaction->type === Transaction::TYPE_DECLARE_CANDIDACY) {
                     $address = $tx['data']['Address'] ?? null;
-                    $transaction->address = $address ? ucfirst($address) : null;
+                    $transaction->address = $address ? mb_strtolower($address) : null;
                     $transaction->commission = $tx['data']['Commission'] ?? null;
                 }
 
                 if (\in_array($transaction->type, [Transaction::TYPE_DECLARE_CANDIDACY, Transaction::TYPE_DELEGATE],
                     true)) {
                     $pubKey = $tx['data']['PubKey'] ?? null;
-                    $transaction->pub_key = $pubKey ? ucfirst($pubKey) : null;
-                    $transaction->coin = mb_strtoupper($tx['data']['Coin'] ?? '');
+                    $transaction->pub_key = $pubKey ? mb_strtolower($pubKey) : null;
+                    $transaction->coin = mb_strtolower($tx['data']['Coin'] ?? '');
                     $transaction->stake = $tx['data']['Stake'] ?? null;
                 }
 

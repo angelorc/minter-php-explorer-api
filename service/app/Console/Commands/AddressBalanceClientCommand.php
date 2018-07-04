@@ -69,7 +69,7 @@ class AddressBalanceClientCommand extends Command
                     $data = \GuzzleHttp\json_decode($r->getPayload());
 
                     $balance = Balance::updateOrCreate(
-                        ['address' => ucfirst($data->address), 'coin' => mb_strtolower($data->coin)],
+                        ['address' => mb_strtolower($data->address), 'coin' => mb_strtolower($data->coin)],
                         ['amount' => $data->balance]
                     );
 

@@ -50,15 +50,19 @@ class ValidatorService implements ValidatorServiceInterface
      */
     public function getTotalValidatorsCount(): int
     {
-        return Validator::count();
+
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
+
+        return Validator::whereDate('updated_at', '>=', $dt->format('Y-m-d H:i:sO'))->count();
     }
 
     /**
      * Save Validators to DB
-     * @param int $blockHeigth
+     * @param int $blockHeight
      * @return Collection
      */
-    public function saveValidatorsFromApiData(int $blockHeigth): Collection
+    public function saveValidatorsFromApiData(int $blockHeight): Collection
     {
         $validators = [];
 
@@ -66,7 +70,7 @@ class ValidatorService implements ValidatorServiceInterface
 
         try {
             $data = $this->httpClient->request('GET', '/api/validators', [
-                'query' => ['height' => $blockHeigth]
+                'query' => ['height' => $blockHeight]
             ]);
 
             $validatorsData = \GuzzleHttp\json_decode($data->getBody()->getContents(), true);
@@ -83,22 +87,14 @@ class ValidatorService implements ValidatorServiceInterface
 
                 $validator = null;
 
-                $validatorAddress = $validatorData['candidate_address'] ?? '';
-                $validatorPubKey = $validatorData['pub_key'] ?? '';
+                $validatorAddress = mb_strtolower($validatorData['candidate_address'] ?? '');
+                $validatorPubKey = mb_strtolower($validatorData['pub_key'] ?? '');
 
-                if ($validatorAddress) {
-                    $validator = Validator::where('public_key', 'ilike', $validatorPubKey)->first();
-                }
-
-                if (!$validator && $validatorPubKey) {
-                    $validator = new Validator();
-                    $validator->name = '';
-                    $validator->address = $validatorAddress;
-                    $validator->public_key = $validatorPubKey;
-                    $validator->save();
-                }
-
-                if ($validator) {
+                if ($validatorPubKey) {
+                    $validator = Validator::updateOrCreate(
+                        ['public_key' => $validatorPubKey, 'address' => $validatorAddress],
+                        ['name' => '']
+                    );
                     $validators[] = $validator;
                 }
             }

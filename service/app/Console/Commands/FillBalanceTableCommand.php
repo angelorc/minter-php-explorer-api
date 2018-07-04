@@ -76,7 +76,7 @@ class FillBalanceTableCommand extends Command
                 foreach ($data['result'] as $k => $v) {
 
                     Balance::updateOrCreate(
-                        ['address' => ucfirst($address), 'coin' => mb_strtolower($k)],
+                        ['address' => mb_strtolower($address), 'coin' => mb_strtolower($k)],
                         ['amount' => $v]
                     );
 

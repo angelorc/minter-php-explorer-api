@@ -10,10 +10,10 @@ interface ValidatorServiceInterface
 
     /**
      * Save Validator to DB
-     * @param int $blockHeigth
+     * @param int $blockHeight
      * @return Collection
      */
-    public function saveValidatorsFromApiData(int $blockHeigth): Collection;
+    public function saveValidatorsFromApiData(int $blockHeight): Collection;
 
     /**
      * Get Total Validators Count
