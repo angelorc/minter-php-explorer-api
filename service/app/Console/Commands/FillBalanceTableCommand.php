@@ -63,25 +63,19 @@ class FillBalanceTableCommand extends Command
         $addresses = array_unique(array_merge($txTo->toArray(), $txFrom->toArray()));
 
         foreach ($addresses as $address) {
-
             if (!$address) {
                 continue;
             }
 
             try {
                 $res = $this->client->request('GET', 'api/balance/' . ucfirst($address));
-
                 $data = json_decode($res->getBody()->getContents(), 1);
-
                 foreach ($data['result'] as $k => $v) {
-
                     Balance::updateOrCreate(
-                        ['address' => mb_strtolower($address), 'coin' => mb_strtolower($k)],
+                        ['address' => mb_strtolower($address), 'coin' => mb_strtoupper($k)],
                         ['amount' => $v]
                     );
-
                 }
-
                 $count++;
             } catch (GuzzleException $e) {
                 $this->error('Error: ' . $e->getMessage());

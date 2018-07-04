@@ -69,12 +69,12 @@ class AddressBalanceClientCommand extends Command
                     $data = \GuzzleHttp\json_decode($r->getPayload());
 
                     $balance = Balance::updateOrCreate(
-                        ['address' => mb_strtolower($data->address), 'coin' => mb_strtolower($data->coin)],
+                        ['address' => mb_strtolower($data->address), 'coin' => mb_strtoupper($data->coin)],
                         ['amount' => $data->balance]
                     );
 
                     /** @var Collection $bl */
-                    $balanceChannelList = BalanceChannel::where('address', 'ilike', $data->address)->get();
+                    $balanceChannelList = BalanceChannel::where('address', mb_strtolower($data->address))->get();
 
                     foreach ($balanceChannelList as $balanceChannel) {
                         /** BalanceChannel $balanceChannel */
@@ -88,7 +88,7 @@ class AddressBalanceClientCommand extends Command
                         foreach ($balances as $balance) {
                             $this->centrifuge->publish($name, [
                                 'address' => mb_strtolower($balance->address),
-                                'coin' => mb_strtolower($balance->coin),
+                                'coin' => mb_strtoupper($balance->coin),
                                 'amount' => $balance->amount
                             ]);
                         }

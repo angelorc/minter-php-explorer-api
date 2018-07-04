@@ -14,6 +14,6 @@ $router->get('block/{height}', BlockController::class. '@getBlockByHeight');
 $router->get('transactions', TransactionController::class. '@getList');
 $router->get('transaction/{hash}', TransactionController::class. '@getTransactionByHash');
 
-$router->get('address/getBalanceChannel', AddressController::class . '@getBalanceWsChannel');
+$router->get('address/get-balance-channel', AddressController::class . '@getBalanceWsChannel');
 $router->get('address/{address}', AddressController::class. '@address');
 $router->get('address', AddressController::class. '@addresses');

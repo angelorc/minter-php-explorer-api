@@ -58,7 +58,7 @@ class TransactionService implements TransactionServiceInterface
 
                 $val = $tx['data']['value'] ?? 0;
                 $transaction->value = bcmul($val, Coin::PIP_STR, 18);
-                $transaction->coin = mb_strtolower($tx['data']['coin'] ?? '');
+                $transaction->coin = mb_strtoupper($tx['data']['coin'] ?? '');
                 $transaction->to = mb_strtolower($tx['data']['to'] ?? '');
 
                 $pubKey = $tx['data']['pubkey'] ?? null;
@@ -74,7 +74,7 @@ class TransactionService implements TransactionServiceInterface
                     true)) {
                     $pubKey = $tx['data']['PubKey'] ?? null;
                     $transaction->pub_key = $pubKey ? mb_strtolower($pubKey) : null;
-                    $transaction->coin = mb_strtolower($tx['data']['Coin'] ?? '');
+                    $transaction->coin = mb_strtoupper($tx['data']['Coin'] ?? '');
                     $transaction->stake = $tx['data']['Stake'] ?? null;
                 }
 
