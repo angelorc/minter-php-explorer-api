@@ -67,7 +67,7 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [
                         'pub_key' => $this->pub_key,
                         'coin' => $this->coin,
-                        'value' => (float)$this->value
+                        'stake' => (float)$this->value
                     ];
                     break;
                 case Transaction::TYPE_REDEEM_CHECK:

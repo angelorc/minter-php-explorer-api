@@ -100,7 +100,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'pub_key' => $item->pub_key,
                             'coin' => $item->coin,
-                            'value' => (float)$item->value
+                            'stake' => (float)$item->value
                         ];
                         break;
                     case Transaction::TYPE_REDEEM_CHECK:

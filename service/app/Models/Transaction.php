@@ -93,9 +93,9 @@ class Transaction extends Model
 
     /**
      * Get transaction commission
-     * @return float
+     * @return string
      */
-    public function getFeeMntAttribute(): float
+    public function getFeeMntAttribute(): string
     {
         return $this->fee * Coin::PIP;
     }
