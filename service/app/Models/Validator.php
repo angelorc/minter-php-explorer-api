@@ -33,6 +33,8 @@ class Validator extends Model
         'name',
         'public_key',
         'address',
+        'updated_at',
+        'created_at',
     ];
 
     /**

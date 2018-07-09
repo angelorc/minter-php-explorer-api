@@ -120,7 +120,7 @@ class StatusController extends Controller
 
     /**
      * @SWG\Get(
-     *     path="/api/v1/txCountChartData",
+     *     path="/api/v1/tx-count-chart-data",
      *     tags={"Info"},
      *     summary="Количество транзакций по дням за последние 14",
      *     produces={"application/json"},
@@ -164,7 +164,7 @@ class StatusController extends Controller
 
     /**
      * @SWG\Get(
-     *     path="/api/v1/status_page",
+     *     path="/api/v1/status-page",
      *     tags={"Info"},
      *     summary="Статус сети",
      *     produces={"application/json"},

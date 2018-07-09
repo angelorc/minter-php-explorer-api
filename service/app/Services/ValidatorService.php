@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Helpers\StringHelper;
 use App\Models\Block;
 use App\Models\Validator;
 use GuzzleHttp\Client;
@@ -68,6 +69,8 @@ class ValidatorService implements ValidatorServiceInterface
 
         $validatorsData = null;
 
+        $dateTime = new \DateTime();
+
         try {
             $data = $this->httpClient->request('GET', '/api/validators', [
                 'query' => ['height' => $blockHeight]
@@ -87,13 +90,13 @@ class ValidatorService implements ValidatorServiceInterface
 
                 $validator = null;
 
-                $validatorAddress = mb_strtolower($validatorData['candidate_address'] ?? '');
-                $validatorPubKey = mb_strtolower($validatorData['pub_key'] ?? '');
+                $validatorAddress = StringHelper::mb_ucfirst($validatorData['candidate_address'] ?? '');
+                $validatorPubKey = StringHelper::mb_ucfirst($validatorData['pub_key'] ?? '');
 
                 if ($validatorPubKey) {
                     $validator = Validator::updateOrCreate(
                         ['public_key' => $validatorPubKey, 'address' => $validatorAddress],
-                        ['name' => '']
+                        ['updated_at' => $dateTime->format('Y-m-d H:i:sO')]
                     );
                     $validators[] = $validator;
                 }

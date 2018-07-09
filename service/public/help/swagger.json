@@ -216,7 +216,7 @@
                 }
             }
         },
-        "/api/v1/txCountChartData": {
+      "/api/v1/tx-count-chart-data": {
             "get": {
                 "tags": [
                     "Info"
@@ -242,7 +242,7 @@
                 }
             }
         },
-        "/api/v1/status_page": {
+      "/api/v1/status-page": {
             "get": {
                 "tags": [
                     "Info"
