@@ -96,7 +96,7 @@ class TransactionCollection extends ResourceCollection
                             'stake' => $item->stake
                         ];
                         break;
-                    case Transaction::TYPE_UNBOND:
+                    case Transaction::TYPE_UNBOUND:
                         $result['data'] = [
                             'pub_key' => $item->pub_key,
                             'coin' => $item->coin,

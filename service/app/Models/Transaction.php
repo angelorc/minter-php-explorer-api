@@ -48,6 +48,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int stake
  * @property float value
  * @property float fee
+ * @property float initial_amount
+ * @property float initial_reserve
+ * @property float constant_reserve_ratio
  * @property string hash
  * @property string service_data
  * @property string from
@@ -57,6 +60,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string pub_key
  * @property string address
  * @property string created_at
+ * @property string from_coin_symbol
+ * @property string to_coin_symbol
+ * @property string name
+ * @property string symbol
  */
 class Transaction extends Model
 {
@@ -65,7 +72,7 @@ class Transaction extends Model
     public const TYPE_CREATE_COIN = 3;
     public const TYPE_DECLARE_CANDIDACY = 4;
     public const TYPE_DELEGATE = 5;
-    public const TYPE_UNBOND = 6;
+    public const TYPE_UNBOUND = 6;
     public const TYPE_REDEEM_CHECK = 7;
     public const TYPE_SET_CANDIDATE_ONLINE = 8;
     public const TYPE_SET_CANDIDATE_OFFLINE = 9;
@@ -85,7 +92,7 @@ class Transaction extends Model
     }
 
     /**
-     * Коммисия за транзакцию
+     * Get transaction commission
      * @return float
      */
     public function getFeeMntAttribute(): float
@@ -94,7 +101,7 @@ class Transaction extends Model
     }
 
     /**
-     * Статус
+     * Get transaction status
      * @return string
      */
     public function getStatusAttribute(): string
@@ -104,7 +111,7 @@ class Transaction extends Model
     }
 
     /**
-     * Тип транзакции
+     * Get transaction type
      * @return string
      */
     public function getTypeStringAttribute(): string
@@ -120,8 +127,8 @@ class Transaction extends Model
                 return 'declareCandidacy';
             case $this::TYPE_DELEGATE:
                 return 'delegate';
-            case $this::TYPE_UNBOND:
-                return 'unbond';
+            case $this::TYPE_UNBOUND:
+                return 'unbound';
             case $this::TYPE_REDEEM_CHECK:
                 return 'redeemCheckData';
             case $this::TYPE_SET_CANDIDATE_ONLINE:
@@ -134,7 +141,7 @@ class Transaction extends Model
     }
 
     /**
-     * Базовая стоимость
+     * Get base price
      * @param int $type
      * @return int
      */
@@ -150,7 +157,7 @@ class Transaction extends Model
                 return 1000;
                 break;
             case $this::TYPE_CONVERT:
-            case $this::TYPE_UNBOND:
+            case $this::TYPE_UNBOUND:
             case $this::TYPE_DELEGATE:
                 return 10000;
                 break;

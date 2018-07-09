@@ -65,6 +65,19 @@ class TransactionService implements TransactionServiceInterface
                 $pubKey = $tx['data']['pubkey'] ?? null;
                 $transaction->pub_key = $pubKey ? StringHelper::mb_ucfirst($pubKey) : null;
 
+                if ($transaction->type === Transaction::TYPE_CONVERT) {
+                    $transaction->from_coin_symbol = mb_strtoupper($tx['data']['from_coin'] ?? '');
+                    $transaction->to_coin_symbol = mb_strtoupper($tx['data']['to_coin'] ?? '');
+                }
+
+                if ($transaction->type === Transaction::TYPE_CREATE_COIN) {
+                    $transaction->name = mb_strtoupper($tx['data']['name'] ?? '');
+                    $transaction->symbol = mb_strtoupper($tx['data']['coin_symbol'] ?? '');
+                    $transaction->initial_amount = $tx['data']['initial_amount'] ?? null;
+                    $transaction->initial_reserve = $tx['data']['initial_reserve'] ?? null;
+                    $transaction->constant_reserve_ratio = $tx['data']['constant_reserve_ratio'] ?? null;
+                }
+
                 if ($transaction->type === Transaction::TYPE_DECLARE_CANDIDACY) {
                     $address = $tx['data']['Address'] ?? null;
                     $transaction->address = $address ? StringHelper::mb_ucfirst($address) : null;

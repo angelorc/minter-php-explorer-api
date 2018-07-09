@@ -63,7 +63,7 @@ class TransactionResource extends JsonResource
                         'stake' => $this->stake
                     ];
                     break;
-                case Transaction::TYPE_UNBOND:
+                case Transaction::TYPE_UNBOUND:
                     $data['data']['data'] = [
                         'pub_key' => $this->pub_key,
                         'coin' => $this->coin,
