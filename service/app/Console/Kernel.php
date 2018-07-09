@@ -25,8 +25,6 @@ class Kernel extends ConsoleKernel
         TxPerDaySaveCommand::class,
         AddressBalanceClientCommand::class,
         FillBalanceTableCommand::class,
-        BlocksQueueWorkerCommand::class,
-        DeclareQueuesCommand::class,
     ];
 
     /**

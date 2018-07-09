@@ -56,13 +56,9 @@ class ContainerServiceProvider extends ServiceProvider
         $this->app->singleton(Client::class, function () {
             return new Client([
                 'base_uri' => 'http://' . env('MINTER_API'),
-                'headers' => [
-                    'Connection' => 'close'
-                ],
-                'curl' => [
-                    CURLOPT_FORBID_REUSE => true,
-                    CURLOPT_FRESH_CONNECT => true
-                ]
+                'Connection' => 'close',
+                CURLOPT_FORBID_REUSE => true,
+                CURLOPT_FRESH_CONNECT => true,
             ]);
         });
 

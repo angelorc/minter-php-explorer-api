@@ -10,6 +10,7 @@ use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\StringHelper;
 
 class TransactionService implements TransactionServiceInterface
 {
@@ -53,27 +54,27 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->fee = $tx['gas'];
                 $transaction->payload = $tx['payload'] ?? null;
                 $transaction->service_data = $tx['serviceData'] ?? null;
-                $transaction->from = mb_strtolower($tx['from']);
+                $transaction->from = StringHelper::mb_ucfirst($tx['from']);
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
 
                 $val = $tx['data']['value'] ?? 0;
                 $transaction->value = bcmul($val, Coin::PIP_STR, 18);
                 $transaction->coin = mb_strtoupper($tx['data']['coin'] ?? '');
-                $transaction->to = mb_strtolower($tx['data']['to'] ?? '');
+                $transaction->to = StringHelper::mb_ucfirst($tx['data']['to'] ?? '');
 
                 $pubKey = $tx['data']['pubkey'] ?? null;
-                $transaction->pub_key = $pubKey ? mb_strtolower($pubKey) : null;
+                $transaction->pub_key = $pubKey ? StringHelper::mb_ucfirst($pubKey) : null;
 
                 if ($transaction->type === Transaction::TYPE_DECLARE_CANDIDACY) {
                     $address = $tx['data']['Address'] ?? null;
-                    $transaction->address = $address ? mb_strtolower($address) : null;
+                    $transaction->address = $address ? StringHelper::mb_ucfirst($address) : null;
                     $transaction->commission = $tx['data']['Commission'] ?? null;
                 }
 
                 if (\in_array($transaction->type, [Transaction::TYPE_DECLARE_CANDIDACY, Transaction::TYPE_DELEGATE],
                     true)) {
                     $pubKey = $tx['data']['PubKey'] ?? null;
-                    $transaction->pub_key = $pubKey ? mb_strtolower($pubKey) : null;
+                    $transaction->pub_key = $pubKey ? StringHelper::mb_ucfirst($pubKey) : null;
                     $transaction->coin = mb_strtoupper($tx['data']['Coin'] ?? '');
                     $transaction->stake = $tx['data']['Stake'] ?? null;
                 }

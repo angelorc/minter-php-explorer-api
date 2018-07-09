@@ -42,7 +42,6 @@ class BalanceService implements BalanceServiceInterface
             ];
         });
 
-
         return $result;
     }
 }

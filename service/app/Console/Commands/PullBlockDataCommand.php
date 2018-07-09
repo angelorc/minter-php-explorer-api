@@ -33,21 +33,32 @@ class PullBlockDataCommand extends Command
 
     public function handle(): void
     {
-        $this->info('start');
+        $this->info('Start pulling blocks data');
 
         try {
+
             $lastBlockHeight = $this->blockService->getLatestBlockHeight();
             $explorerLastBlockHeight = $this->blockService->getExplorerLatestBlockHeight() + 1;
+
             while (true) {
 
+                $spentTime = 0;
+
                 if ($lastBlockHeight >= $explorerLastBlockHeight) {
+                    $start = time();
                     $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
                     $this->blockService->saveFromApiData($blockData);
                     $explorerLastBlockHeight++;
-                } else {
-                    usleep($this::SLEEP_TIME);
-                    $lastBlockHeight = $this->blockService->getLatestBlockHeight();
+                    $spentTime = time() - $start;
                 }
+
+                //Если блок обрабатывался меньше 2,5 сек, засыпаем
+                $sleepTime = $this::SLEEP_TIME - 1000000 * $spentTime;
+                if ($sleepTime > 0) {
+                    usleep($spentTime);
+                }
+
+                $lastBlockHeight = $this->blockService->getLatestBlockHeight();
             }
         } catch (GuzzleException $e) {
             Log::error($e->getMessage());

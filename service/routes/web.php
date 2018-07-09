@@ -12,5 +12,5 @@
 */
 
 $router->get('/', function () use ($router) {
-    return ['name' => 'Minter API', 'version' => '1.0 beta'];
+    return ['name' => 'Minter Explorer API', 'version' => '1.0 beta'];
 });

@@ -28,13 +28,15 @@ class BlockService implements BlockServiceInterface
      * @param BlockRepositoryInterface $blockRepository
      * @param TransactionServiceInterface $transactionService
      * @param ValidatorServiceInterface $validatorService
+     * @param Client $client
      */
     public function __construct(
         BlockRepositoryInterface $blockRepository,
         TransactionServiceInterface $transactionService,
-        ValidatorServiceInterface $validatorService
+        ValidatorServiceInterface $validatorService,
+        Client $client
     ) {
-        $this->client = new Client(['base_uri' => 'http://' . env('MINTER_API')]);
+        $this->client = $client;
 
         $this->blockRepository = $blockRepository;
 
@@ -79,6 +81,10 @@ class BlockService implements BlockServiceInterface
      */
     public function saveFromApiData(array $blockData): void
     {
+        if (!$blockData) {
+            return;
+        }
+
         $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($blockData['time']);
 
         $block = new Block();
@@ -86,7 +92,7 @@ class BlockService implements BlockServiceInterface
         $block->timestamp = $blockTime->format('Y-m-d H:i:sO');
         $block->created_at = $blockTime->format('Y-m-d H:i:sO');
         $block->tx_count = $blockData['num_txs'];
-        $block->hash = 'mh' . mb_strtolower($blockData['hash']);
+        $block->hash = 'Mh' . mb_strtolower($blockData['hash']);
         $block->block_reward = $this->getBlockReward($block->height);
         $block->block_time = $this->calculateBlockTime($blockTime->getTimestamp());
 
