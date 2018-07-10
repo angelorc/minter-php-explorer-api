@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Coin;
 use App\Models\Transaction;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -53,21 +54,21 @@ class TransactionResource extends JsonResource
                         'pub_key' => $this->pub_key,
                         'commission' => $this->commission,
                         'coin' => $this->coin,
-                        'stake' => $this->stake
+                        'stake' => bcmul($this->stake, Coin::PIP_STR, 18)
                     ];
                     break;
                 case Transaction::TYPE_DELEGATE:
                     $data['data']['data'] = [
                         'pub_key' => $this->pub_key,
                         'coin' => $this->coin,
-                        'stake' => $this->stake
+                        'stake' => bcmul($this->stake, Coin::PIP_STR, 18)
                     ];
                     break;
                 case Transaction::TYPE_UNBOUND:
                     $data['data']['data'] = [
                         'pub_key' => $this->pub_key,
                         'coin' => $this->coin,
-                        'stake' => (float)$this->value
+                        'stake' => bcmul($this->value, Coin::PIP_STR, 18)
                     ];
                     break;
                 case Transaction::TYPE_REDEEM_CHECK:

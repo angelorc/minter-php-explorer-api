@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Coin;
 use App\Models\Transaction;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -86,21 +87,21 @@ class TransactionCollection extends ResourceCollection
                             'pub_key' => $item->pub_key,
                             'commission' => $item->commission,
                             'coin' => $item->coin,
-                            'stake' => $item->stake
+                            'stake' => bcmul($item->stake, Coin::PIP_STR, 18)
                         ];
                         break;
                     case Transaction::TYPE_DELEGATE:
                         $result['data'] = [
                             'pub_key' => $item->pub_key,
                             'coin' => $item->coin,
-                            'stake' => $item->stake
+                            'stake' => bcmul($item->stake, Coin::PIP_STR, 18)
                         ];
                         break;
                     case Transaction::TYPE_UNBOUND:
                         $result['data'] = [
                             'pub_key' => $item->pub_key,
                             'coin' => $item->coin,
-                            'stake' => (float)$item->value
+                            'stake' => bcmul($item->value, Coin::PIP_STR, 18)
                         ];
                         break;
                     case Transaction::TYPE_REDEEM_CHECK:
