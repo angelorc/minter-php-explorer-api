@@ -36,14 +36,14 @@ interface TransactionServiceInterface
     /**
      * Получить сумму комиссии за транзакции с даты
      * @param \DateTime $startTime
-     * @return float
+     * @return string
      */
-    public function getCommission(\DateTime $startTime = null): float;
+    public function getCommission(\DateTime $startTime = null): string;
 
     /**
      * Получить среднюю комиссиию за транзакции с даты
      * @param \DateTime $startTime
-     * @return float
+     * @return string
      */
-    public function getAverageCommission(\DateTime $startTime = null): float;
+    public function getAverageCommission(\DateTime $startTime = null): string;
 }

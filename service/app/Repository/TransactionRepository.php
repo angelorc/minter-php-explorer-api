@@ -93,7 +93,7 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     /**
      * Получить количество транзакций за последние 24 часа
-     * @return int
+     * @return string
      * @throws \Exception
      */
     public function get24hTransactionsAverageCommission(): string

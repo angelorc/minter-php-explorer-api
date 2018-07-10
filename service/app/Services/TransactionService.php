@@ -146,9 +146,9 @@ class TransactionService implements TransactionServiceInterface
     /**
      * Получить сумму комиссии за транзакции с даты
      * @param \DateTime $startTime
-     * @return float
+     * @return string
      */
-    public function getCommission(\DateTime $startTime = null): float
+    public function getCommission(\DateTime $startTime = null): string
     {
         return bcmul($this->transactionRepository->get24hTransactionsCommission(), Coin::PIP_STR, 18);
     }
@@ -156,9 +156,9 @@ class TransactionService implements TransactionServiceInterface
     /**
      * Получить среднюю комиссиию за транзакции с даты
      * @param \DateTime $startTime
-     * @return float
+     * @return string
      */
-    public function getAverageCommission(\DateTime $startTime = null): float
+    public function getAverageCommission(\DateTime $startTime = null): string
     {
         return bcmul($this->transactionRepository->get24hTransactionsAverageCommission(), Coin::PIP_STR, 18);
     }
