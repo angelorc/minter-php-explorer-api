@@ -13,6 +13,7 @@ class TransactionResource extends JsonResource
         if ($this->resource) {
             $data = [
                 'data' => [
+                    'txn' => $this->id,
                     'hash' => $this->hash,
                     'nonce' => $this->nonce,
                     'block' => $this->block->height,

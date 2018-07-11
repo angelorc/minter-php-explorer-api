@@ -46,6 +46,7 @@ class TransactionCollection extends ResourceCollection
             'data' => $this->collection->map(function ($item) {
 
                 $result = [
+                    'txn' => $item->id,
                     'hash' => $item->hash,
                     'nonce' => $item->nonce,
                     'block' => $item->block->height,
