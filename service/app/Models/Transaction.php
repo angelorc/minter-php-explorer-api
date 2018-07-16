@@ -163,7 +163,6 @@ class Transaction extends Model
             case $this::TOGGLE_CANDIDATES_STATUS:
                 return 1000;
                 break;
-            case $this::TYPE_CONVERT:
             case $this::TYPE_UNBOUND:
             case $this::TYPE_DELEGATE:
                 return 10000;

@@ -33,10 +33,11 @@ class TransactionResource extends JsonResource
                         'amount' => (float)$this->value
                     ];
                     break;
-                case Transaction::TYPE_CONVERT:
-                    $data['data']['data'] = [
-                        'from_coin_symbol' => $this->from_coin_symbol,
-                        'to_coin_symbol' => $this->to_coin_symbol,
+                case Transaction::TYPE_SELL_COIN:
+                case Transaction::TYPE_BUY_COIN:
+                    $result['data'] = [
+                        'coin_to_sell' => $this->coin_to_sell,
+                        'coin_to_buy' => $this->coin_to_buy,
                         'value' => (float)$this->value
                     ];
                     break;
