@@ -27,8 +27,8 @@ class CreateTransactionsTable extends Migration
             $table->string('service_data')->nullable();
             $table->string('pub_key')->nullable();
             $table->string('address')->nullable();
-            $table->string('from_coin_symbol')->nullable();
-            $table->string('to_coin_symbol')->nullable();
+            $table->string('coin_to_sell')->nullable();
+            $table->string('coin_to_buy')->nullable();
             $table->string('raw_check')->nullable();
             $table->string('proof')->nullable();
             $table->string('name')->nullable();
@@ -40,6 +40,10 @@ class CreateTransactionsTable extends Migration
             $table->decimal('initial_amount', 50, 0)->nullable();
             $table->decimal('initial_reserve', 50, 0)->nullable();
             $table->decimal('constant_reserve_ratio', 50, 0)->nullable();
+            $table->decimal('gas_wanted', 50, 0)->nullable();
+            $table->decimal('gas_used', 50, 0)->nullable();
+            $table->boolean('status');
+            $table->string('log')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
 

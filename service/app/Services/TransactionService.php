@@ -65,9 +65,15 @@ class TransactionService implements TransactionServiceInterface
                 $pubKey = $tx['data']['pubkey'] ?? null;
                 $transaction->pub_key = $pubKey ? StringHelper::mb_ucfirst($pubKey) : null;
 
-                if ($transaction->type === Transaction::TYPE_CONVERT) {
-                    $transaction->from_coin_symbol = mb_strtoupper($tx['data']['from_coin'] ?? '');
-                    $transaction->to_coin_symbol = mb_strtoupper($tx['data']['to_coin'] ?? '');
+                if ($transaction->type === Transaction::TYPE_SELL_COIN && $transaction->type === Transaction::TYPE_BUY_COIN) {
+                    $transaction->coin_to_sell = mb_strtoupper($tx['data']['coin_to_sell'] ?? '');
+                    $transaction->coin_to_buy = mb_strtoupper($tx['data']['coin_to_buy'] ?? '');
+                }
+                if ($transaction->type === Transaction::TYPE_SELL_COIN) {
+                    $transaction->value = $tx['data']['value_to_sell'];
+                }
+                if ($transaction->type === Transaction::TYPE_BUY_COIN) {
+                    $transaction->value = $tx['data']['value_to_buy'];
                 }
 
                 if ($transaction->type === Transaction::TYPE_CREATE_COIN) {
@@ -90,6 +96,15 @@ class TransactionService implements TransactionServiceInterface
                     $transaction->pub_key = $pubKey ? StringHelper::mb_ucfirst($pubKey) : null;
                     $transaction->coin = mb_strtoupper($tx['data']['Coin'] ?? '');
                     $transaction->stake = $tx['data']['Stake'] ?? null;
+                }
+
+                if (isset($tx['tx_result']['code'])) {
+                    $transaction->status = false;
+                    $transaction->log = $tx['tx_result']['log'] ?? null;
+                } else {
+                    $transaction->status = true;
+                    $transaction->gas_wanted = $tx['tx_result']['gas_wanted'] ?? null;
+                    $transaction->gas_used = $tx['tx_result']['gas_used'] ?? null;
                 }
 
                 $transactions[] = $transaction;

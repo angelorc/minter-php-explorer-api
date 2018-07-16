@@ -79,7 +79,7 @@ class StatusService implements StatusServiceInterface
     public function isActiveStatus(): bool
     {
         /** @var Block $lastBlock */
-        $lastBlock = Block::orderByDesc('id')->first();
+        $lastBlock = Block::orderByDesc('height')->first();
 
         if ($lastBlock) {
             $lastBlockTime = new \DateTime($lastBlock->timestamp);

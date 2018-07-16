@@ -44,6 +44,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int nonce
  * @property int validator_id
  * @property int gas_price
+ * @property int gas_wanted
+ * @property int gas_used
  * @property int commission
  * @property int stake
  * @property float value
@@ -60,22 +62,25 @@ use Illuminate\Database\Eloquent\Model;
  * @property string pub_key
  * @property string address
  * @property string created_at
- * @property string from_coin_symbol
- * @property string to_coin_symbol
+ * @property string coin_to_sell
+ * @property string coin_to_buy
  * @property string name
  * @property string symbol
+ * @property string log
+ * @property boolean status
  */
 class Transaction extends Model
 {
     public const TYPE_SEND = 1;
-    public const TYPE_CONVERT = 2;
-    public const TYPE_CREATE_COIN = 3;
-    public const TYPE_DECLARE_CANDIDACY = 4;
-    public const TYPE_DELEGATE = 5;
-    public const TYPE_UNBOUND = 6;
-    public const TYPE_REDEEM_CHECK = 7;
-    public const TYPE_SET_CANDIDATE_ONLINE = 8;
-    public const TYPE_SET_CANDIDATE_OFFLINE = 9;
+    public const TYPE_SELL_COIN = 2;
+    public const TYPE_BUY_COIN = 3;
+    public const TYPE_CREATE_COIN = 4;
+    public const TYPE_DECLARE_CANDIDACY = 5;
+    public const TYPE_DELEGATE = 6;
+    public const TYPE_UNBOUND = 7;
+    public const TYPE_REDEEM_CHECK = 8;
+    public const TYPE_SET_CANDIDATE_ONLINE = 9;
+    public const TYPE_SET_CANDIDATE_OFFLINE = 10;
 
 
     public const PAYLOAD = 'payload';
@@ -119,8 +124,10 @@ class Transaction extends Model
         switch ($this->type){
             case $this::TYPE_SEND:
                 return 'send';
-            case $this::TYPE_CONVERT:
-                return 'convert';
+            case $this::TYPE_SELL_COIN:
+                return 'sellCoin';
+            case $this::TYPE_BUY_COIN:
+                return 'buyCoin';
             case $this::TYPE_CREATE_COIN:
                 return 'createCoin';
             case $this::TYPE_DECLARE_CANDIDACY:
