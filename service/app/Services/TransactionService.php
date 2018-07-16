@@ -50,8 +50,8 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->type = $tx['type'];
                 $transaction->nonce = $tx['nonce'];
                 $transaction->hash = $tx['hash'];
-                $transaction->gas_price = $tx['gasPrice'];
-                $transaction->fee = $tx['gas'];
+                $transaction->gas_price = $tx['gas_price'];
+                $transaction->fee = $tx['gas'] ?? 0;
                 $transaction->payload = $tx['payload'] ?? null;
                 $transaction->service_data = $tx['serviceData'] ?? null;
                 $transaction->from = StringHelper::mb_ucfirst($tx['from']);
