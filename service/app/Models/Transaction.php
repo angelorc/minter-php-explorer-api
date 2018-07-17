@@ -102,7 +102,7 @@ class Transaction extends Model
      */
     public function getFeeMntAttribute(): string
     {
-        return bcmul($this->fee, Coin::PIP_STR, 18);
+        return bcmul($this->fee, '0.000000000000001', 15);
     }
 
     /**
