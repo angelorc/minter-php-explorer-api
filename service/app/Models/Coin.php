@@ -13,7 +13,7 @@ class Coin
     /**
      * PIP coefficient
      */
-    public const PIP = 0.000000000000001;
+    public const PIP = 0.000000000000000001;
     public const PIP_STR = '0.000000000000000001';
 
     /**
