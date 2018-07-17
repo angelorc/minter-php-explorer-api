@@ -38,7 +38,7 @@ class TransactionResource extends JsonResource
                     $result['data'] = [
                         'coin_to_sell' => $this->coin_to_sell,
                         'coin_to_buy' => $this->coin_to_buy,
-                        'value' => (float)$this->value
+                        'value' => bcmul($this->value, Coin::PIP_STR, 18)
                     ];
                     break;
                 case Transaction::TYPE_CREATE_COIN:

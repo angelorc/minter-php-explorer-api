@@ -71,7 +71,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'coin_to_sell' => $item->coin_to_sell,
                             'coin_to_buy' => $item->coin_to_buy,
-                            'value' => (float)$item->value
+                            'value' => bcmul($item->value, Coin::PIP_STR, 18)
                         ];
                         break;
                     case Transaction::TYPE_CREATE_COIN:
