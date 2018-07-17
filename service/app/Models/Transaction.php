@@ -102,7 +102,7 @@ class Transaction extends Model
      */
     public function getFeeMntAttribute(): string
     {
-        return $this->fee * Coin::PIP;
+        return bcmul($this->fee, Coin::PIP_STR, 18);
     }
 
     /**
@@ -111,7 +111,7 @@ class Transaction extends Model
      */
     public function getStatusAttribute(): string
     {
-        return $this->status;
+        return isset($this->log) ? 'fail' : 'success';
     }
 
     /**
