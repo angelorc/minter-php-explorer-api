@@ -38,7 +38,7 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function findByHash(string $hash): ?Transaction
     {
-        return Transaction::where('hash', 'ilike', $hash)->first();
+        return Transaction::where('hash', 'ilike', $hash)->where('status', true)->first();
     }
 
     /**
