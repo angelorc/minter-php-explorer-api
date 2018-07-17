@@ -111,8 +111,7 @@ class Transaction extends Model
      */
     public function getStatusAttribute(): string
     {
-        //TODO: добавить реализацию
-        return 'success';
+        return $this->status;
     }
 
     /**
