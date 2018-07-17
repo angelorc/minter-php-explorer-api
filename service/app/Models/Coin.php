@@ -13,8 +13,8 @@ class Coin
     /**
      * PIP coefficient
      */
-    public const PIP = 0.000000000000000001;
-    public const PIP_STR = '0.000000000000000001';
+    public const PIP = 10 ** (-18);
+    public const PIP_STR = '0.0000000000000000001';
 
     /**
      * @var string
@@ -50,7 +50,7 @@ class Coin
      */
     public function getAmount(): float
     {
-        return  bcmul($this->pipAmount, $this::PIP_STR, 18);
+        return bcmul($this->pipAmount, $this::PIP, 18);
     }
 
     /**
