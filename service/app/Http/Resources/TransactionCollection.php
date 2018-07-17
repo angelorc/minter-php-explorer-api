@@ -54,7 +54,7 @@ class TransactionCollection extends ResourceCollection
                     'fee' => $item->feeMnt,
                     'type' => $item->typeString,
                     'status' => $item->status,
-                    'payload' => $item->payload,
+                    'payload' => base64_decode($item->payload),
                     'data' => []
                 ];
 
