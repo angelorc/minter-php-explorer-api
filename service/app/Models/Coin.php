@@ -50,7 +50,7 @@ class Coin
      */
     public function getAmount(): float
     {
-        return bcmul($this->pipAmount, $this::PIP, 18);
+        return bcmul($this->pipAmount, $this::PIP_STR, 18);
     }
 
     /**
