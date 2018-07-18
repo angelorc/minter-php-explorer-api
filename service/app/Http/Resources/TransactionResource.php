@@ -30,7 +30,7 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [
                         'to' => $this->to,
                         'coin' => $this->coin,
-                        'amount' => (float)$this->value
+                        'amount' => (string)$this->value
                     ];
                     break;
                 case Transaction::TYPE_SELL_COIN:

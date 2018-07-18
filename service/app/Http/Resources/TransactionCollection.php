@@ -63,7 +63,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'to' => $item->to,
                             'coin' => $item->coin,
-                            'amount' => (float)$item->value
+                            'amount' => (string)$item->value
                         ];
                         break;
                     case Transaction::TYPE_SELL_COIN:
