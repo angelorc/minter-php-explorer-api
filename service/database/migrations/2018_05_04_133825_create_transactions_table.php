@@ -20,9 +20,9 @@ class CreateTransactionsTable extends Migration
             $table->integer('nonce');
             $table->integer('gas_price');
             $table->string('from');
-            $table->string('to');
-            $table->string('coin');
             $table->string('hash');
+            $table->string('to')->nullable();
+            $table->string('coin')->nullable();
             $table->string('payload')->nullable();
             $table->string('service_data')->nullable();
             $table->string('pub_key')->nullable();

@@ -46,57 +46,16 @@ class TransactionService implements TransactionServiceInterface
         foreach ($txs as $tx) {
             try {
                 $transaction = new Transaction();
-
-                $transaction->type = $tx['type'];
-                $transaction->nonce = $tx['nonce'];
-                $transaction->hash = $tx['hash'];
-                $transaction->gas_price = $tx['gas_price'];
-                $transaction->fee = $tx['gas'] ?? 0;
-                $transaction->payload = $tx['payload'] ?? null;
-                $transaction->service_data = $tx['serviceData'] ?? null;
+                $transaction->hash = StringHelper::mb_ucfirst($tx['hash']);
                 $transaction->from = StringHelper::mb_ucfirst($tx['from']);
+                $transaction->nonce = $tx['nonce'];
+                $transaction->gas_price = $tx['gas_price'];
+                $transaction->type = $tx['type'];
+                $transaction->payload = $tx['payload'] ?? null;
+                $transaction->fee = $tx['gas'] ?? 0;
+                $transaction->service_data = $tx['serviceData'] ?? null;
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
-
-                $val = $tx['data']['value'] ?? 0;
-                $transaction->value = bcmul($val, Coin::PIP_STR, 18);
-                $transaction->coin = mb_strtoupper($tx['data']['coin'] ?? '');
-                $transaction->to = StringHelper::mb_ucfirst($tx['data']['to'] ?? '');
-
-                $pubKey = $tx['data']['pubkey'] ?? null;
-                $transaction->pub_key = $pubKey ? StringHelper::mb_ucfirst($pubKey) : null;
-
-                if ($transaction->type === Transaction::TYPE_SELL_COIN && $transaction->type === Transaction::TYPE_BUY_COIN) {
-                    $transaction->coin_to_sell = mb_strtoupper($tx['data']['coin_to_sell'] ?? '');
-                    $transaction->coin_to_buy = mb_strtoupper($tx['data']['coin_to_buy'] ?? '');
-                }
-                if ($transaction->type === Transaction::TYPE_SELL_COIN) {
-                    $transaction->value = $tx['data']['value_to_sell'];
-                }
-                if ($transaction->type === Transaction::TYPE_BUY_COIN) {
-                    $transaction->value = $tx['data']['value_to_buy'];
-                }
-
-                if ($transaction->type === Transaction::TYPE_CREATE_COIN) {
-                    $transaction->name = mb_strtoupper($tx['data']['name'] ?? '');
-                    $transaction->symbol = mb_strtoupper($tx['data']['coin_symbol'] ?? '');
-                    $transaction->initial_amount = $tx['data']['initial_amount'] ?? null;
-                    $transaction->initial_reserve = $tx['data']['initial_reserve'] ?? null;
-                    $transaction->constant_reserve_ratio = $tx['data']['constant_reserve_ratio'] ?? null;
-                }
-
-                if ($transaction->type === Transaction::TYPE_DECLARE_CANDIDACY) {
-                    $address = $tx['data']['Address'] ?? null;
-                    $transaction->address = $address ? StringHelper::mb_ucfirst($address) : null;
-                    $transaction->commission = $tx['data']['Commission'] ?? null;
-                }
-
-                if (\in_array($transaction->type, [Transaction::TYPE_DECLARE_CANDIDACY, Transaction::TYPE_DELEGATE],
-                    true)) {
-                    $pubKey = $tx['data']['PubKey'] ?? null;
-                    $transaction->pub_key = $pubKey ? StringHelper::mb_ucfirst($pubKey) : null;
-                    $transaction->coin = mb_strtoupper($tx['data']['Coin'] ?? '');
-                    $transaction->stake = $tx['data']['Stake'] ?? null;
-                }
+                $transaction->value = 0;
 
                 if (isset($tx['tx_result']['code'])) {
                     $transaction->status = false;
@@ -105,6 +64,60 @@ class TransactionService implements TransactionServiceInterface
                     $transaction->status = true;
                     $transaction->gas_wanted = $tx['tx_result']['gas_wanted'] ?? null;
                     $transaction->gas_used = $tx['tx_result']['gas_used'] ?? null;
+                }
+
+                if ($transaction->type === Transaction::TYPE_SEND) {
+                    $transaction->coin = mb_strtoupper($tx['data']['coin'] ?? '');
+                    $transaction->to = StringHelper::mb_ucfirst($tx['data']['to'] ?? '');
+                    $transaction->value = $tx['data']['value'] ?? null;
+                }
+
+                if ($transaction->type === Transaction::TYPE_SELL_COIN || $transaction->type === Transaction::TYPE_BUY_COIN) {
+                    $transaction->coin_to_sell = isset($tx['data']['coin_to_sell']) ? mb_strtoupper($tx['data']['coin_to_sell']) : null;
+                    $transaction->coin_to_buy = isset($tx['data']['coin_to_buy']) ? mb_strtoupper($tx['data']['coin_to_buy']) : null;
+                }
+                if ($transaction->type === Transaction::TYPE_SELL_COIN) {
+                    $transaction->value = $tx['data']['value_to_sell'] ?? 0;
+                }
+                if ($transaction->type === Transaction::TYPE_BUY_COIN) {
+                    $transaction->value = $tx['data']['value_to_buy'] ?? 0;
+                }
+
+                if ($transaction->type === Transaction::TYPE_CREATE_COIN) {
+                    $transaction->name = $tx['data']['name'] ?? null;
+                    $transaction->coin = isset($tx['data']['coin_symbol']) ? mb_strtoupper($tx['data']['coin_symbol']) : null;
+                    $transaction->initial_amount = $tx['data']['initial_amount'] ?? null;
+                    $transaction->initial_reserve = $tx['data']['initial_reserve'] ?? null;
+                    $transaction->constant_reserve_ratio = $tx['data']['constant_reserve_ratio'] ?? null;
+                }
+
+                if ($transaction->type === Transaction::TYPE_DECLARE_CANDIDACY) {
+                    $transaction->address = isset($tx['data']['address']) ? StringHelper::mb_ucfirst($tx['data']['address']) : null;
+                    $transaction->pub_key = isset($tx['data']['pub_key']) ? StringHelper::mb_ucfirst($tx['data']['pub_key']) : null;
+                    $transaction->commission = $tx['data']['commission'] ?? null;
+                    $transaction->coin = $tx['data']['coin'] ?? null;
+                    $transaction->stake = $tx['data']['stake'] ?? null;
+                }
+
+                if ($transaction->type === Transaction::TYPE_DELEGATE) {
+                    $transaction->pub_key = isset($tx['data']['pub_key']) ? StringHelper::mb_ucfirst($tx['data']['pub_key']) : null;
+                    $transaction->coin = $tx['data']['coin'] ?? null;
+                    $transaction->stake = $tx['data']['stake'] ?? null;
+                }
+
+                if ($transaction->type === Transaction::TYPE_UNBOUND) {
+                    $transaction->pub_key = isset($tx['data']['pub_key']) ? StringHelper::mb_ucfirst($tx['data']['pub_key']) : null;
+                    $transaction->coin = $tx['data']['coin'] ?? null;
+                    $transaction->value = $tx['data']['value'] ?? 0;
+                }
+
+                if ($transaction->type === Transaction::TYPE_REDEEM_CHECK) {
+                    $transaction->raw_check = $tx['data']['raw_check'] ?? null;
+                    $transaction->proof = $tx['data']['proof'] ?? null;
+                }
+
+                if ($transaction->type === Transaction::TYPE_SET_CANDIDATE_ONLINE || $transaction->type === Transaction::TYPE_SET_CANDIDATE_OFFLINE) {
+                    $transaction->pub_key = isset($tx['data']['pub_key']) ? StringHelper::mb_ucfirst($tx['data']['pub_key']) : null;
                 }
 
                 $transactions[] = $transaction;
