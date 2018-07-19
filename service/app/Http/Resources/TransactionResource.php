@@ -22,6 +22,7 @@ class TransactionResource extends JsonResource
                     'type' => $this->typeString,
                     'status' => $this->status,
                     'payload' => base64_decode($this->payload),
+                    'data' => []
                 ]
             ];
 
@@ -35,7 +36,7 @@ class TransactionResource extends JsonResource
                     break;
                 case Transaction::TYPE_SELL_COIN:
                 case Transaction::TYPE_BUY_COIN:
-                    $result['data'] = [
+                    $data['data']['data'] = [
                         'coin_to_sell' => $this->coin_to_sell,
                         'coin_to_buy' => $this->coin_to_buy,
                         'value' => bcmul($this->value, Coin::PIP_STR, 18)
