@@ -30,7 +30,7 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [
                         'to' => $this->to,
                         'coin' => $this->coin,
-                        'amount' => (string)$this->value
+                        'amount' => bcmul($this->value, Coin::PIP_STR, 18)
                     ];
                     break;
                 case Transaction::TYPE_SELL_COIN:

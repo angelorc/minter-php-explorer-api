@@ -63,7 +63,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'to' => $item->to,
                             'coin' => $item->coin,
-                            'amount' => (string)$item->value
+                            'amount' => bcmul($item->value, Coin::PIP_STR, 18)
                         ];
                         break;
                     case Transaction::TYPE_SELL_COIN:
