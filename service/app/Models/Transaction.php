@@ -146,35 +146,4 @@ class Transaction extends Model
                 return '';
         }
     }
-
-    /**
-     * Get base price
-     * @param int $type
-     * @return int
-     */
-    private function getBasePrice(int $type): int
-    {
-        switch ($type){
-            case $this::PAYLOAD:
-                return 500;
-                break;
-            case $this::TYPE_SEND:
-            case $this::TYPE_REDEEM_CHECK:
-            case $this::TOGGLE_CANDIDATES_STATUS:
-                return 1000;
-                break;
-            case $this::TYPE_UNBOUND:
-            case $this::TYPE_DELEGATE:
-                return 10000;
-                break;
-            case $this::TYPE_CREATE_COIN:
-            case $this::TYPE_DECLARE_CANDIDACY:
-                return 100000;
-                break;
-            default:
-                return 0;
-                break;
-        }
-    }
-
 }

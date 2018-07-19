@@ -78,8 +78,8 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'name' => $item->name,
                             'symbol' => $item->symbol,
-                            'initial_amount' => $item->initial_amount,
-                            'initial_reserve' => $item->initial_reserve,
+                            'initial_amount' => bcmul($item->initial_amount, Coin::PIP_STR, 18),
+                            'initial_reserve' => bcmul($item->initial_reserve, Coin::PIP_STR, 18),
                             'constant_reserve_ratio' => $item->constant_reserve_ratio,
                         ];
                         break;
