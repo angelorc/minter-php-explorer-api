@@ -1,8 +1,6 @@
 <?php
 namespace App\Models;
 
-use BI\BigInteger;
-
 
 /**
  * Class Coin

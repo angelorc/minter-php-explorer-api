@@ -67,6 +67,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string name
  * @property string symbol
  * @property string log
+ * @property string raw_check
+ * @property string proof
  * @property boolean status
  */
 class Transaction extends Model
@@ -94,6 +96,14 @@ class Transaction extends Model
     public function block()
     {
         return $this->belongsTo(Block::class);
+    }
+
+    /**
+     * Get the block that owns the transactions.
+     */
+    public function tags()
+    {
+        return $this->hasMany(TxTag::class);
     }
 
     /**
