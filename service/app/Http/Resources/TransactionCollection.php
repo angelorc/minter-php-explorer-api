@@ -93,12 +93,6 @@ class TransactionCollection extends ResourceCollection
                         ];
                         break;
                     case Transaction::TYPE_DELEGATE:
-                        $result['data'] = [
-                            'pub_key' => $item->pub_key,
-                            'coin' => $item->coin,
-                            'stake' => bcmul($item->stake, Coin::PIP_STR, 18)
-                        ];
-                        break;
                     case Transaction::TYPE_UNBOUND:
                         $result['data'] = [
                             'pub_key' => $item->pub_key,

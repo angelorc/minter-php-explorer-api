@@ -21,6 +21,9 @@ class CreateTransactionsTable extends Migration
             $table->integer('gas_price');
             $table->string('from');
             $table->string('hash');
+            $table->boolean('status');
+            $table->decimal('fee', 50, 0);
+            $table->decimal('value', 50, 18)->nullable();
             $table->string('to')->nullable();
             $table->string('coin')->nullable();
             $table->string('payload')->nullable();
@@ -33,8 +36,6 @@ class CreateTransactionsTable extends Migration
             $table->string('proof')->nullable();
             $table->string('name')->nullable();
             $table->string('symbol')->nullable();
-            $table->decimal('fee', 50, 0);
-            $table->decimal('value', 50, 18);
             $table->decimal('stake', 50, 0)->nullable();
             $table->decimal('commission', 50, 0)->nullable();
             $table->decimal('initial_amount', 50, 0)->nullable();
@@ -42,7 +43,6 @@ class CreateTransactionsTable extends Migration
             $table->decimal('constant_reserve_ratio', 50, 0)->nullable();
             $table->decimal('gas_wanted', 50, 0)->nullable();
             $table->decimal('gas_used', 50, 0)->nullable();
-            $table->boolean('status');
             $table->string('log')->nullable();
             $table->timestampsTz();
             $table->softDeletesTz();
