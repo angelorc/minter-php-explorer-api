@@ -77,7 +77,7 @@ class TransactionCollection extends ResourceCollection
                     case Transaction::TYPE_CREATE_COIN:
                         $result['data'] = [
                             'name' => $item->name,
-                            'symbol' => $item->symbol,
+                            'symbol' => $item->coin,
                             'initial_amount' => bcmul($item->initial_amount, Coin::PIP_STR, 18),
                             'initial_reserve' => bcmul($item->initial_reserve, Coin::PIP_STR, 18),
                             'constant_reserve_ratio' => $item->constant_reserve_ratio,

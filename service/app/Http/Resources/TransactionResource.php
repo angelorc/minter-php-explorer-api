@@ -45,7 +45,7 @@ class TransactionResource extends JsonResource
                 case Transaction::TYPE_CREATE_COIN:
                     $data['data']['data'] = [
                         'name' => $this->name,
-                        'symbol' => $this->symbol,
+                        'symbol' => $this->coin,
                         'initial_amount' => bcmul($this->initial_amount, Coin::PIP_STR, 18),
                         'initial_reserve' => bcmul($this->initial_reserve, Coin::PIP_STR, 18),
                     ];
