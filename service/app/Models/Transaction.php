@@ -75,14 +75,15 @@ class Transaction extends Model
 {
     public const TYPE_SEND = 1;
     public const TYPE_SELL_COIN = 2;
-    public const TYPE_BUY_COIN = 3;
-    public const TYPE_CREATE_COIN = 4;
-    public const TYPE_DECLARE_CANDIDACY = 5;
-    public const TYPE_DELEGATE = 6;
-    public const TYPE_UNBOUND = 7;
-    public const TYPE_REDEEM_CHECK = 8;
-    public const TYPE_SET_CANDIDATE_ONLINE = 9;
-    public const TYPE_SET_CANDIDATE_OFFLINE = 10;
+    public const TYPE_SELL_ALL_COIN = 3;
+    public const TYPE_BUY_COIN = 4;
+    public const TYPE_CREATE_COIN = 5;
+    public const TYPE_DECLARE_CANDIDACY = 6;
+    public const TYPE_DELEGATE = 7;
+    public const TYPE_UNBOUND = 8;
+    public const TYPE_REDEEM_CHECK = 9;
+    public const TYPE_SET_CANDIDATE_ONLINE = 10;
+    public const TYPE_SET_CANDIDATE_OFFLINE = 11;
 
 
     public const PAYLOAD = 'payload';
