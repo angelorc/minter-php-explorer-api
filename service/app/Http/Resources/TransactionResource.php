@@ -46,9 +46,8 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [
                         'name' => $this->name,
                         'symbol' => $this->symbol,
-                        'initial_amount' => $this->initial_amount,
-                        'initial_reserve' => $this->initial_reserve,
-                        'constant_reserve_ratio' => $this->constant_reserve_ratio,
+                        'initial_amount' => bcmul($this->initial_amount, Coin::PIP_STR, 18),
+                        'initial_reserve' => bcmul($this->initial_reserve, Coin::PIP_STR, 18),
                     ];
                     break;
                 case Transaction::TYPE_DECLARE_CANDIDACY:

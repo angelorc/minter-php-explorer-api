@@ -117,7 +117,8 @@ class TransactionService implements TransactionServiceInterface
                 }
 
                 if ($transaction->type === Transaction::TYPE_SET_CANDIDATE_ONLINE || $transaction->type === Transaction::TYPE_SET_CANDIDATE_OFFLINE) {
-                    $transaction->pub_key = StringHelper::mb_ucfirst($tx['data']['pub_key']);
+                    $pk = $tx['data']['pubkey'] ?? $tx['data']['pub_key'];
+                    $transaction->pub_key = StringHelper::mb_ucfirst($pk);
                 }
 
                 $transactions[] = $transaction;
