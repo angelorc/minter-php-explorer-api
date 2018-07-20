@@ -56,6 +56,7 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->service_data = $tx['serviceData'] ?? null;
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
                 $transaction->value = 0;
+                $transaction->gas_coin = $tx['gas_coin'] ?? null;
 
                 if (isset($tx['tx_result']['code'])) {
                     $transaction->status = false;

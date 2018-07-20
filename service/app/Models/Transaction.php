@@ -66,6 +66,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string coin_to_buy
  * @property string name
  * @property string symbol
+ * @property string gas_coin
  * @property string log
  * @property string raw_check
  * @property string proof
