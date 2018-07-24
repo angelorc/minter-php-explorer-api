@@ -19,6 +19,7 @@ class CreateTransactionsTable extends Migration
             $table->integer('type');
             $table->integer('nonce');
             $table->integer('gas_price');
+            $table->string('gas_coin')->nullable();
             $table->string('from');
             $table->string('hash');
             $table->boolean('status');

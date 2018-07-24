@@ -56,6 +56,7 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->service_data = $tx['serviceData'] ?? null;
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
                 $transaction->value = 0;
+                $transaction->gas_coin = $tx['gas_coin'] ?? null;
 
                 if (isset($tx['tx_result']['code'])) {
                     $transaction->status = false;
@@ -72,7 +73,10 @@ class TransactionService implements TransactionServiceInterface
                     $transaction->value = $tx['data']['value'] ?? null;
                 }
 
-                if ($transaction->type === Transaction::TYPE_SELL_COIN || $transaction->type === Transaction::TYPE_BUY_COIN) {
+                if (
+                    $transaction->type === Transaction::TYPE_SELL_COIN ||
+                    $transaction->type === Transaction::TYPE_SELL_ALL_COIN ||
+                    $transaction->type === Transaction::TYPE_BUY_COIN) {
                     $transaction->coin_to_sell = mb_strtoupper($tx['data']['coin_to_sell']);
                     $transaction->coin_to_buy = mb_strtoupper($tx['data']['coin_to_buy']);
                 }
