@@ -54,7 +54,7 @@ class TransactionCollection extends ResourceCollection
                     'fee' => $item->feeMnt,
                     'type' => $item->typeString,
                     'status' => $item->status,
-                    'payload' => base64_decode($item->payload),
+                    'payload' => utf8_encode(base64_decode($item->payload)),
                     'data' => []
                 ];
 
@@ -67,6 +67,7 @@ class TransactionCollection extends ResourceCollection
                         ];
                         break;
                     case Transaction::TYPE_SELL_COIN:
+                    case Transaction::TYPE_SELL_ALL_COIN:
                     case Transaction::TYPE_BUY_COIN:
                         $result['data'] = [
                             'coin_to_sell' => $item->coin_to_sell,

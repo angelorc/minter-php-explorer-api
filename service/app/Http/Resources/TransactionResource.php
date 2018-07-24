@@ -21,7 +21,7 @@ class TransactionResource extends JsonResource
                     'fee' => $this->feeMnt,
                     'type' => $this->typeString,
                     'status' => $this->status,
-                    'payload' => base64_decode($this->payload),
+                    'payload' => utf8_encode(base64_decode($this->payload)),
                     'data' => []
                 ]
             ];
@@ -35,6 +35,7 @@ class TransactionResource extends JsonResource
                     ];
                     break;
                 case Transaction::TYPE_SELL_COIN:
+                case Transaction::TYPE_SELL_ALL_COIN:
                 case Transaction::TYPE_BUY_COIN:
                     $data['data']['data'] = [
                         'coin_to_sell' => $this->coin_to_sell,
