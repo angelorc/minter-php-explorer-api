@@ -70,7 +70,7 @@ class FillBalanceTableCommand extends Command
             try {
                 $res = $this->client->request('GET', 'api/balance/' . ucfirst($address));
                 $data = json_decode($res->getBody()->getContents(), 1);
-                foreach ($data['result'] as $k => $v) {
+                foreach ($data['result']['balance'] as $k => $v) {
                     Balance::updateOrCreate(
                         ['address' => mb_strtolower($address), 'coin' => mb_strtoupper($k)],
                         ['amount' => $v]
