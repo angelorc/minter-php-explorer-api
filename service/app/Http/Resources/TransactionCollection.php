@@ -36,7 +36,7 @@ class TransactionCollection extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
-     *
+     * @TODO: Centralize transaction outputs
      * @param  \Illuminate\Http\Request
      * @return array
      */

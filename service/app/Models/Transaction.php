@@ -128,6 +128,8 @@ class Transaction extends Model
     }
 
     /**
+     * @TODO: Centralize transaction outputs
+     *
      * Get transaction type
      * @return string
      */
@@ -136,6 +138,8 @@ class Transaction extends Model
         switch ($this->type){
             case $this::TYPE_SEND:
                 return 'send';
+            case $this::TYPE_SELL_ALL_COIN:
+                return 'sellAllCoin';
             case $this::TYPE_SELL_COIN:
                 return 'sellCoin';
             case $this::TYPE_BUY_COIN:
