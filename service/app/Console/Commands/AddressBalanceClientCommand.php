@@ -35,12 +35,12 @@ class AddressBalanceClientCommand extends Command
 
     /**
      * AddressBalanceClientCommand constructor.
+     *
      * @param \phpcent\Client $centrifuge
      */
     public function __construct(\phpcent\Client $centrifuge)
     {
         parent::__construct();
-
         $this->centrifuge = $centrifuge;
     }
 
@@ -51,23 +51,20 @@ class AddressBalanceClientCommand extends Command
 
             $client = new Client('ws://' . env('MINTER_API') . $this::ENDPOINT,
                 'http://' . env('MINTER_API') . $this::ENDPOINT);
-
             $client->connect();
-
             $response = true;
 
             while ($response) {
-
                 $response = $client->receive();
-
-                $data = null;
-
+                // if $response === null - client is not connected
+                if (is_null($response)) {
+                    break;
+                }
+                $data     = null;
                 $channels = [];
 
                 foreach ($response as $r) {
-
-                    $data = \GuzzleHttp\json_decode($r->getPayload());
-
+                    $data    = \GuzzleHttp\json_decode($r->getPayload());
                     $balance = Balance::updateOrCreate(
                         ['address' => mb_strtolower($data->address), 'coin' => mb_strtoupper($data->coin)],
                         ['amount' => $data->balance]
@@ -88,8 +85,8 @@ class AddressBalanceClientCommand extends Command
                         foreach ($balances as $balance) {
                             $this->centrifuge->publish($name, [
                                 'address' => mb_strtolower($balance->address),
-                                'coin' => mb_strtoupper($balance->coin),
-                                'amount' => $balance->amount
+                                'coin'    => mb_strtoupper($balance->coin),
+                                'amount'  => $balance->amount
                             ]);
                         }
 
