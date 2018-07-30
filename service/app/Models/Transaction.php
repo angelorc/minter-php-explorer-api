@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Helpers\MathHelper;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -115,7 +116,7 @@ class Transaction extends Model
     public function getFeeMntAttribute(): string
     {
         $result = bcmul($this->fee, 10 ** 15);
-        return bcmul($result, Coin::PIP_STR, 18);
+        return MathHelper::makeAmountFromIntString($result);
     }
 
     /**

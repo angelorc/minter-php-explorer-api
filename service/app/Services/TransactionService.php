@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use App\Helpers\DateTimeHelper;
+use App\Helpers\MathHelper;
 use App\Models\Coin;
 use App\Models\Transaction;
 use App\Repository\TransactionRepositoryInterface;
@@ -183,7 +184,7 @@ class TransactionService implements TransactionServiceInterface
      */
     public function getCommission(\DateTime $startTime = null): string
     {
-        return bcmul($this->transactionRepository->get24hTransactionsCommission(), Coin::PIP_STR, 18);
+        return MathHelper::makeAmountFromIntString($this->transactionRepository->get24hTransactionsCommission());
     }
 
     /**
@@ -193,6 +194,6 @@ class TransactionService implements TransactionServiceInterface
      */
     public function getAverageCommission(\DateTime $startTime = null): string
     {
-        return bcmul($this->transactionRepository->get24hTransactionsAverageCommission(), Coin::PIP_STR, 18);
+        return MathHelper::makeAmountFromIntString($this->transactionRepository->get24hTransactionsAverageCommission());
     }
 }

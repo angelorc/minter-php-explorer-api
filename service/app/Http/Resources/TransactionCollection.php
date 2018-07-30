@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\MathHelper;
 use App\Models\Coin;
 use App\Models\Transaction;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -63,7 +64,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'to' => $item->to,
                             'coin' => $item->coin,
-                            'amount' => bcmul($item->value, Coin::PIP_STR, 18)
+                            'amount' => MathHelper::makeAmountFromIntString($item->value)
                         ];
                         break;
                     case Transaction::TYPE_SELL_COIN:
@@ -72,15 +73,15 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'coin_to_sell' => $item->coin_to_sell,
                             'coin_to_buy' => $item->coin_to_buy,
-                            'value' => bcmul($item->value, Coin::PIP_STR, 18)
+                            'value' => MathHelper::makeAmountFromIntString($item->value)
                         ];
                         break;
                     case Transaction::TYPE_CREATE_COIN:
                         $result['data'] = [
                             'name' => $item->name,
                             'symbol' => $item->coin,
-                            'initial_amount' => bcmul($item->initial_amount, Coin::PIP_STR, 18),
-                            'initial_reserve' => bcmul($item->initial_reserve, Coin::PIP_STR, 18),
+                            'initial_amount' => MathHelper::makeAmountFromIntString($item->initial_amount),
+                            'initial_reserve' => MathHelper::makeAmountFromIntString($item->initial_reserve),
                             'constant_reserve_ratio' => $item->constant_reserve_ratio,
                         ];
                         break;
@@ -90,7 +91,7 @@ class TransactionCollection extends ResourceCollection
                             'pub_key' => $item->pub_key,
                             'commission' => $item->commission,
                             'coin' => $item->coin,
-                            'stake' => bcmul($item->stake, Coin::PIP_STR, 18)
+                            'stake' => MathHelper::makeAmountFromIntString($item->stake)
                         ];
                         break;
                     case Transaction::TYPE_DELEGATE:
@@ -98,7 +99,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'pub_key' => $item->pub_key,
                             'coin' => $item->coin,
-                            'stake' => bcmul($item->value, Coin::PIP_STR, 18)
+                            'stake' => MathHelper::makeAmountFromIntString($item->value)
                         ];
                         break;
                     case Transaction::TYPE_REDEEM_CHECK:

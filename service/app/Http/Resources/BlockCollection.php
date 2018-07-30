@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Resources;
 
+use App\Helpers\MathHelper;
 use App\Models\Coin;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -46,7 +47,7 @@ class BlockCollection extends ResourceCollection
                     'height' => $item->height,
                     'timestamp' => $item->timestamp,
                     'txCount' => $item->tx_count,
-                    'reward' => bcmul($item->block_reward, Coin::PIP_STR, 18),
+                    'reward' => MathHelper::makeAmountFromIntString($item->block_reward),
                     'size' => $item->size,
                     'hash' => $item->hash,
                     'blockTime' => $item->block_time,

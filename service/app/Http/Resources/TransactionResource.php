@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\MathHelper;
 use App\Models\Coin;
 use App\Models\Transaction;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -31,7 +32,7 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [
                         'to' => $this->to,
                         'coin' => $this->coin,
-                        'amount' => bcmul($this->value, Coin::PIP_STR, 18)
+                        'amount' => MathHelper::makeAmountFromIntString($this->value)
                     ];
                     break;
                 case Transaction::TYPE_SELL_COIN:
@@ -40,15 +41,15 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [
                         'coin_to_sell' => $this->coin_to_sell,
                         'coin_to_buy' => $this->coin_to_buy,
-                        'value' => bcmul($this->value, Coin::PIP_STR, 18)
+                        'value' => MathHelper::makeAmountFromIntString($this->value)
                     ];
                     break;
                 case Transaction::TYPE_CREATE_COIN:
                     $data['data']['data'] = [
                         'name' => $this->name,
                         'symbol' => $this->coin,
-                        'initial_amount' => bcmul($this->initial_amount, Coin::PIP_STR, 18),
-                        'initial_reserve' => bcmul($this->initial_reserve, Coin::PIP_STR, 18),
+                        'initial_amount' => MathHelper::makeAmountFromIntString($this->initial_amount),
+                        'initial_reserve' => MathHelper::makeAmountFromIntString($this->initial_reserve),
                     ];
                     break;
                 case Transaction::TYPE_DECLARE_CANDIDACY:
@@ -57,21 +58,21 @@ class TransactionResource extends JsonResource
                         'pub_key' => $this->pub_key,
                         'commission' => $this->commission,
                         'coin' => $this->coin,
-                        'stake' => bcmul($this->stake, Coin::PIP_STR, 18)
+                        'stake' => MathHelper::makeAmountFromIntString($this->stake)
                     ];
                     break;
                 case Transaction::TYPE_DELEGATE:
                     $data['data']['data'] = [
                         'pub_key' => $this->pub_key,
                         'coin' => $this->coin,
-                        'stake' => bcmul($this->stake, Coin::PIP_STR, 18)
+                        'stake' => MathHelper::makeAmountFromIntString($this->stake)
                     ];
                     break;
                 case Transaction::TYPE_UNBOUND:
                     $data['data']['data'] = [
                         'pub_key' => $this->pub_key,
                         'coin' => $this->coin,
-                        'stake' => bcmul($this->value, Coin::PIP_STR, 18)
+                        'stake' => MathHelper::makeAmountFromIntString($this->value)
                     ];
                     break;
                 case Transaction::TYPE_REDEEM_CHECK:
