@@ -192,7 +192,7 @@ class StatusController extends Controller
                 'blockSpeed24h' => $this->statusService->getAverageBlockTime(),
                 'txTotalCount' => $this->transactionService->getTotalTransactionsCount(),
                 'tx24hCount' => $transactionData['count'],
-                'txPerSecond' => $this->transactionService->getTransactionsSpeed(),
+                'txPerSecond' => $transactionData['perSecond'],
                 'activeValidators' => $this->validatorService->getActiveValidatorsCount(),
                 'totalValidatorsCount' => $this->validatorService->getTotalValidatorsCount(),
                 'averageTxCommission' => $transactionData['avg'],

@@ -207,6 +207,7 @@ class TransactionService implements TransactionServiceInterface
 
         return [
             'count' => $data['count'],
+            'perSecond' => round($data['count'] / 86400, 8),
             'sum' => MathHelper::makeCommissionFromIntString($data['sum']),
             'avg' => MathHelper::makeCommissionFromIntString($data['avg']),
         ];
