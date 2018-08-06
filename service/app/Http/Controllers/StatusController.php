@@ -182,6 +182,10 @@ class StatusController extends Controller
      */
     public function statusPage(): array
     {
+        $transactionData = $this->transactionService->get24hTransactionsData();
+
+        dd($transactionData);
+
         return [
             'data' => [
                 'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
@@ -189,12 +193,12 @@ class StatusController extends Controller
                 'numberOfBlocks' => $this->statusService->getLastBlockHeight(),
                 'blockSpeed24h' => $this->statusService->getAverageBlockTime(),
                 'txTotalCount' => $this->transactionService->getTotalTransactionsCount(),
-                'tx24hCount' => $this->transactionService->get24hTransactionsCount(),
+                'tx24hCount' => $transactionData['count'],
                 'txPerSecond' => $this->transactionService->getTransactionsSpeed(),
                 'activeValidators' => $this->validatorService->getActiveValidatorsCount(),
                 'totalValidatorsCount' => $this->validatorService->getTotalValidatorsCount(),
-                'averageTxCommission' => $this->transactionService->getAverageCommission(),
-                'totalCommission' => $this->transactionService->getCommission(),
+                'averageTxCommission' => $transactionData['avg'],
+                'totalCommission' => $transactionData['sum'],
             ]
         ];
     }

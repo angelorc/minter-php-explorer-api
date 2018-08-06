@@ -46,4 +46,11 @@ interface TransactionServiceInterface
      * @return string
      */
     public function getAverageCommission(\DateTime $startTime = null): string;
+
+
+    /**
+     * Данные по трнзакциям за 24 часа
+     * @return array
+     */
+    public function get24hTransactionsData(): array;
 }

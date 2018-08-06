@@ -196,4 +196,19 @@ class TransactionService implements TransactionServiceInterface
     {
         return MathHelper::makeCommissionFromIntString($this->transactionRepository->get24hTransactionsAverageCommission());
     }
+
+    /**
+     * Данные по трнзакциям за 24 часа
+     * @return array
+     */
+    public function get24hTransactionsData(): array
+    {
+        $data = $this->transactionRepository->get24hTransactionsData();
+
+        return [
+            'count' => $data['count'],
+            'sum' => MathHelper::makeCommissionFromIntString($data['sum']),
+            'avg' => MathHelper::makeCommissionFromIntString($data['avg']),
+        ];
+    }
 }

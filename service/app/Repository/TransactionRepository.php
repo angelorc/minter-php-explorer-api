@@ -192,4 +192,26 @@ class TransactionRepository implements TransactionRepositoryInterface
 
         return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->sum('fee');
     }
+
+    /**
+     * Данные по трнзакциям за 24 часа
+     * @return array
+     */
+    public function get24hTransactionsData(): array
+    {
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
+
+        $result = DB::select("
+            select count(fee), sum(fee) as sum , avg(fee)  as avg
+            from transactions
+            where created_at >= '" . $dt->format('Y-m-d H:i:s') . "';
+        ");
+
+        return [
+            'count' => $result[0]->count ?? 0,
+            'sum' => $result[0]->sum ?? 0,
+            'avg' => $result[0]->avg ?? 0,
+        ];
+    }
 }
