@@ -184,8 +184,6 @@ class StatusController extends Controller
     {
         $transactionData = $this->transactionService->get24hTransactionsData();
 
-        dd($transactionData);
-
         return [
             'data' => [
                 'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
