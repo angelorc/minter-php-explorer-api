@@ -184,7 +184,7 @@ class TransactionService implements TransactionServiceInterface
      */
     public function getCommission(\DateTime $startTime = null): string
     {
-        return MathHelper::makeAmountFromIntString($this->transactionRepository->get24hTransactionsCommission());
+        return MathHelper::makeCommissionFromIntString($this->transactionRepository->get24hTransactionsCommission());
     }
 
     /**
@@ -194,6 +194,6 @@ class TransactionService implements TransactionServiceInterface
      */
     public function getAverageCommission(\DateTime $startTime = null): string
     {
-        return MathHelper::makeAmountFromIntString($this->transactionRepository->get24hTransactionsAverageCommission());
+        return MathHelper::makeCommissionFromIntString($this->transactionRepository->get24hTransactionsAverageCommission());
     }
 }

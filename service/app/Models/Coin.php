@@ -14,8 +14,10 @@ class Coin
     /**
      * PIP coefficient
      */
-    public const PIP     = 10 ** -18;
+    public const PIP = 10 ** -18;
     public const PIP_STR = '0.000000000000000001';
+    public const UNIT = 10 ** -15;
+    public const UNIT_STR = '0.000000000000001';
 
     /**
      * @var string
@@ -61,7 +63,6 @@ class Coin
     public function getUsdAmount(): string
     {
         //TODO: перенести конвертацию в сервис, как будет понятно откуда брать курс
-        //return $this->getAmount() * 0.000075;
         return bcmul($this->getAmount(), '0.000075', 24);
     }
 }
