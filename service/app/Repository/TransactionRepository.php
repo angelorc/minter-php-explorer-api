@@ -107,6 +107,7 @@ class TransactionRepository implements TransactionRepositoryInterface
         $dt->modify('-1 day');
 
         return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->avg('fee') ?? 0;
+
     }
 
     /**
@@ -143,9 +144,11 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
-        if (!empty($filter['addresses'])) {
+        if (!empty($filter['addresses']) && \is_array($filter['addresses'])) {
 
-            $addresses = implode(',', $filter['addresses']);
+            $addresses = implode(',', array_map(function ($item) {
+                return "'" . preg_replace("/\W/", '', $item) . "'";
+            }, $filter['addresses']));
 
             $query->where(function ($query) use ($addresses) {
                 $query
@@ -160,8 +163,10 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
-        if (!empty($filter['hashes'])) {
-            $hashes = implode(',', $filter['hashes']);
+        if (!empty($filter['hashes']) && \is_array($filter['hashes'])) {
+            $hashes = implode(',', array_map(function ($item) {
+                return "'" . preg_replace("/\W/", '', $item) . "'";
+            }, $filter['hashes']));
 
             $query->where(function ($query) use ($hashes) {
                 $query->whereRaw('transactions.hash ilike any (array[' . $hashes . ']) ');
