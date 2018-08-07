@@ -4,7 +4,6 @@ namespace App\Repository;
 
 
 use App\Models\Block;
-use App\Models\Coin;
 use App\Models\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -108,7 +107,6 @@ class TransactionRepository implements TransactionRepositoryInterface
         $dt->modify('-1 day');
 
         return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->avg('fee') ?? 0;
-
     }
 
     /**
@@ -146,9 +144,8 @@ class TransactionRepository implements TransactionRepositoryInterface
         }
 
         if (!empty($filter['addresses'])) {
-            $addresses = implode(',', array_map(function ($item) {
-                return "'" . preg_replace("/\W/", '', $item) . "'";
-            }, $filter['addresses']));
+
+            $addresses = implode(',', $filter['addresses']);
 
             $query->where(function ($query) use ($addresses) {
                 $query
@@ -164,9 +161,7 @@ class TransactionRepository implements TransactionRepositoryInterface
         }
 
         if (!empty($filter['hashes'])) {
-            $hashes = implode(',', array_map(function ($item) {
-                return "'" . preg_replace("/\W/", '', $item) . "'";
-            }, $filter['hashes']));
+            $hashes = implode(',', $filter['hashes']);
 
             $query->where(function ($query) use ($hashes) {
                 $query->whereRaw('transactions.hash ilike any (array[' . $hashes . ']) ');
@@ -202,11 +197,11 @@ class TransactionRepository implements TransactionRepositoryInterface
         $dt = new \DateTime();
         $dt->modify('-1 day');
 
-        $result = DB::select("
+        $result = DB::select('
             select count(fee), sum(fee) as sum , avg(fee)  as avg
             from transactions
-            where created_at >= '" . $dt->format('Y-m-d H:i:s') . "';
-        ");
+            where created_at >= :date ;
+        ', ['date' => $dt->format('Y-m-d H:i:s')]);
 
         return [
             'count' => $result[0]->count ?? 0,

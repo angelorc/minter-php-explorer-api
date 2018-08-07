@@ -33,7 +33,7 @@ class CreateTransactionsTable extends Migration
             $table->string('address')->nullable();
             $table->string('coin_to_sell')->nullable();
             $table->string('coin_to_buy')->nullable();
-            $table->string('raw_check')->nullable();
+            $table->text('raw_check')->nullable();
             $table->string('proof')->nullable();
             $table->string('name')->nullable();
             $table->string('symbol')->nullable();
