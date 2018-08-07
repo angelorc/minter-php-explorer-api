@@ -51,7 +51,7 @@ class BlockCollection extends ResourceCollection
                     'size' => $item->size,
                     'hash' => $item->hash,
                     'blockTime' => $item->block_time,
-                    'validators' => isset($this->validators) ? ValidatorResource::collection($this->validators) : []
+                    'validators' => $item->validators->count() ? ValidatorResource::collection($item->validators) : []
                 ];
             }),
         ];
