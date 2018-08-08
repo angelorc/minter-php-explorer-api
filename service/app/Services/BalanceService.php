@@ -34,12 +34,14 @@ class BalanceService implements BalanceServiceInterface
 
             $coin = new Coin($item->coin, $item->amount);
 
-            return [
-                'coin' => $coin->getName(),
-                'amount' => $coin->getAmount(),
-                'baseCoinAmount' => $coin->getAmount(),
-                'usdAmount' => $coin->getUsdAmount(),
-            ];
+            if ($item->amount) {
+                return [
+                    'coin' => $coin->getName(),
+                    'amount' => $coin->getAmount(),
+                    'baseCoinAmount' => $coin->getAmount(),
+                    'usdAmount' => $coin->getUsdAmount(),
+                ];
+            }
         });
 
         return $result;
