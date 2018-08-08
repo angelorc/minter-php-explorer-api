@@ -101,6 +101,6 @@ class StatusService implements StatusServiceInterface
         $slow = Block::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))
             ->where('block_time', '>=', 6)->count();
 
-        return $total / $slow;
+        return $slow / $total;
     }
 }
