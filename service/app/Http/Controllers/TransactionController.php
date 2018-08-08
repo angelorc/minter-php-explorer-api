@@ -38,6 +38,7 @@ class TransactionController extends Controller
      *     @SWG\Parameter(in="query", name="hash", type="string", description="Хэш"),
      *     @SWG\Parameter(in="query", name="hashes", type="string", description="Список хэшей (hashes[]=Mt...&hashes[]=Mt...)"),
      *     @SWG\Parameter(in="query", name="page", type="integer", description="Номер страницы"),
+     *     @SWG\Parameter(in="query", name="perPage", type="integer", description="Количество на странице"),
      *
      *     @SWG\Response(
      *         response=200,
@@ -67,9 +68,11 @@ class TransactionController extends Controller
             'hashes' => $request->get('hashes'),
         ];
 
+        $perPage = $request->get('perPage', null) ?? $this::BLOCKS_PER_PAGE;
+
         $query = $this->transactionRepository->getAllQuery($filter);
 
-        return new TransactionCollection($query->orderByDesc('created_at')->paginate($this::BLOCKS_PER_PAGE));
+        return new TransactionCollection($query->orderByDesc('created_at')->paginate($perPage));
 
     }
 
