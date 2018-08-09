@@ -93,7 +93,7 @@ class TransactionRepository implements TransactionRepositoryInterface
         $dt = new \DateTime();
         $dt->modify('-1 day');
         //TODO: Возможно стоит брать транзакции на начало часа, что позволит кэшировать данные на час
-        return Block::whereDate('timestamp', '>=', $dt->format('Y-m-d H:i:s'))->sum('tx_count');
+        return Block::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->sum('tx_count');
     }
 
     /**

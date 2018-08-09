@@ -50,10 +50,10 @@ class FillTxPerDayTableCommand extends Command
         $today = new \DateTime();
 
         $dates = DB::table('blocks')
-            ->select(DB::raw('timestamp::date'))
+            ->select(DB::raw('created_at::date'))
             ->distinct()
-            ->orderBy('timestamp')
-            ->pluck('timestamp');
+            ->orderBy('created_at')
+            ->pluck('created_at');
 
         foreach ($dates as $date) {
 
