@@ -57,7 +57,7 @@ class Block extends Model
         return $this->belongsToMany(Validator::class);
     }
 
-    public function getTimestampAttribute()
+    public function getFormattedDateAttribute()
     {
         return date('Y-m-d H:i:sO', $this->created_at->getTimestamp());
     }
