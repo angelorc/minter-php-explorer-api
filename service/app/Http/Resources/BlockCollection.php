@@ -45,7 +45,7 @@ class BlockCollection extends ResourceCollection
                 return [
                     'latestBlockHeight' => $item->latestBlockHeight,
                     'height' => $item->height,
-                    'timestamp' => $item->timestamp,
+                    'timestamp' => $item->formattedDate,
                     'txCount' => $item->tx_count,
                     'reward' => MathHelper::makeAmountFromIntString($item->block_reward),
                     'size' => $item->size,

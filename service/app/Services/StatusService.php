@@ -82,7 +82,7 @@ class StatusService implements StatusServiceInterface
         $lastBlock = Block::orderByDesc('height')->first();
 
         if ($lastBlock) {
-            $lastBlockTime = new \DateTime($lastBlock->timestamp);
+            $lastBlockTime = new \DateTime($lastBlock->created_at);
             return time() - $lastBlockTime->getTimestamp() <= $this::IS_ACTIVE_PERIOD;
         }
 
@@ -101,6 +101,11 @@ class StatusService implements StatusServiceInterface
         $slow = Block::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))
             ->where('block_time', '>=', 6)->count();
 
-        return $slow / $total;
+        if($total){
+            return 1 - $slow / $total;
+        }
+
+        return false;
+
     }
 }

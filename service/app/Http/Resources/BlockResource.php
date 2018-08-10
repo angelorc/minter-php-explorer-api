@@ -29,7 +29,7 @@ class BlockResource extends JsonResource
         return [
             'latestBlockHeight' => $this->latestBlockHeight,
             'height' => $this->height,
-            'timestamp' => $this->timestamp,
+            'timestamp' => $this->formattedDate,
             'txCount' => $this->tx_count,
             'reward' => MathHelper::makeAmountFromIntString($this->block_reward),
             'size' => $this->size,

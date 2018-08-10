@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Helpers\DateTimeHelper;
 use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
+use Carbon\Carbon;
+use DateTimeZone;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Minter\SDK\MinterReward;
@@ -85,16 +87,16 @@ class BlockService implements BlockServiceInterface
             return;
         }
 
-        $blockTime = DateTimeHelper::getDateTimeFonNanoSeconds($blockData['time']);
+        $blockTime = DateTimeHelper::getDateTimeFromNanoSeconds($blockData['time']);
 
         $block = new Block();
         $block->height = $blockData['height'];
-        $block->timestamp = $blockTime->format('Y-m-d H:i:sO');
+        $block->timestamp = DateTimeHelper::getDateTimeAsFloat($blockData['time']);
         $block->created_at = $blockTime->format('Y-m-d H:i:sO');
         $block->tx_count = $blockData['num_txs'];
         $block->hash = 'Mh' . mb_strtolower($blockData['hash']);
         $block->block_reward = $this->getBlockReward($block->height);
-        $block->block_time = $this->calculateBlockTime($blockTime->getTimestamp());
+        $block->block_time = $this->calculateBlockTime($block->timestamp);
 
         $transactions = null;
         $validators = null;
@@ -134,19 +136,18 @@ class BlockService implements BlockServiceInterface
     }
 
     /**
-     * @param int $currentBlockTime
-     * @return int
+     * @param Carbon $currentBlockTime
+     * @return float
      */
-    private function calculateBlockTime(int $currentBlockTime): int
+    private function calculateBlockTime(string $currentBlockTime): float
     {
-        //TODO: проверить расчет
-        $lastBlockTime = Cache::get('last_block_time', null);
+        $lastBlock = Block::orderBy('created_at', 'desc')->limit(1)->first();
 
-        if ($lastBlockTime && $currentBlockTime > $lastBlockTime) {
-            return $currentBlockTime - $lastBlockTime;
+        if (!$lastBlock) {
+            return $this::DEFAULT_BLOCK_TIME;
         }
 
-        return $this::DEFAULT_BLOCK_TIME;
+        return (float)$currentBlockTime - (float)$lastBlock->timestamp;
     }
 
     /**

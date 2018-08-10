@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Services\BlockServiceInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class PullBlockDataCommand extends Command
@@ -45,6 +46,13 @@ class PullBlockDataCommand extends Command
                 $spentTime = 0;
 
                 if ($lastBlockHeight >= $explorerLastBlockHeight) {
+
+                    if ($lastBlockHeight - $explorerLastBlockHeight  > 3){
+                        Cache::put('explorer_status', 'updating', 1);
+                    }else{
+                        Cache::forget('explorer_status');
+                    }
+
                     $start = time();
                     $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
                     $this->blockService->saveFromApiData($blockData);
