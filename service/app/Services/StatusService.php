@@ -102,7 +102,7 @@ class StatusService implements StatusServiceInterface
             ->where('block_time', '>=', 6)->count();
 
         if($total){
-            return $slow / $total;
+            return 1 - $slow / $total;
         }
 
         return false;

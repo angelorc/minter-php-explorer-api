@@ -184,9 +184,15 @@ class StatusController extends Controller
     {
         $transactionData = $this->transactionService->get24hTransactionsData();
 
+        $status = Cache::get('explorer_status', false);
+
+        if(!$status){
+            $status = $this->statusService->isActiveStatus() ? 'active' : 'down';
+        }
+
         return [
             'data' => [
-                'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
+                'status' => $status,
                 'uptime' => $this->statusService->getUpTime(),
                 'numberOfBlocks' => $this->statusService->getLastBlockHeight(),
                 'blockSpeed24h' => $this->statusService->getAverageBlockTime(),
