@@ -99,7 +99,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'pub_key' => $item->pub_key,
                             'coin' => $item->coin,
-                            'stake' => MathHelper::makeAmountFromIntString($item->value)
+                            'stake' => MathHelper::makeAmountFromIntString($item->stake)
                         ];
                         break;
                     case Transaction::TYPE_REDEEM_CHECK:

@@ -178,6 +178,21 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
+        if (!empty($filter['pubKeys']) && \is_array($filter['pubKeys'])) {
+            $keys = implode(',', array_map(function ($item) {
+                return "'" . preg_replace("/\W/", '', $item) . "'";
+            }, $filter['pubKeys']));
+
+            $query->where(function ($query) use ($keys) {
+                $query->whereRaw('transactions.pub_key ilike any (array[' . $keys . ']) ');
+            });
+
+        } elseif (!empty($filter['pubKey'])) {
+            $query->where(function ($query) use ($filter) {
+                $query->where('transactions.pub_key', 'ilike', $filter['pubKey']);
+            });
+        }
+
         return $query;
     }
 
