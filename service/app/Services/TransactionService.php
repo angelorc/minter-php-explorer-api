@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Helpers\CoinHelper;
 use App\Helpers\DateTimeHelper;
 use App\Helpers\MathHelper;
 use App\Models\Coin;
@@ -208,8 +209,8 @@ class TransactionService implements TransactionServiceInterface
         return [
             'count' => $data['count'],
             'perSecond' => round($data['count'] / 86400, 8),
-            'sum' => $data['sum'],
-            'avg' => $data['avg'],
+            'sum' => CoinHelper::convertUnitToMnt($data['sum']),
+            'avg' => CoinHelper::convertUnitToMnt($data['suavgm']),
         ];
     }
 }
