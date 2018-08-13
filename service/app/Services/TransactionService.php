@@ -210,7 +210,7 @@ class TransactionService implements TransactionServiceInterface
             'count' => $data['count'],
             'perSecond' => round($data['count'] / 86400, 8),
             'sum' => CoinHelper::convertUnitToMnt($data['sum']),
-            'avg' => CoinHelper::convertUnitToMnt($data['suavgm']),
+            'avg' => CoinHelper::convertUnitToMnt($data['avg']),
         ];
     }
 }
