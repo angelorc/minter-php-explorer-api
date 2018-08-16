@@ -50,7 +50,7 @@ class BlockCollection extends ResourceCollection
                     'reward' => MathHelper::makeAmountFromIntString($item->block_reward),
                     'size' => $item->size,
                     'hash' => $item->hash,
-                    'blockTime' => $item->block_time,
+                    'blockTime' => floor($item->block_time),
                     'validators' => $item->validators->count() ? ValidatorResource::collection($item->validators) : []
                 ];
             }),

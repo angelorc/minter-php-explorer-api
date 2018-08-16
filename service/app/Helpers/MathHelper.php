@@ -20,9 +20,9 @@ class MathHelper
      *
      * @return string
      */
-    public static function makeAmountFromIntString(string $intStrValue, $scale = self::DEFAULT_SCALE): string
+    public static function makeAmountFromIntString(string $intStrValue = '0', $scale = self::DEFAULT_SCALE): string
     {
-        return bcmul($intStrValue, Coin::PIP_STR, $scale);
+        return  bcmul($intStrValue, Coin::PIP_STR, $scale);
     }
 
     /**
@@ -31,7 +31,7 @@ class MathHelper
      *
      * @return string
      */
-    public static function makeCommissionFromIntString(string $intStrValue, $scale = self::DEFAULT_SCALE): string
+    public static function makeCommissionFromIntString(string $intStrValue = '0', $scale = self::DEFAULT_SCALE): string
     {
         return bcmul($intStrValue, Coin::UNIT_STR, $scale);
     }

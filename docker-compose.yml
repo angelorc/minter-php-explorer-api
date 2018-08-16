@@ -1,60 +1,60 @@
 version: '3'
 services:
-    app:
-        container_name: "minter_explorer_api"
-        build: ./docker/php
-        volumes:
-            - ./service:/var/www
-        depends_on:
-            - postgres
-            - redis
-            - centrifugo
-        links:
-            - postgres
-            - redis
-            - centrifugo
-    nginx:
-        container_name: "minter_explorer_web_server"
-        build: ./docker/nginx
-        volumes:
-            - ./service:/var/www
-        ports:
-            - "8000:80"
-        links:
-            - app
-    postgres:
-        container_name: "minter_explorer_db"
-        image: postgres
-        restart: always
-        ports:
-            - 54322:5432
-        environment:
-            POSTGRES_DB: explorer_db
-            POSTGRES_USER: minter_adm
-            POSTGRES_PASSWORD: password
-        volumes:
-            - ./service/db_data:/var/lib/postgresql/data
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U postgres"]
-            interval: 30s
-            timeout: 3s
-            retries: 5
-    redis:
-        container_name: "minter_explorer_cache"
-        image: redis
-        restart: always
-        ports:
-            - 6379:6379
-    composer:
-        container_name: "minter_explorer_composer"
-        build: ./docker/composer
-        volumes:
-            - ./service:/app
-        command: install
+  app:
+    container_name: "minter_explorer_api"
+    build: ./docker/php
+    volumes:
+      - ./service:/var/www
+    depends_on:
+      - postgres
+      - redis
+      - centrifugo
+    links:
+      - postgres
+      - redis
+      - centrifugo
+  nginx:
+    container_name: "minter_explorer_web_server"
+    build: ./docker/nginx
+    volumes:
+      - ./service:/var/www
+    ports:
+      - "8000:80"
+    links:
+      - app
+  postgres:
+    container_name: "minter_explorer_db"
+    image: postgres
+    restart: always
+    ports:
+      - 54322:5432
+    environment:
+      POSTGRES_DB: explorer_db
+      POSTGRES_USER: minter_adm
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./service/db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+  redis:
+    container_name: "minter_explorer_cache"
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+  composer:
+    container_name: "minter_explorer_composer"
+    build: ./docker/composer
+    volumes:
+      - ./service:/app
+    command: install
 
-    centrifugo:
-        image: centrifugo/centrifugo
-        volumes:
-          - ./docker/centrifugo:/centrifugo
-        ports:
-          - 8800:8000
+  centrifugo:
+    image: centrifugo/centrifugo
+    volumes:
+      - ./docker/centrifugo:/centrifugo
+    ports:
+      - 8800:8000
