@@ -64,7 +64,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'to' => $item->to,
                             'coin' => $item->coin,
-                            'amount' => MathHelper::makeAmountFromIntString($item->value)
+                            'amount' => isset($item->value) ? MathHelper::makeAmountFromIntString($item->value) : '',
                         ];
                         break;
                     case Transaction::TYPE_SELL_COIN:
@@ -73,15 +73,15 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'coin_to_sell' => $item->coin_to_sell,
                             'coin_to_buy' => $item->coin_to_buy,
-                            'value' => MathHelper::makeAmountFromIntString($item->value)
+                            'value' => isset($item->value) ?  MathHelper::makeAmountFromIntString($item->value) : '',
                         ];
                         break;
                     case Transaction::TYPE_CREATE_COIN:
                         $result['data'] = [
                             'name' => $item->name,
                             'symbol' => $item->coin,
-                            'initial_amount' => MathHelper::makeAmountFromIntString($item->initial_amount),
-                            'initial_reserve' => MathHelper::makeAmountFromIntString($item->initial_reserve),
+                            'initial_amount' => isset($item->initial_amount) ?  MathHelper::makeAmountFromIntString($item->initial_amount): '',
+                            'initial_reserve' => isset($item->initial_amount) ?  MathHelper::makeAmountFromIntString($item->initial_reserve): '',
                             'constant_reserve_ratio' => $item->constant_reserve_ratio,
                         ];
                         break;
@@ -91,7 +91,7 @@ class TransactionCollection extends ResourceCollection
                             'pub_key' => $item->pub_key,
                             'commission' => $item->commission,
                             'coin' => $item->coin,
-                            'stake' => MathHelper::makeAmountFromIntString($item->stake)
+                            'stake' => isset($item->stake) ?  MathHelper::makeAmountFromIntString($item->stake) : ''
                         ];
                         break;
                     case Transaction::TYPE_DELEGATE:
@@ -99,7 +99,7 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'pub_key' => $item->pub_key,
                             'coin' => $item->coin,
-                            'stake' => MathHelper::makeAmountFromIntString($item->stake)
+                            'stake' => isset($item->stake) ?  MathHelper::makeAmountFromIntString($item->stake) : ''
                         ];
                         break;
                     case Transaction::TYPE_REDEEM_CHECK:
