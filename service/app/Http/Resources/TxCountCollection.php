@@ -16,12 +16,12 @@ class TxCountCollection extends ResourceCollection
     public function toArray($request): array
     {
         return [
-            'data' => $this->collection->map(function ($item) {
+            'data' => array_reverse($this->collection->map(function ($item) {
                 return [
                     'date' => $item->date,
                     'txCount' => $item->transactions_count,
                 ];
-            })
+            })->toArray())
         ];
     }
 }

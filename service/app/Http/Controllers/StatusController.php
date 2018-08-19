@@ -140,7 +140,7 @@ class StatusController extends Controller
      */
     public function txCountChartData(): TxCountCollection
     {
-        return new TxCountCollection(TxPerDay::limit(14)->get());
+        return new TxCountCollection(TxPerDay::limit(14)->orderBy('date', 'desc')->get());
     }
 
     /**
