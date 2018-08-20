@@ -102,9 +102,15 @@ class BlockRepository implements BlockRepositoryInterface
      */
     public function getAverageBlockTime(\DateTime $startDate = null): float
     {
-        $start = new \DateTime();
-        $start->sub(new \DateInterval('PT24H'));
+        $dt = $startDate ?? new \DateTime();
+        $dt->modify('-1 day');
 
-        return Block::where('created_at', '>=', $start->format('Y-m-d h:i:s'))->avg('block_time') ?? 0;
+        $result = DB::select('
+            select  avg(block_time)  as avg
+            from blocks
+            where created_at >= :date ;
+        ', ['date' => $dt->format('Y-m-d H:i:s')]);
+
+        return  $result[0]->avg ?? 0;
     }
 }

@@ -15,6 +15,13 @@ interface TransactionServiceInterface
     public function decodeTransactionsFromApiData(array $data): Collection;
 
     /**
+     * Получить колекцию тэгов транзакций из данных API
+     * @param array $data
+     * @return array
+     */
+    public function decodeTxTagsFromApiData(array $data): array;
+
+    /**
      * Количество транзакций
      * @param string $address
      * @return int
@@ -53,4 +60,10 @@ interface TransactionServiceInterface
      * @return array
      */
     public function get24hTransactionsData(): array;
+
+    /**
+     * Сохранить тэги транзакций
+     * @param array $txTags
+     */
+    public function saveTransactionsTags(array $txTags): void;
 }

@@ -2,17 +2,16 @@
 
 namespace App\Services;
 
-
 use App\Helpers\CoinHelper;
 use App\Helpers\DateTimeHelper;
 use App\Helpers\MathHelper;
-use App\Models\Coin;
+use App\Helpers\StringHelper;
 use App\Models\Transaction;
+use App\Models\TxTag;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use App\Helpers\StringHelper;
 
 class TransactionService implements TransactionServiceInterface
 {
@@ -29,7 +28,6 @@ class TransactionService implements TransactionServiceInterface
     {
         $this->transactionRepository = $transactionRepository;
     }
-
 
     /**
      * Получить колекцию транзакций из данных API
@@ -122,7 +120,10 @@ class TransactionService implements TransactionServiceInterface
                     $transaction->proof = $tx['data']['proof'] ?? null;
                 }
 
-                if ($transaction->type === Transaction::TYPE_SET_CANDIDATE_ONLINE || $transaction->type === Transaction::TYPE_SET_CANDIDATE_OFFLINE) {
+                if (
+                    $transaction->type === Transaction::TYPE_SET_CANDIDATE_ONLINE ||
+                    $transaction->type === Transaction::TYPE_SET_CANDIDATE_OFFLINE
+                ) {
                     $pk = $tx['data']['pubkey'] ?? $tx['data']['pub_key'];
                     $transaction->pub_key = StringHelper::mb_ucfirst($pk);
                 }
@@ -141,6 +142,29 @@ class TransactionService implements TransactionServiceInterface
         }
 
         return collect($transactions);
+    }
+
+    /**
+     * Получить массив тэгов
+     * @param array $data
+     * @return array
+     */
+    public function decodeTxTagsFromApiData(array $data): array
+    {
+        $txs = $data['transactions'];
+        $tagsData = [];
+        foreach ($txs as $tx) {
+            $tags = [];
+            if (isset($tx['tx_result']) && isset($tx['tx_result']['tags'])) {
+                $tags = $this->decodeTxTags($tx['tx_result']['tags']);
+            }
+            //TODO: возможно стоит добавить время, т.к. хэш может быть не уникальным
+            if (\count($tags)) {
+                $tagsData[$tx['hash']] = collect($tags);
+            }
+        }
+
+        return $tagsData;
     }
 
     /**
@@ -212,5 +236,34 @@ class TransactionService implements TransactionServiceInterface
             'sum' => CoinHelper::convertUnitToMnt($data['sum']),
             'avg' => CoinHelper::convertUnitToMnt($data['avg']),
         ];
+    }
+
+
+    /**
+     * @param array $txTags
+     */
+    public function saveTransactionsTags(array $txTags): void
+    {
+        foreach ($txTags as $hash => $tags){
+            $transaction = $this->transactionRepository->findByHash($hash);
+
+            if($transaction){
+                $this->transactionRepository->saveTransactionTags($transaction, $tags);
+            }
+        }
+    }
+
+    /**
+     * @param array $tagsData
+     * @return array
+     */
+    private function decodeTxTags(array $tagsData)
+    {
+        return array_map(function ($el) {
+            $tag = new TxTag();
+            $tag->key = base64_decode($el['key']);
+            $tag->value =$el['value'];
+            return $tag;
+        }, $tagsData);
     }
 }

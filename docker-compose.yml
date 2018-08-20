@@ -51,10 +51,30 @@ services:
     volumes:
       - ./service:/app
     command: install
-
   centrifugo:
     image: centrifugo/centrifugo
     volumes:
       - ./docker/centrifugo:/centrifugo
     ports:
       - 8800:8000
+  status:
+    container_name: "minter_explorer_status"
+    image: minterteam/status-minter-network:1.0-alpine
+    build:
+      context: https://github.com/MinterTeam/docker-status-minter-network.git
+      dockerfile: alpine/Dockerfile
+      args:
+        EXPLORER_MAINNET_URL: "http://localhost:8000"
+        EXPLORER_TESTNET_URL: "http://localhost:8000"
+    ports:
+      - 8010:80
+  explorer:
+    container_name: "minter_explorer_web"
+    image: minterteam/explorer-minter-network:1.0-alpine
+    build:
+      context: https://github.com/MinterTeam/docker-explorer-web-minter.git
+      dockerfile: alpine/Dockerfile
+      args:
+        EXPLORER_URL: "http://localhost:8000"
+    ports:
+      - 8011:80

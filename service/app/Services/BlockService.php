@@ -100,10 +100,12 @@ class BlockService implements BlockServiceInterface
 
         $transactions = null;
         $validators = null;
+        $tags = [];
 
         if ($block->tx_count > 0) {
             $transactions = $this->transactionService->decodeTransactionsFromApiData($blockData);
             $block->size = $this->getBlockSize($blockData);
+            $tags = $this->transactionService->decodeTxTagsFromApiData($blockData);
         } else {
             $block->size = 0;
         }
@@ -111,6 +113,10 @@ class BlockService implements BlockServiceInterface
         $validators = $this->validatorService->saveValidatorsFromApiData($block->height);
 
         $this->blockRepository->save($block, $transactions, $validators);
+
+        if(\count($tags)){
+            $this->transactionService->saveTransactionsTags($tags);
+        }
 
         $expiresAt = new \DateTime();
         try {

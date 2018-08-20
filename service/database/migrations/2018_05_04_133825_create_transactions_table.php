@@ -24,7 +24,7 @@ class CreateTransactionsTable extends Migration
             $table->string('hash');
             $table->boolean('status');
             $table->decimal('fee', 50, 0);
-            $table->decimal('value', 50, 18)->nullable();
+            $table->decimal('value', 50, 0)->nullable();
             $table->string('to')->nullable();
             $table->string('coin')->nullable();
             $table->string('payload')->nullable();

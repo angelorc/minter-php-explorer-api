@@ -21,6 +21,15 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
+     * Сохранить тэги транзакции
+     * @param Transaction $transaction
+     * @param Collection $tags
+     */
+    public function saveTransactionTags(Transaction $transaction, Collection $tags): void{
+        $transaction->tags()->saveMany($tags);
+    }
+
+    /**
      * Найти транзакцию по Id
      * @param int $id
      * @return Transaction|null
