@@ -31,10 +31,15 @@ class Validator extends Model
 
     protected $fillable = [
         'name',
-        'public_key',
-        'address',
+        'pub_key',
+        'candidate_address',
+        'accumulated_reward',
+        'absent_times',
+        'total_stake',
+        'commission',
+        'status',
+        'created_at_block',
         'updated_at',
-        'created_at',
     ];
 
     /**

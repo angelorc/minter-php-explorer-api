@@ -65,21 +65,20 @@ class ValidatorService implements ValidatorServiceInterface
      */
     public function saveValidatorsFromApiData(int $blockHeight): Collection
     {
+        if($blockHeight <= 1 ){
+            return collect([]);
+        }
+
         $validators = [];
-
         $validatorsData = null;
-
         $dateTime = new \DateTime();
 
         try {
             $data = $this->httpClient->request('GET', '/api/validators', [
                 'query' => ['height' => $blockHeight]
             ]);
-
             $validatorsData = \GuzzleHttp\json_decode($data->getBody()->getContents(), true);
-
             $validatorsData = $validatorsData['result'];
-
         } catch (GuzzleException $e) {
             Log::error($e->getMessage());
         }
@@ -89,15 +88,28 @@ class ValidatorService implements ValidatorServiceInterface
             foreach ($validatorsData as $validatorData) {
 
                 $validator = null;
+                $candidate = $validatorData['candidate'];
+                $validatorAddress = StringHelper::mb_ucfirst($candidate['candidate_address'] ?? '');
+                $validatorPubKey = StringHelper::mb_ucfirst($candidate['pub_key'] ?? '');
 
-                $validatorAddress = StringHelper::mb_ucfirst($validatorData['candidate_address'] ?? '');
-                $validatorPubKey = StringHelper::mb_ucfirst($validatorData['pub_key'] ?? '');
+                $data = [
+                    'pub_key' => $validatorPubKey,
+                    'candidate_address' => $validatorAddress,
+                    'accumulated_reward' => $validatorData['accumulated_reward'],
+                    'absent_times' => $validatorData['absent_times'],
+                    'total_stake' => $candidate['total_stake'],
+                    'commission' => $candidate['commission'],
+                    'status' => $candidate['status'],
+                    'created_at_block' => $candidate['created_at_block'],
+                    'updated_at' => $dateTime->format('Y-m-d H:i:sO')
+                ];
 
                 if ($validatorPubKey) {
                     $validator = Validator::updateOrCreate(
-                        ['public_key' => $validatorPubKey, 'address' => $validatorAddress],
-                        ['updated_at' => $dateTime->format('Y-m-d H:i:sO')]
+                        ['pub_key' => $validatorPubKey, 'candidate_address' => $validatorAddress],
+                        $data
                     );
+
                     $validators[] = $validator;
                 }
             }
