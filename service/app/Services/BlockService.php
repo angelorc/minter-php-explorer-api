@@ -95,7 +95,7 @@ class BlockService implements BlockServiceInterface
         $block->created_at = $blockTime->format('Y-m-d H:i:sO');
         $block->tx_count = $blockData['num_txs'];
         $block->hash = 'Mh' . mb_strtolower($blockData['hash']);
-        $block->block_reward = $this->getBlockReward($block->height);
+        $block->block_reward = $blockData['block_reward'];
         $block->block_time = $this->calculateBlockTime($block->timestamp);
 
         $transactions = null;
