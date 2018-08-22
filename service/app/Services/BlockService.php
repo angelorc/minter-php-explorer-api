@@ -132,17 +132,7 @@ class BlockService implements BlockServiceInterface
     }
 
     /**
-     * Поучить награду за блок
-     * @param int $blockHeight
-     * @return string
-     */
-    private function getBlockReward(int $blockHeight): string
-    {
-        return MinterReward::get($blockHeight);
-    }
-
-    /**
-     * @param Carbon $currentBlockTime
+     * @param string $currentBlockTime
      * @return float
      */
     private function calculateBlockTime(string $currentBlockTime): float

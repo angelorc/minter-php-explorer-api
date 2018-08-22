@@ -244,10 +244,10 @@ class TransactionService implements TransactionServiceInterface
      */
     public function saveTransactionsTags(array $txTags): void
     {
-        foreach ($txTags as $hash => $tags){
+        foreach ($txTags as $hash => $tags) {
             $transaction = $this->transactionRepository->findByHash($hash);
 
-            if($transaction){
+            if ($transaction) {
                 $this->transactionRepository->saveTransactionTags($transaction, $tags);
             }
         }
@@ -262,7 +262,18 @@ class TransactionService implements TransactionServiceInterface
         return array_map(function ($el) {
             $tag = new TxTag();
             $tag->key = base64_decode($el['key']);
-            $tag->value =$el['value'];
+
+            try{
+                $tag->value = base64_decode($el['value']);
+            }catch (\Exception $exception){
+                $tag->value = $exception->getMessage();
+
+                Log::channel('transactions')->error(
+                    $exception->getFile() . ' ' .
+                    $exception->getLine() . 'Tag decode: ' .
+                    $exception->getMessage()
+                );
+            }
             return $tag;
         }, $tagsData);
     }
