@@ -18,7 +18,6 @@ class CreateTxTagsTable extends Migration
             $table->bigInteger('transaction_id');
             $table->string('key');
             $table->string('value');
-
             $table->foreign('transaction_id')->references('id')->on('transactions');
 
         });

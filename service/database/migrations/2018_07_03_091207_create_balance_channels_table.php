@@ -17,7 +17,7 @@ class CreateBalanceChannelsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('address');
-            $table->timestamps();
+            $table->timestampsTz();
         });
     }
 
