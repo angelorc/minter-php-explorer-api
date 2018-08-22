@@ -106,7 +106,7 @@ class ValidatorService implements ValidatorServiceInterface
 
                 if ($validatorPubKey) {
                     $validator = Validator::updateOrCreate(
-                        ['pub_key' => $validatorPubKey, 'candidate_address' => $validatorAddress],
+                        ['public_key' => $validatorPubKey, 'address' => $validatorAddress],
                         $data
                     );
 
