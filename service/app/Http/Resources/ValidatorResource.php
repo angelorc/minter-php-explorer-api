@@ -12,6 +12,10 @@ class ValidatorResource extends JsonResource
         return [
             'name' => $this->name,
             'address' => $this->address,
+            'public_key' => $this->public_key,
+            'absent_times' => $this->absent_times,
+            'commission' => $this->commission,
+            'status' => $this->status,
         ];
     }
 }
