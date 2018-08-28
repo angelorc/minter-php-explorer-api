@@ -92,13 +92,15 @@ class TransactionService implements TransactionServiceInterface
                     $transaction->coin_to_buy = mb_strtoupper($tx['data']['coin_to_buy']);
                 }
                 if ($transaction->type === Transaction::TYPE_SELL_COIN) {
-                    $transaction->value = $tx['data']['value_to_sell'] ?? 0;
+                    $transaction->value_to_sell = $tx['data']['value_to_sell'] ?? 0;
+                    $transaction->value_to_buy = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
                 }
                 if ($transaction->type === Transaction::TYPE_SELL_ALL_COIN) {
-                    $transaction->value = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
+                    $transaction->value_to_sell = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
                 }
                 if ($transaction->type === Transaction::TYPE_BUY_COIN) {
-                    $transaction->value = $tx['data']['value_to_buy'] ?? 0;
+                    $transaction->value_to_buy = $tx['value_to_buy']['value_to_buy'] ?? 0;
+                    $transaction->value_to_sell = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
                 }
 
                 if ($transaction->type === Transaction::TYPE_CREATE_COIN) {

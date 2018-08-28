@@ -55,6 +55,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property float initial_reserve
  * @property float constant_reserve_ratio
  * @property string hash
+ * @property string value_to_buy
+ * @property string value_to_sell
  * @property string service_data
  * @property string from
  * @property string to
