@@ -58,6 +58,17 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->value = 0;
                 $transaction->gas_coin = $tx['gas_coin'] ?? null;
 
+                try{
+                    $payload = strip_tags(base64_decode($tx['payload']));
+                    $transaction->payload = \mb_strlen($payload) ? $payload : null ;
+                }catch (\Exception $exception){
+                    Log::channel('transactions')->error(
+                        $exception->getFile() . ' ' .
+                        $exception->getLine() . 'Payload decode: ' . $tx['payload'] . ' ' .
+                        $exception->getMessage()
+                    );
+                }
+
                 if (isset($tx['tx_result']['code'])) {
                     $transaction->status = false;
                     $transaction->log = $tx['tx_result']['log'] ?? null;
@@ -82,6 +93,9 @@ class TransactionService implements TransactionServiceInterface
                 }
                 if ($transaction->type === Transaction::TYPE_SELL_COIN) {
                     $transaction->value = $tx['data']['value_to_sell'] ?? 0;
+                }
+                if ($transaction->type === Transaction::TYPE_SELL_ALL_COIN) {
+                    $transaction->value = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
                 }
                 if ($transaction->type === Transaction::TYPE_BUY_COIN) {
                     $transaction->value = $tx['data']['value_to_buy'] ?? 0;
@@ -255,19 +269,17 @@ class TransactionService implements TransactionServiceInterface
 
     /**
      * @param array $tagsData
-     * @return array
+     * @return TxTag[]
      */
-    private function decodeTxTags(array $tagsData)
+    private function decodeTxTags(array $tagsData): array
     {
         return array_map(function ($el) {
             $tag = new TxTag();
             $tag->key = base64_decode($el['key']);
-
+            $tag->value = '';
             try{
                 $tag->value = base64_decode($el['value']);
             }catch (\Exception $exception){
-                $tag->value = $exception->getMessage();
-
                 Log::channel('transactions')->error(
                     $exception->getFile() . ' ' .
                     $exception->getLine() . 'Tag decode: ' .
@@ -276,5 +288,16 @@ class TransactionService implements TransactionServiceInterface
             }
             return $tag;
         }, $tagsData);
+    }
+
+    private function getValueFromTxTag(array $tagsData): ?string
+    {
+        $tags = $this->decodeTxTags($tagsData);
+        foreach ($tags as $tag) {
+            if($tag->key === 'tx.return'){
+                return $tag->value;
+            }
+        }
+        return null;
     }
 }
