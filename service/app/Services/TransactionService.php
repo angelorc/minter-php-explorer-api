@@ -55,19 +55,10 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->fee = $tx['gas'] ?? 0;
                 $transaction->service_data = $tx['serviceData'] ?? null;
                 $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
-                $transaction->value = 0;
                 $transaction->gas_coin = $tx['gas_coin'] ?? null;
 
-                try{
-                    $payload = strip_tags(base64_decode($tx['payload']));
-                    $transaction->payload = \mb_strlen($payload) ? $payload : null ;
-                }catch (\Exception $exception){
-                    Log::channel('transactions')->error(
-                        $exception->getFile() . ' ' .
-                        $exception->getLine() . 'Payload decode: ' . $tx['payload'] . ' ' .
-                        $exception->getMessage()
-                    );
-                }
+                $payload = strip_tags(base64_decode($tx['payload']));
+                $transaction->payload = \mb_strlen($payload) ? $payload : null ;
 
                 if (isset($tx['tx_result']['code'])) {
                     $transaction->status = false;
