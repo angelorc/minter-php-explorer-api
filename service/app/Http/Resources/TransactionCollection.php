@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\MathHelper;
+use App\Models\Coin;
 use App\Models\Transaction;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -35,7 +37,7 @@ class TransactionCollection extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
-     *
+     * @TODO: Centralize transaction outputs
      * @param  \Illuminate\Http\Request
      * @return array
      */
@@ -45,10 +47,11 @@ class TransactionCollection extends ResourceCollection
             'data' => $this->collection->map(function ($item) {
 
                 $result = [
+                    'txn' => $item->id,
                     'hash' => $item->hash,
                     'nonce' => $item->nonce,
                     'block' => $item->block->height,
-                    'timestamp' => $item->block->timestamp,
+                    'timestamp' => $item->block->formattedDate,
                     'fee' => $item->feeMnt,
                     'type' => $item->typeString,
                     'status' => $item->status,
@@ -56,78 +59,68 @@ class TransactionCollection extends ResourceCollection
                     'data' => []
                 ];
 
-                //TODO: как будет поддержка на фронте вернуть
-                $result['data'] = [
-                    'from' => $item->from,
-                    'to' => $item->to,
-                    'coin' => $item->coin,
-                    'amount' => (float)$item->value
-                ];
-
-//                switch ($item->type) {
-//                    case Transaction::TYPE_SEND:
-//                        $result['data'] = [
-//                            'from' => $item->from,
-//                            'to' => $item->to,
-//                            'coin' => $item->coin,
-//                            'amount' => (float)$item->value
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_CONVERT:
-//                        $result['data'] = [
-//                            'from_coin_symbol' => $item->from_coin_symbol,
-//                            'to_coin_symbol' => $item->to_coin_symbol,
-//                            'value' => (float)$item->value
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_CREATE_COIN:
-//                        $result['data'] = [
-//                            'name' => $item->name,
-//                            'symbol' => $item->symbol,
-//                            'initial_amount' => $item->initial_amount,
-//                            'initial_reserve' => $item->initial_reserve,
-//                            'constant_reserve_ratio' => $item->constant_reserve_ratio,
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_DECLARE_CANDIDACY:
-//                        $result['data'] = [
-//                            'address' => $item->address,
-//                            'pub_key' => $item->pub_key,
-//                            'commission' => $item->commission,
-//                            'coin' => $item->coin,
-//                            'stake' => $item->stake
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_DELEGATE:
-//                        $result['data'] = [
-//                            'pub_key' => $item->pub_key,
-//                            'coin' => $item->coin,
-//                            'stake' => $item->stake
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_UNBOND:
-//                        $result['data'] = [
-//                            'pub_key' => $item->pub_key,
-//                            'coin' => $item->coin,
-//                            'value' => (float)$item->value
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_REDEEM_CHECK:
-//                        $result['data'] = [
-//                            'raw_check' => $item->raw_check,
-//                            'proof' => $item->proof
-//                        ];
-//                        break;
-//                    case Transaction::TYPE_SET_CANDIDATE_ONLINE:
-//                    case Transaction::TYPE_SET_CANDIDATE_OFFLINE:
-//                        $result['data'] = [
-//                            'pub_key' => $item->pub_key,
-//                        ];
-//                        break;
-//                    default:
-//                        $result['data'] = [];
-//                        break;
-//                }
+                switch ($item->type) {
+                    case Transaction::TYPE_SEND:
+                        $result['data'] = [
+                            'to' => $item->to,
+                            'coin' => $item->coin,
+                            'amount' => isset($item->value) ? MathHelper::makeAmountFromIntString($item->value) : '',
+                        ];
+                        break;
+                    case Transaction::TYPE_SELL_COIN:
+                    case Transaction::TYPE_SELL_ALL_COIN:
+                    case Transaction::TYPE_BUY_COIN:
+                        $result['data'] = [
+                            'coin_to_sell' => $item->coin_to_sell,
+                            'coin_to_buy' => $item->coin_to_buy,
+                            'value' => isset($item->value) ?  MathHelper::makeAmountFromIntString($item->value) : '',
+                            'value_to_buy' =>  isset($item->value_to_buy) ?  MathHelper::makeAmountFromIntString($item->value_to_buy) : '',
+                            'value_to_sell' =>  isset($item->value_to_sell) ?  MathHelper::makeAmountFromIntString($item->value_to_sell) : '',
+                        ];
+                        break;
+                    case Transaction::TYPE_CREATE_COIN:
+                        $result['data'] = [
+                            'name' => $item->name,
+                            'symbol' => $item->coin,
+                            'initial_amount' => isset($item->initial_amount) ?  MathHelper::makeAmountFromIntString($item->initial_amount): '',
+                            'initial_reserve' => isset($item->initial_amount) ?  MathHelper::makeAmountFromIntString($item->initial_reserve): '',
+                            'constant_reserve_ratio' => $item->constant_reserve_ratio,
+                        ];
+                        break;
+                    case Transaction::TYPE_DECLARE_CANDIDACY:
+                        $result['data'] = [
+                            'address' => $item->address,
+                            'pub_key' => $item->pub_key,
+                            'commission' => $item->commission,
+                            'coin' => $item->coin,
+                            'stake' => isset($item->stake) ?  MathHelper::makeAmountFromIntString($item->stake) : ''
+                        ];
+                        break;
+                    case Transaction::TYPE_DELEGATE:
+                    case Transaction::TYPE_UNBOUND:
+                        $result['data'] = [
+                            'pub_key' => $item->pub_key,
+                            'coin' => $item->coin,
+                            'stake' => isset($item->stake) ?  MathHelper::makeAmountFromIntString($item->stake) : ''
+                        ];
+                        break;
+                    case Transaction::TYPE_REDEEM_CHECK:
+                        $result['data'] = [
+                            'raw_check' => $item->raw_check,
+                            'proof' => $item->proof
+                        ];
+                        break;
+                    case Transaction::TYPE_SET_CANDIDATE_ONLINE:
+                    case Transaction::TYPE_SET_CANDIDATE_OFFLINE:
+                        $result['data'] = [
+                            'pub_key' => $item->pub_key,
+                        ];
+                        break;
+                    default:
+                        $result['data'] = [];
+                        break;
+                }
+                $result['data']['from'] = $item->from ?? '';
 
                 return $result;
             }),

@@ -79,10 +79,10 @@ class StatusService implements StatusServiceInterface
     public function isActiveStatus(): bool
     {
         /** @var Block $lastBlock */
-        $lastBlock = Block::orderByDesc('id')->first();
+        $lastBlock = Block::orderByDesc('height')->first();
 
         if ($lastBlock) {
-            $lastBlockTime = new \DateTime($lastBlock->timestamp);
+            $lastBlockTime = new \DateTime($lastBlock->created_at);
             return time() - $lastBlockTime->getTimestamp() <= $this::IS_ACTIVE_PERIOD;
         }
 
@@ -94,28 +94,18 @@ class StatusService implements StatusServiceInterface
      */
     public function getUpTime(): float
     {
-        $now = new \DateTime();
-        $firstBlock = $this->blockRepository->findById(1);
-        $firstBlockDate = $firstBlock ? new \DateTime($firstBlock->timestamp) : new \DateTime();
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
 
-        if ($now->diff($firstBlockDate)->d < 30){
-            //Теоретическое кол-во блоков от времени первого блока
-            $theoryBlocks = (time() - $firstBlockDate->getTimestamp()) / 5;
-        }else{
-            //Теоретическое кол-во блоков в месяц
-            $theoryBlocks = 60 / 5 * 60 * 24 * 30;
+        $total = Block::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->count();
+        $slow = Block::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))
+            ->where('block_time', '>=', 6)->count();
+
+        if($total){
+            return 1 - $slow / $total;
         }
 
-        //Период 30 дней в секундах
-        $period = 30 * 24 * 3600;
+        return false;
 
-        //Реальное кол-во блоков за месяц
-        $count = $this->blockRepository->getBlocksCountByPeriod($period);
-
-        if ($count === 0) {
-            return 0;
-        }
-
-        return $count / $theoryBlocks;
     }
 }

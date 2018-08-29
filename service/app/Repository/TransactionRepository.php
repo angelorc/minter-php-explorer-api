@@ -4,7 +4,6 @@ namespace App\Repository;
 
 
 use App\Models\Block;
-use App\Models\Coin;
 use App\Models\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +18,15 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function save(Transaction $transaction): void
     {
         $transaction->save();
+    }
+
+    /**
+     * Сохранить тэги транзакции
+     * @param Transaction $transaction
+     * @param Collection $tags
+     */
+    public function saveTransactionTags(Transaction $transaction, Collection $tags): void{
+        $transaction->tags()->saveMany($tags);
     }
 
     /**
@@ -38,7 +46,13 @@ class TransactionRepository implements TransactionRepositoryInterface
      */
     public function findByHash(string $hash): ?Transaction
     {
-        return Transaction::where('hash', 'ilike', $hash)->first();
+        $transaction = Transaction::where('hash', 'ilike', $hash)->where('status', true)->first();
+
+        if ($transaction) {
+            return $transaction;
+        }
+
+        return Transaction::where('hash', 'ilike', $hash)->orderBy('created_at', 'asc')->first();
     }
 
     /**
@@ -88,12 +102,12 @@ class TransactionRepository implements TransactionRepositoryInterface
         $dt = new \DateTime();
         $dt->modify('-1 day');
         //TODO: Возможно стоит брать транзакции на начало часа, что позволит кэшировать данные на час
-        return Block::whereDate('timestamp', '>=', $dt->format('Y-m-d H:i:s'))->sum('tx_count');
+        return Block::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->sum('tx_count');
     }
 
     /**
      * Получить количество транзакций за последние 24 часа
-     * @return int
+     * @return string
      * @throws \Exception
      */
     public function get24hTransactionsAverageCommission(): string
@@ -139,7 +153,8 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
-        if (!empty($filter['addresses'])) {
+        if (!empty($filter['addresses']) && \is_array($filter['addresses'])) {
+
             $addresses = implode(',', array_map(function ($item) {
                 return "'" . preg_replace("/\W/", '', $item) . "'";
             }, $filter['addresses']));
@@ -157,7 +172,7 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
-        if (!empty($filter['hashes'])) {
+        if (!empty($filter['hashes']) && \is_array($filter['hashes'])) {
             $hashes = implode(',', array_map(function ($item) {
                 return "'" . preg_replace("/\W/", '', $item) . "'";
             }, $filter['hashes']));
@@ -169,6 +184,21 @@ class TransactionRepository implements TransactionRepositoryInterface
         } elseif (!empty($filter['hash'])) {
             $query->where(function ($query) use ($filter) {
                 $query->where('transactions.hash', 'ilike', $filter['hash']);
+            });
+        }
+
+        if (!empty($filter['pubKeys']) && \is_array($filter['pubKeys'])) {
+            $keys = implode(',', array_map(function ($item) {
+                return "'" . preg_replace("/\W/", '', $item) . "'";
+            }, $filter['pubKeys']));
+
+            $query->where(function ($query) use ($keys) {
+                $query->whereRaw('transactions.pub_key ilike any (array[' . $keys . ']) ');
+            });
+
+        } elseif (!empty($filter['pubKey'])) {
+            $query->where(function ($query) use ($filter) {
+                $query->where('transactions.pub_key', 'ilike', $filter['pubKey']);
             });
         }
 
@@ -185,5 +215,27 @@ class TransactionRepository implements TransactionRepositoryInterface
         $dt->modify('-1 day');
 
         return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->sum('fee');
+    }
+
+    /**
+     * Данные по трнзакциям за 24 часа
+     * @return array
+     */
+    public function get24hTransactionsData(): array
+    {
+        $dt = new \DateTime();
+        $dt->modify('-1 day');
+
+        $result = DB::select('
+            select count(fee), sum(fee) as sum , avg(fee)  as avg
+            from transactions
+            where created_at >= :date ;
+        ', ['date' => $dt->format('Y-m-d H:i:s')]);
+
+        return [
+            'count' => $result[0]->count ?? 0,
+            'sum' => $result[0]->sum ?? 0,
+            'avg' => $result[0]->avg ?? 0,
+        ];
     }
 }

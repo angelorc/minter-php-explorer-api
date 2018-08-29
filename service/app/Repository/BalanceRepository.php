@@ -23,6 +23,6 @@ class BalanceRepository extends ModelRepository implements BalanceRepositoryInte
      */
     public function getBalanceByAddress(string $address): Collection
     {
-        return $this->query()->where('address', ucfirst($address))->get();
+        return $this->query()->where('address', 'ilike', $address)->get();
     }
 }

@@ -1,26 +1,26 @@
 <?php
+
 namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
 
-
 /**
- * Class Balance
+ * Class BalanceChannel
  * @package App\Models
  *
+ * @property string name
  * @property string address
- * @property string coin
- * @property string amount
  */
-class Balance extends Model
+class BalanceChannel extends Model
 {
+    /**  @var string */
     protected $dateFormat = 'Y-m-d H:i:sO';
 
+    /** @var array */
     protected $fillable = [
-        'address',
-        'coin',
-        'amount'
+        'name',
+        'address'
     ];
 
 }

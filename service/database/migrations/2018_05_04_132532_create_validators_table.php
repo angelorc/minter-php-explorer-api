@@ -16,8 +16,14 @@ class CreateValidatorsTable extends Migration
         Schema::create('validators', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->default('');
-            $table->string('public_key')->default('');
-            $table->string('address')->unique();
+            $table->decimal('accumulated_reward', 50, 0);
+            $table->bigInteger('absent_times');
+            $table->string('address');
+            $table->decimal('total_stake', 50, 0);
+            $table->string('public_key')->unique();
+            $table->bigInteger('commission');
+            $table->smallInteger('status');
+            $table->bigInteger('created_at_block');
             $table->timestampsTz();
             $table->softDeletesTz();
         });

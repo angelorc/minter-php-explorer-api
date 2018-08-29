@@ -120,7 +120,7 @@ class StatusController extends Controller
 
     /**
      * @SWG\Get(
-     *     path="/api/v1/txCountChartData",
+     *     path="/api/v1/tx-count-chart-data",
      *     tags={"Info"},
      *     summary="Количество транзакций по дням за последние 14",
      *     produces={"application/json"},
@@ -140,7 +140,7 @@ class StatusController extends Controller
      */
     public function txCountChartData(): TxCountCollection
     {
-        return new TxCountCollection(TxPerDay::limit(14)->get());
+        return new TxCountCollection(TxPerDay::limit(14)->orderBy('date', 'desc')->get());
     }
 
     /**
@@ -164,7 +164,7 @@ class StatusController extends Controller
 
     /**
      * @SWG\Get(
-     *     path="/api/v1/status_page",
+     *     path="/api/v1/status-page",
      *     tags={"Info"},
      *     summary="Статус сети",
      *     produces={"application/json"},
@@ -182,19 +182,27 @@ class StatusController extends Controller
      */
     public function statusPage(): array
     {
+        $transactionData = $this->transactionService->get24hTransactionsData();
+
+        $status = Cache::get('explorer_status', false);
+
+        if(!$status){
+            $status = $this->statusService->isActiveStatus() ? 'active' : 'down';
+        }
+
         return [
             'data' => [
-                'status' => $this->statusService->isActiveStatus() ? 'active' : 'down',
+                'status' => $status,
                 'uptime' => $this->statusService->getUpTime(),
                 'numberOfBlocks' => $this->statusService->getLastBlockHeight(),
                 'blockSpeed24h' => $this->statusService->getAverageBlockTime(),
                 'txTotalCount' => $this->transactionService->getTotalTransactionsCount(),
-                'tx24hCount' => $this->transactionService->get24hTransactionsCount(),
-                'txPerSecond' => $this->transactionService->getTransactionsSpeed(),
+                'tx24hCount' => $transactionData['count'],
+                'txPerSecond' => $transactionData['perSecond'],
                 'activeValidators' => $this->validatorService->getActiveValidatorsCount(),
                 'totalValidatorsCount' => $this->validatorService->getTotalValidatorsCount(),
-                'averageTxCommission' => $this->transactionService->getAverageCommission(),
-                'totalCommission' => $this->transactionService->getCommission(),
+                'averageTxCommission' => $transactionData['avg'],
+                'totalCommission' => $transactionData['sum'],
             ]
         ];
     }

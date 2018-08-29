@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\StringHelper;
 use App\Models\Balance;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -44,44 +45,31 @@ class FillBalanceTableCommand extends Command
      */
     public function handle(): void
     {
-        $start = new \DateTime();
-
-        Balance::truncate();
-
+        $start = $this->microtime_float();
         $count = 0;
 
-        $txFrom = DB::table('transactions')
-            ->select('from')
-            ->distinct()
-            ->pluck('from');
+        $addresses = DB::select('
+            select  distinct address from (
+              select  "from"  as address from transactions
+              union
+              select  "to"  as address from transactions
+            ) as list where address notnull;
+        ');
 
-        $txTo = DB::table('transactions')
-            ->select('to')
-            ->distinct()
-            ->pluck('to');
+        $addressesList = [];
 
-        $addresses = array_unique(array_merge($txTo->toArray(), $txFrom->toArray()));
-
-        foreach ($addresses as $address) {
-
-            if (!$address) {
-                continue;
-            }
-
+        foreach ($addresses as $a) {
+            $address = $a->address;
             try {
-                $res = $this->client->request('GET', 'api/balance/' . ucfirst($address));
-
+                $res = $this->client->request('GET', 'api/balance/' . StringHelper::mb_ucfirst($address));
                 $data = json_decode($res->getBody()->getContents(), 1);
-
-                foreach ($data['result'] as $k => $v) {
-
-                    Balance::updateOrCreate(
-                        ['address' => ucfirst($address), 'coin' => mb_strtolower($k)],
-                        ['amount' => $v]
-                    );
-
+                foreach ($data['result']['balance'] as $k => $v) {
+                    $balance = new Balance();
+                    $balance->address = mb_strtolower($address);
+                    $balance->coin = mb_strtoupper($k);
+                    $balance->amount = $v;
+                    $addressesList[] = $balance;
                 }
-
                 $count++;
             } catch (GuzzleException $e) {
                 $this->error('Error: ' . $e->getMessage());
@@ -89,8 +77,19 @@ class FillBalanceTableCommand extends Command
             }
         }
 
-        $end = new \DateTime();
+        Balance::truncate();
+        foreach ($addressesList as $address) {
+            DB::transaction(function () use ($address) {
+                $address->save();
+            });
+        }
+        $end = $this->microtime_float();
+        $this->info("Balances have been update. Handled addresses: {$count} in " . ($end - $start) . 's');
+    }
 
-        $this->info("Handled addresses : {$count} in " . ($end->getTimestamp() - $start->getTimestamp()) . 's');
+    function microtime_float()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        return ((float)$usec + (float)$sec);
     }
 }

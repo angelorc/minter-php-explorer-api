@@ -17,8 +17,6 @@ interface BlockServiceInterface
     /**
      * Получить высоту последнего блока из Базы
      * @return int
-     * @throws \RuntimeException
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getExplorerLatestBlockHeight(): int;
 

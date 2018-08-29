@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\MathHelper;
 use App\Models\Block;
 use App\Models\Coin;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -28,9 +29,9 @@ class BlockResource extends JsonResource
         return [
             'latestBlockHeight' => $this->latestBlockHeight,
             'height' => $this->height,
-            'timestamp' => $this->timestamp,
+            'timestamp' => $this->formattedDate,
             'txCount' => $this->tx_count,
-            'reward' => bcmul($this->block_reward, Coin::PIP_STR, 18),
+            'reward' => MathHelper::makeAmountFromIntString($this->block_reward),
             'size' => $this->size,
             'hash' => $this->hash,
             'validators' => ValidatorResource::collection($this->validators)

@@ -40,8 +40,8 @@ class BalanceService implements BalanceServiceInterface
                 'baseCoinAmount' => $coin->getAmount(),
                 'usdAmount' => $coin->getUsdAmount(),
             ];
-        });
 
+        });
 
         return $result;
     }

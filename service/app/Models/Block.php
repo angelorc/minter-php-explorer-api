@@ -15,6 +15,7 @@ use Illuminate\Support\Collection;
  * @property int tx_count
  * @property int size
  * @property string hash
+ * @property string created_at
  * @property int block_time
  * @property float block_reward
  * @property Collection validators
@@ -54,5 +55,10 @@ class Block extends Model
     public function validators()
     {
         return $this->belongsToMany(Validator::class);
+    }
+
+    public function getFormattedDateAttribute()
+    {
+        return date('Y-m-d H:i:sO', $this->created_at->getTimestamp());
     }
 }

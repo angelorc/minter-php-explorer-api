@@ -1,4 +1,4 @@
-FROM php:7.2.9-fpm-alpine3.8
+FROM php:7.2.9-cli-alpine3.8
 
 RUN apk --no-cache add \
     gmp-dev \

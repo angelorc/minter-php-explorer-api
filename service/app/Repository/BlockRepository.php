@@ -19,7 +19,7 @@ class BlockRepository implements BlockRepositoryInterface
         $block->save();
 
         /** Collections $transactions */
-        if ($transactions){
+        if ($transactions) {
             $chunks = $transactions->chunk(300);
             foreach ($chunks as $chunk) {
                 DB::transaction(function () use ($block, $chunk) {
@@ -28,6 +28,7 @@ class BlockRepository implements BlockRepositoryInterface
             }
         }
 
+        /** Collections $validators */
         if ($validators) {
             DB::transaction(function () use ($block, $validators) {
                 $block->validators()->saveMany($validators);
@@ -101,9 +102,15 @@ class BlockRepository implements BlockRepositoryInterface
      */
     public function getAverageBlockTime(\DateTime $startDate = null): float
     {
-        $start = new \DateTime();
-        $start->sub(new \DateInterval('PT24H'));
+        $dt = $startDate ?? new \DateTime();
+        $dt->modify('-1 day');
 
-        return Block::where('timestamp', '>=', $start->format('Y-m-d h:i:s'))->avg('block_time') ?? 0;
+        $result = DB::select('
+            select  avg(block_time)  as avg
+            from blocks
+            where created_at >= :date ;
+        ', ['date' => $dt->format('Y-m-d H:i:s')]);
+
+        return  $result[0]->avg ?? 0;
     }
 }

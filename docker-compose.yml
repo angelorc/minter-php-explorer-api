@@ -1,61 +1,112 @@
 version: '3'
 services:
-    app:
-        container_name: "minter_explorer_api"
-        build: ./docker/php
-        volumes:
-            - ./service:/var/www
-        depends_on:
-            - postgres
-            - redis
-            - rabbitmq
-        links:
-            - postgres
-            - redis
-            - rabbitmq
-    nginx:
-        container_name: "minter_explorer_web_server"
-        build: ./docker/nginx
-        volumes:
-            - ./service:/var/www
-        ports:
-            - "8000:80"
-        links:
-            - app
-    postgres:
-        container_name: "minter_explorer_db"
-        image: postgres
-        restart: always
-        ports:
-            - 54322:5432
-        environment:
-            POSTGRES_DB: explorer_db
-            POSTGRES_USER: minter_adm
-            POSTGRES_PASSWORD: password
-        volumes:
-            - ./service/db_data:/var/lib/postgresql/data
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U postgres"]
-            interval: 30s
-            timeout: 3s
-            retries: 5
-    redis:
-        container_name: "minter_explorer_cache"
-        image: redis
-        restart: always
-        ports:
-            - 6379:6379
-    rabbitmq:
-         image: rabbitmq:3-management
-         ports:
-            - 4369:4369
-            - 5671:5671
-            - 5672:5672
-            - 15672:15672
-            - 8088:15672
-    composer:
-        container_name: "minter_explorer_composer"
-        build: ./docker/composer
-        volumes:
-            - ./service:/app
-        command: install
+  app:
+    container_name: "minter_explorer_api"
+    build: ./docker/php
+    volumes:
+      - ./service:/var/www
+    depends_on:
+      - postgres
+      - redis
+      - centrifugo
+    links:
+      - postgres
+      - redis
+      - centrifugo
+    networks:
+      - explorer-network
+  nginx:
+    container_name: "minter_explorer_web_server"
+    build: ./docker/nginx
+    volumes:
+      - ./service:/var/www
+    ports:
+      - "8000:80"
+    links:
+      - app
+    networks:
+      - explorer-network
+  postgres:
+    container_name: "minter_explorer_db"
+    image: postgres
+    restart: always
+    ports:
+      - 54322:5432
+    environment:
+      POSTGRES_DB: explorer_db
+      POSTGRES_USER: minter_adm
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./service/db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+    networks:
+      - explorer-network
+  redis:
+    container_name: "minter_explorer_cache"
+    image: redis:4.0.11-alpine3.8
+    restart: always
+    ports:
+      - 6379:6379
+    networks:
+      - explorer-network
+  composer:
+    container_name: "minter_explorer_composer"
+    build: ./docker/composer
+    volumes:
+      - ./service:/app
+    command: install
+  centrifugo:
+    image: centrifugo/centrifugo
+    volumes:
+      - ./docker/centrifugo:/centrifugo
+    ports:
+      - 8800:8000
+    networks:
+      - explorer-network
+  status:
+    container_name: "minter_explorer_status"
+    image: minterteam/status-minter-network:1.0-alpine
+    build:
+      context: https://github.com/MinterTeam/docker-status-minter-network.git
+      dockerfile: alpine/Dockerfile
+      args:
+        EXPLORER_MAINNET_URL: "http://localhost:8000"
+        EXPLORER_TESTNET_URL: "http://localhost:8000"
+    ports:
+      - 8010:80
+    networks:
+      - explorer-network
+  explorer:
+    container_name: "minter_explorer_web"
+    image: minterteam/explorer-minter-network:1.0-alpine
+    build:
+      context: https://github.com/MinterTeam/docker-explorer-web-minter.git
+      dockerfile: alpine/Dockerfile
+      args:
+        EXPLORER_URL: "http://localhost:8000"
+    ports:
+      - 8011:80
+    networks:
+      - explorer-network
+  tests:
+    container_name: "minter_explorer_tests"
+    build: ./docker/tests
+    volumes:
+      - ./service:/var/www
+    depends_on:
+      - postgres
+      - redis
+      - centrifugo
+    links:
+      - postgres
+      - redis
+      - centrifugo
+    networks:
+      - explorer-network
+networks:
+  explorer-network:
+    driver: bridge

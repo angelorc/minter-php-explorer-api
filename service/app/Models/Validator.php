@@ -29,6 +29,19 @@ class Validator extends Model
 
     protected $dateFormat = 'Y-m-d H:i:sO';
 
+    protected $fillable = [
+        'name',
+        'public_key',
+        'address',
+        'accumulated_reward',
+        'absent_times',
+        'total_stake',
+        'commission',
+        'status',
+        'created_at_block',
+        'updated_at',
+    ];
+
     /**
      * The transactions that belong to the block.
      */

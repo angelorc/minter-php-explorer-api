@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Resources;
 
+use App\Helpers\MathHelper;
 use App\Models\Coin;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -44,13 +45,13 @@ class BlockCollection extends ResourceCollection
                 return [
                     'latestBlockHeight' => $item->latestBlockHeight,
                     'height' => $item->height,
-                    'timestamp' => $item->timestamp,
+                    'timestamp' => $item->formattedDate,
                     'txCount' => $item->tx_count,
-                    'reward' => bcmul($item->block_reward, Coin::PIP_STR, 18),
+                    'reward' => MathHelper::makeAmountFromIntString($item->block_reward),
                     'size' => $item->size,
                     'hash' => $item->hash,
-                    'blockTime' => $item->block_time,
-                    'validators' => isset($this->validators) ? ValidatorResource::collection($this->validators) : []
+                    'blockTime' => floor($item->block_time),
+                    'validators' => $item->validators->count() ? ValidatorResource::collection($item->validators) : []
                 ];
             }),
         ];

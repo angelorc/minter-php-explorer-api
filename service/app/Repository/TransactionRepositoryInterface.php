@@ -16,6 +16,13 @@ interface TransactionRepositoryInterface
     public function save(Transaction $transaction): void;
 
     /**
+     * Сохранить транзакцию
+     * @param Transaction $transaction
+     * @param Collection $tags
+     */
+    public function saveTransactionTags(Transaction $transaction, Collection $tags): void;
+
+    /**
      * Найти транзакцию по Id
      * @param int $id
      * @return Transaction|null
@@ -75,5 +82,11 @@ interface TransactionRepositoryInterface
      * @return Collection
      */
     public function get24hTransactionsCommission(): string;
+
+    /**
+     * Данные по трнзакциям за 24 часа
+     * @return array
+     */
+    public function get24hTransactionsData(): array;
 
 }

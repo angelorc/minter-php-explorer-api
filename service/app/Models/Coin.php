@@ -1,7 +1,8 @@
 <?php
+
 namespace App\Models;
 
-use BI\BigInteger;
+use App\Helpers\MathHelper;
 
 
 /**
@@ -13,8 +14,10 @@ class Coin
     /**
      * PIP coefficient
      */
-    public const PIP = 0.000000000000000001;
+    public const PIP = 10 ** -18;
     public const PIP_STR = '0.000000000000000001';
+    public const UNIT = 10 ** -15;
+    public const UNIT_STR = '0.000000000000001';
 
     /**
      * @var string
@@ -28,12 +31,13 @@ class Coin
 
     /**
      * Coin constructor.
+     *
      * @param $name
      * @param $pipAmount
      */
     public function __construct(string $name, string $pipAmount)
     {
-        $this->name = mb_strtolower($name);
+        $this->name      = mb_strtolower($name);
         $this->pipAmount = $pipAmount;
     }
 
@@ -46,19 +50,19 @@ class Coin
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getAmount(): float
+    public function getAmount(): string
     {
-        return  bcmul($this->pipAmount, $this::PIP_STR, 18);
+        return MathHelper::makeAmountFromIntString($this->pipAmount);
     }
 
     /**
-     * @return float
+     * @return string
      */
-    public function getUsdAmount(): float
+    public function getUsdAmount(): string
     {
         //TODO: перенести конвертацию в сервис, как будет понятно откуда брать курс
-        return $this->getAmount() * 0.000075;
+        return bcmul($this->getAmount(), '0.000075', 24);
     }
 }

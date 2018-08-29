@@ -1,9 +1,13 @@
 <?php
+
 namespace App\Console\Commands;
+
 use App\Services\BlockServiceInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+
 class PullBlockDataCommand extends Command
 {
     protected const SLEEP_TIME = 2500000;
@@ -17,6 +21,7 @@ class PullBlockDataCommand extends Command
     protected $description = 'Pull last block data';
     /** @var BlockServiceInterface */
     private $blockService;
+
     /**
      * PullBlockDataCommand constructor.
      * @param BlockServiceInterface $blockService
@@ -26,23 +31,42 @@ class PullBlockDataCommand extends Command
         parent::__construct();
         $this->blockService = $blockService;
     }
+
     public function handle(): void
     {
-        $this->info('start');
+        $this->info('Start pulling blocks data');
 
         try {
+
             $lastBlockHeight = $this->blockService->getLatestBlockHeight();
             $explorerLastBlockHeight = $this->blockService->getExplorerLatestBlockHeight() + 1;
+
             while (true) {
 
-                if ($lastBlockHeight > $explorerLastBlockHeight) {
+                $spentTime = 0;
+
+                if ($lastBlockHeight >= $explorerLastBlockHeight) {
+
+                    if ($lastBlockHeight - $explorerLastBlockHeight  > 3){
+                        Cache::put('explorer_status', 'updating', 1);
+                    }else{
+                        Cache::forget('explorer_status');
+                    }
+
+                    $start = time();
                     $blockData = $this->blockService->pullBlockData($explorerLastBlockHeight);
                     $this->blockService->saveFromApiData($blockData);
                     $explorerLastBlockHeight++;
-                } else {
-                    usleep($this::SLEEP_TIME);
-                    $lastBlockHeight = $this->blockService->getLatestBlockHeight();
+                    $spentTime = time() - $start;
                 }
+
+                //Если блок обрабатывался меньше 2,5 сек, засыпаем
+                $sleepTime = $this::SLEEP_TIME - 1000000 * $spentTime;
+                if ($sleepTime > 0) {
+                    usleep($spentTime);
+                }
+
+                $lastBlockHeight = $this->blockService->getLatestBlockHeight();
             }
         } catch (GuzzleException $e) {
             Log::error($e->getMessage());

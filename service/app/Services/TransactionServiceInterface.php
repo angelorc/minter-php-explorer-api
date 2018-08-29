@@ -15,6 +15,13 @@ interface TransactionServiceInterface
     public function decodeTransactionsFromApiData(array $data): Collection;
 
     /**
+     * Получить колекцию тэгов транзакций из данных API
+     * @param array $data
+     * @return array
+     */
+    public function decodeTxTagsFromApiData(array $data): array;
+
+    /**
      * Количество транзакций
      * @param string $address
      * @return int
@@ -36,14 +43,27 @@ interface TransactionServiceInterface
     /**
      * Получить сумму комиссии за транзакции с даты
      * @param \DateTime $startTime
-     * @return float
+     * @return string
      */
-    public function getCommission(\DateTime $startTime = null): float;
+    public function getCommission(\DateTime $startTime = null): string;
 
     /**
      * Получить среднюю комиссиию за транзакции с даты
      * @param \DateTime $startTime
-     * @return float
+     * @return string
      */
-    public function getAverageCommission(\DateTime $startTime = null): float;
+    public function getAverageCommission(\DateTime $startTime = null): string;
+
+
+    /**
+     * Данные по трнзакциям за 24 часа
+     * @return array
+     */
+    public function get24hTransactionsData(): array;
+
+    /**
+     * Сохранить тэги транзакций
+     * @param array $txTags
+     */
+    public function saveTransactionsTags(array $txTags): void;
 }

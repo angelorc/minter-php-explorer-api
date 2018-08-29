@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Helpers\MathHelper;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -44,11 +45,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property int nonce
  * @property int validator_id
  * @property int gas_price
+ * @property int gas_wanted
+ * @property int gas_used
  * @property int commission
  * @property int stake
  * @property float value
  * @property float fee
+ * @property float initial_amount
+ * @property float initial_reserve
+ * @property float constant_reserve_ratio
  * @property string hash
+ * @property string value_to_buy
+ * @property string value_to_sell
  * @property string service_data
  * @property string from
  * @property string to
@@ -57,18 +65,29 @@ use Illuminate\Database\Eloquent\Model;
  * @property string pub_key
  * @property string address
  * @property string created_at
+ * @property string coin_to_sell
+ * @property string coin_to_buy
+ * @property string name
+ * @property string symbol
+ * @property string gas_coin
+ * @property string log
+ * @property string raw_check
+ * @property string proof
+ * @property boolean status
  */
 class Transaction extends Model
 {
     public const TYPE_SEND = 1;
-    public const TYPE_CONVERT = 2;
-    public const TYPE_CREATE_COIN = 3;
-    public const TYPE_DECLARE_CANDIDACY = 4;
-    public const TYPE_DELEGATE = 5;
-    public const TYPE_UNBOND = 6;
-    public const TYPE_REDEEM_CHECK = 7;
-    public const TYPE_SET_CANDIDATE_ONLINE = 8;
-    public const TYPE_SET_CANDIDATE_OFFLINE = 9;
+    public const TYPE_SELL_COIN = 2;
+    public const TYPE_SELL_ALL_COIN = 3;
+    public const TYPE_BUY_COIN = 4;
+    public const TYPE_CREATE_COIN = 5;
+    public const TYPE_DECLARE_CANDIDACY = 6;
+    public const TYPE_DELEGATE = 7;
+    public const TYPE_UNBOUND = 8;
+    public const TYPE_REDEEM_CHECK = 9;
+    public const TYPE_SET_CANDIDATE_ONLINE = 10;
+    public const TYPE_SET_CANDIDATE_OFFLINE = 11;
 
 
     public const PAYLOAD = 'payload';
@@ -85,26 +104,36 @@ class Transaction extends Model
     }
 
     /**
-     * Коммисия за транзакцию
-     * @return float
+     * Get the block that owns the transactions.
      */
-    public function getFeeMntAttribute(): float
+    public function tags()
     {
-        return $this->fee * Coin::PIP;
+        return $this->hasMany(TxTag::class);
     }
 
     /**
-     * Статус
+     * Get transaction commission
+     * @return string
+     */
+    public function getFeeMntAttribute(): string
+    {
+        $result = bcmul($this->fee, 10 ** 15);
+        return MathHelper::makeAmountFromIntString($result);
+    }
+
+    /**
+     * Get transaction status
      * @return string
      */
     public function getStatusAttribute(): string
     {
-        //TODO: добавить реализацию
-        return 'success';
+        return isset($this->log) ? 'fail' : 'success';
     }
 
     /**
-     * Тип транзакции
+     * @TODO: Centralize transaction outputs
+     *
+     * Get transaction type
      * @return string
      */
     public function getTypeStringAttribute(): string
@@ -112,16 +141,20 @@ class Transaction extends Model
         switch ($this->type){
             case $this::TYPE_SEND:
                 return 'send';
-            case $this::TYPE_CONVERT:
-                return 'convert';
+            case $this::TYPE_SELL_ALL_COIN:
+                return 'sellAllCoin';
+            case $this::TYPE_SELL_COIN:
+                return 'sellCoin';
+            case $this::TYPE_BUY_COIN:
+                return 'buyCoin';
             case $this::TYPE_CREATE_COIN:
                 return 'createCoin';
             case $this::TYPE_DECLARE_CANDIDACY:
                 return 'declareCandidacy';
             case $this::TYPE_DELEGATE:
                 return 'delegate';
-            case $this::TYPE_UNBOND:
-                return 'unbond';
+            case $this::TYPE_UNBOUND:
+                return 'unbound';
             case $this::TYPE_REDEEM_CHECK:
                 return 'redeemCheckData';
             case $this::TYPE_SET_CANDIDATE_ONLINE:
@@ -132,36 +165,4 @@ class Transaction extends Model
                 return '';
         }
     }
-
-    /**
-     * Базовая стоимость
-     * @param int $type
-     * @return int
-     */
-    private function getBasePrice(int $type): int
-    {
-        switch ($type){
-            case $this::PAYLOAD:
-                return 500;
-                break;
-            case $this::TYPE_SEND:
-            case $this::TYPE_REDEEM_CHECK:
-            case $this::TOGGLE_CANDIDATES_STATUS:
-                return 1000;
-                break;
-            case $this::TYPE_CONVERT:
-            case $this::TYPE_UNBOND:
-            case $this::TYPE_DELEGATE:
-                return 10000;
-                break;
-            case $this::TYPE_CREATE_COIN:
-            case $this::TYPE_DECLARE_CANDIDACY:
-                return 100000;
-                break;
-            default:
-                return 0;
-                break;
-        }
-    }
-
 }

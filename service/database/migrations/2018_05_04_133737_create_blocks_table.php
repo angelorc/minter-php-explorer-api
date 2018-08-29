@@ -16,12 +16,12 @@ class CreateBlocksTable extends Migration
         Schema::create('blocks', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('height')->unique();
-            $table->timestampTz('timestamp');
+            $table->decimal('timestamp', 20, 10);
             $table->integer('tx_count');
             $table->integer('size');
-            $table->integer('block_time');
+            $table->decimal('block_time', 12, 9);
             $table->string('hash');
-            $table->decimal('block_reward', 30, 0);
+            $table->decimal('block_reward', 50, 0);
             $table->timestampsTz();
             $table->softDeletesTz();
         });
