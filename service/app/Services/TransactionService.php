@@ -90,6 +90,7 @@ class TransactionService implements TransactionServiceInterface
                     $transaction->type === Transaction::TYPE_BUY_COIN) {
                     $transaction->coin_to_sell = mb_strtoupper($tx['data']['coin_to_sell']);
                     $transaction->coin_to_buy = mb_strtoupper($tx['data']['coin_to_buy']);
+                    $transaction->value = $tx['data']['value_to_sell'] ?? $tx['data']['value_to_buy'] ?? 0;
                 }
                 if ($transaction->type === Transaction::TYPE_SELL_COIN) {
                     $transaction->value_to_sell = $tx['data']['value_to_sell'] ?? 0;

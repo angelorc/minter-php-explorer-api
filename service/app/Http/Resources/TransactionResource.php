@@ -38,10 +38,13 @@ class TransactionResource extends JsonResource
                 case Transaction::TYPE_SELL_COIN:
                 case Transaction::TYPE_SELL_ALL_COIN:
                 case Transaction::TYPE_BUY_COIN:
+
+                    $value = $this->value_to_buy ?? $this->value_to_sell ?? 0;
+
                     $data['data']['data'] = [
                         'coin_to_sell' => $this->coin_to_sell,
                         'coin_to_buy' => $this->coin_to_buy,
-                        'value' => isset($this->value) ? MathHelper::makeAmountFromIntString($this->value) : 0,
+                        'value' => MathHelper::makeAmountFromIntString($value),
                         //TODO: remove when mobile and web will be ready
                         'value_to_buy' => isset($this->value_to_buy) ? MathHelper::makeAmountFromIntString($this->value_to_buy) : 0,
                         'value_to_sell' => isset($this->value_to_sell) ? MathHelper::makeAmountFromIntString($this->value_to_sell) : 0,
