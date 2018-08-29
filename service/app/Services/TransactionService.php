@@ -99,7 +99,7 @@ class TransactionService implements TransactionServiceInterface
                     $transaction->value_to_sell = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
                 }
                 if ($transaction->type === Transaction::TYPE_BUY_COIN) {
-                    $transaction->value_to_buy = $tx['value_to_buy']['value_to_buy'] ?? 0;
+                    $transaction->value_to_buy = $tx['data']['value_to_buy'] ?? 0;
                     $transaction->value_to_sell = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
                 }
 
