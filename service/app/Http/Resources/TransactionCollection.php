@@ -74,6 +74,8 @@ class TransactionCollection extends ResourceCollection
                             'coin_to_sell' => $item->coin_to_sell,
                             'coin_to_buy' => $item->coin_to_buy,
                             'value' => isset($item->value) ?  MathHelper::makeAmountFromIntString($item->value) : '',
+                            'value_to_buy' =>  isset($item->value_to_buy) ?  MathHelper::makeAmountFromIntString($item->value_to_buy) : '',
+                            'value_to_sell' =>  isset($item->value_to_sell) ?  MathHelper::makeAmountFromIntString($item->value_to_sell) : '',
                         ];
                         break;
                     case Transaction::TYPE_CREATE_COIN:

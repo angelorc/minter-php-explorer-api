@@ -41,7 +41,9 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [
                         'coin_to_sell' => $this->coin_to_sell,
                         'coin_to_buy' => $this->coin_to_buy,
-                        'value' =>  isset($this->value) ?  MathHelper::makeAmountFromIntString($this->value) : '',
+                        'value' =>  isset($this->value) ?  MathHelper::makeAmountFromIntString($this->value) : '', //TODO: remove when mobile and web will be ready
+                        'value_to_buy' =>  isset($this->value_to_buy) ?  MathHelper::makeAmountFromIntString($this->value_to_buy) : '',
+                        'value_to_sell' =>  isset($this->value_to_sell) ?  MathHelper::makeAmountFromIntString($this->value_to_sell) : '',
                     ];
                     break;
                 case Transaction::TYPE_CREATE_COIN:
