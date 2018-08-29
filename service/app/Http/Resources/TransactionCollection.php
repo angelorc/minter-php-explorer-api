@@ -73,17 +73,17 @@ class TransactionCollection extends ResourceCollection
                         $result['data'] = [
                             'coin_to_sell' => $item->coin_to_sell,
                             'coin_to_buy' => $item->coin_to_buy,
-                            'value' => isset($item->value) ?  MathHelper::makeAmountFromIntString($item->value) : '',
-                            'value_to_buy' =>  isset($item->value_to_buy) ?  MathHelper::makeAmountFromIntString($item->value_to_buy) : '',
-                            'value_to_sell' =>  isset($item->value_to_sell) ?  MathHelper::makeAmountFromIntString($item->value_to_sell) : '',
+                            'value' => isset($item->value) ? MathHelper::makeAmountFromIntString($item->value) : 0,
+                            'value_to_buy' => isset($item->value_to_buy) ? MathHelper::makeAmountFromIntString($item->value_to_buy) : 0,
+                            'value_to_sell' => isset($item->value_to_sell) ? MathHelper::makeAmountFromIntString($item->value_to_sell) : 0,
                         ];
                         break;
                     case Transaction::TYPE_CREATE_COIN:
                         $result['data'] = [
                             'name' => $item->name,
                             'symbol' => $item->coin,
-                            'initial_amount' => isset($item->initial_amount) ?  MathHelper::makeAmountFromIntString($item->initial_amount): '',
-                            'initial_reserve' => isset($item->initial_amount) ?  MathHelper::makeAmountFromIntString($item->initial_reserve): '',
+                            'initial_amount' => isset($item->initial_amount) ? MathHelper::makeAmountFromIntString($item->initial_amount) : 0,
+                            'initial_reserve' => isset($item->initial_amount) ? MathHelper::makeAmountFromIntString($item->initial_reserve) : 0,
                             'constant_reserve_ratio' => $item->constant_reserve_ratio,
                         ];
                         break;

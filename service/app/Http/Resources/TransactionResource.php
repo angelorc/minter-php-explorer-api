@@ -32,7 +32,7 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [
                         'to' => $this->to,
                         'coin' => $this->coin,
-                        'amount' => isset($this->value) ?  MathHelper::makeAmountFromIntString($this->value) : '',
+                        'amount' => isset($this->value) ? MathHelper::makeAmountFromIntString($this->value) : 0,
                     ];
                     break;
                 case Transaction::TYPE_SELL_COIN:
@@ -41,17 +41,18 @@ class TransactionResource extends JsonResource
                     $data['data']['data'] = [
                         'coin_to_sell' => $this->coin_to_sell,
                         'coin_to_buy' => $this->coin_to_buy,
-                        'value' =>  isset($this->value) ?  MathHelper::makeAmountFromIntString($this->value) : '', //TODO: remove when mobile and web will be ready
-                        'value_to_buy' =>  isset($this->value_to_buy) ?  MathHelper::makeAmountFromIntString($this->value_to_buy) : '',
-                        'value_to_sell' =>  isset($this->value_to_sell) ?  MathHelper::makeAmountFromIntString($this->value_to_sell) : '',
+                        'value' => isset($this->value) ? MathHelper::makeAmountFromIntString($this->value) : 0,
+                        //TODO: remove when mobile and web will be ready
+                        'value_to_buy' => isset($this->value_to_buy) ? MathHelper::makeAmountFromIntString($this->value_to_buy) : 0,
+                        'value_to_sell' => isset($this->value_to_sell) ? MathHelper::makeAmountFromIntString($this->value_to_sell) : 0,
                     ];
                     break;
                 case Transaction::TYPE_CREATE_COIN:
                     $data['data']['data'] = [
                         'name' => $this->name,
                         'symbol' => $this->coin,
-                        'initial_amount' =>isset($this->initial_amount) ?  MathHelper::makeAmountFromIntString($this->initial_amount) : '',
-                        'initial_reserve' => isset($this->initial_reserve) ?  MathHelper::makeAmountFromIntString($this->initial_reserve) : '',
+                        'initial_amount' => isset($this->initial_amount) ? MathHelper::makeAmountFromIntString($this->initial_amount) : 0,
+                        'initial_reserve' => isset($this->initial_reserve) ? MathHelper::makeAmountFromIntString($this->initial_reserve) : 0,
                     ];
                     break;
                 case Transaction::TYPE_DECLARE_CANDIDACY:
