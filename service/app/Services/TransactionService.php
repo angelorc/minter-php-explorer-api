@@ -155,12 +155,13 @@ class TransactionService implements TransactionServiceInterface
                     $transaction->pub_key = StringHelper::mb_ucfirst($pk);
                 }
 
-                if ($transaction->from === $transaction->to) {
+
+                if (isset($transaction->from)) {
                     $this->balanceService->updateAddressBalanceFromNodeAPI($transaction->from);
                     $this->balanceService->broadcastNewBalances($transaction->from);
-                } else {
-                    $this->balanceService->updateAddressBalanceFromNodeAPI($transaction->from);
-                    $this->balanceService->broadcastNewBalances($transaction->from);
+                }
+
+                if (isset($transaction->to) && $transaction->to != $transaction->from) {
                     $this->balanceService->updateAddressBalanceFromNodeAPI($transaction->to);
                     $this->balanceService->broadcastNewBalances($transaction->to);
                 }
