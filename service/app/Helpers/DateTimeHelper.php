@@ -38,4 +38,26 @@ class DateTimeHelper
     }
 
 
+    /**
+     * Parse DateTime from Minter Node DateTime Format
+     * @param string $stringDateTime
+     * @return \DateTime|null
+     */
+    public static function parse(string $stringDateTime): ?\DateTime
+    {
+        $result = null;
+        preg_match_all('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}[\+\-]\d{2}:\d{2}/', $stringDateTime, $result);
+        if(count($result[0])){
+            $dt = [];
+            preg_match('/(.*)T(.*)\.(\d{1,9})(.*)/', $stringDateTime, $dt);
+
+            $str = $dt[1] . ' ' . $dt[2] . '.' .  substr($dt[3], 0, 6) . $dt[4];
+
+           return date_create_from_format ( 'Y-m-d H:i:s.uP' , $str);
+        };
+
+        return null;
+    }
+
+
 }
