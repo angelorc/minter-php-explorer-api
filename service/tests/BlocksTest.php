@@ -5,30 +5,37 @@ class BlocksTest extends TestCase
     /**
      * @return void
      */
-    public function testSingleBlockResponse(): void
+    public function testSingleBlockStructureResponse(): void
     {
-        $this->json('GET', '/api/v1/block/23')
-            ->seeJsonStructure([
-                'data' => [
-                    "latestBlockHeight",
-                    "height",
-                    "timestamp",
-                    "txCount",
-                    "reward",
-                    "size",
-                    "hash",
-                    "validators" => [
-                        0 => [
-                            "name",
-                            "address",
-                            "publicKey",
-                            "absentTimes",
-                            "commission",
-                            "status"
-                        ]
-                    ],
-                ]
-            ]);
+        for ($i = 0; $i <= 10; $i++) {
+            /** @var \App\Models\Block $block */
+            $block = \App\Models\Block::inRandomOrder()->first();
+
+            echo('Test block ' . $block->height . "\n");
+
+            $this->json('GET', '/api/v1/block/' . $block->height)
+                ->seeJsonStructure([
+                    'data' => [
+                        'latestBlockHeight',
+                        'height',
+                        'timestamp',
+                        'txCount',
+                        'reward',
+                        'size',
+                        'hash',
+                        'validators' => [
+                            0 => [
+                                'name',
+                                'address',
+                                'publicKey',
+                                'absentTimes',
+                                'commission',
+                                'status'
+                            ]
+                        ],
+                    ]
+                ]);
+        }
     }
 
     /**
@@ -39,22 +46,22 @@ class BlocksTest extends TestCase
         $this->json('GET', '/api/v1/blocks')->seeJsonStructure([
             'data' => [
                 0 => [
-                    "latestBlockHeight",
-                    "height",
-                    "timestamp",
-                    "txCount",
-                    "reward",
-                    "size",
-                    "hash",
-                    "blockTime",
-                    "validators" => [
+                    'latestBlockHeight',
+                    'height',
+                    'timestamp',
+                    'txCount',
+                    'reward',
+                    'size',
+                    'hash',
+                    'blockTime',
+                    'validators' => [
                         0 => [
-                            "name",
-                            "address",
-                            "publicKey",
-                            "absentTimes",
-                            "commission",
-                            "status"
+                            'name',
+                            'address',
+                            'publicKey',
+                            'absentTimes',
+                            'commission',
+                            'status'
                         ]
                     ],
                 ],
@@ -65,14 +72,14 @@ class BlocksTest extends TestCase
                 'prev',
                 'next',
             ],
-            "meta" => [
-                "current_page",
-                "from",
-                "last_page",
-                "path",
-                "per_page",
-                "to",
-                "total"
+            'meta' => [
+                'current_page',
+                'from',
+                'last_page',
+                'path',
+                'per_page',
+                'to',
+                'total'
             ]
         ]);
     }
