@@ -21,12 +21,22 @@ class TransactionService implements TransactionServiceInterface
     protected $transactionRepository;
 
     /**
+     * @var BalanceServiceInterface
+     */
+    protected $balanceService;
+
+    /**
      * TransactionService constructor.
      * @param TransactionRepositoryInterface $transactionRepository
+     * @param BalanceServiceInterface $balanceService
      */
-    public function __construct(TransactionRepositoryInterface $transactionRepository)
+    public function __construct(
+        TransactionRepositoryInterface $transactionRepository,
+        BalanceServiceInterface $balanceService
+    )
     {
         $this->transactionRepository = $transactionRepository;
+        $this->balanceService = $balanceService;
     }
 
     /**
@@ -143,6 +153,16 @@ class TransactionService implements TransactionServiceInterface
                 ) {
                     $pk = $tx['data']['pubkey'] ?? $tx['data']['pub_key'];
                     $transaction->pub_key = StringHelper::mb_ucfirst($pk);
+                }
+
+                if ($transaction->from === $transaction->to) {
+                    $this->balanceService->updateAddressBalanceFromNodeAPI($transaction->from);
+                    $this->balanceService->broadcastNewBalances($transaction->from);
+                } else {
+                    $this->balanceService->updateAddressBalanceFromNodeAPI($transaction->from);
+                    $this->balanceService->broadcastNewBalances($transaction->from);
+                    $this->balanceService->updateAddressBalanceFromNodeAPI($transaction->to);
+                    $this->balanceService->broadcastNewBalances($transaction->to);
                 }
 
                 $transactions[] = $transaction;
