@@ -33,7 +33,6 @@ class BalanceService implements BalanceServiceInterface
         $result = $this->balanceRepository->getBalanceByAddress($address)->map(function ($item) {
 
             $coin = new Coin($item->coin, $item->amount);
-
             return [
                 'coin' => $coin->getName(),
                 'amount' => $coin->getAmount(),
@@ -42,7 +41,20 @@ class BalanceService implements BalanceServiceInterface
             ];
 
         });
-
         return $result;
+    }
+
+    /**
+     * @param string $address
+     * @param array $data
+     * @return Collection
+     */
+    public function updateAddressBalanceFromAipData(string $address, array $data): Collection
+    {
+        $balances = [];
+        foreach ($data as $coin => $val){
+            $balances[] = $this->balanceRepository->updateByAddressAndCoin($address, $coin, $val);
+        }
+        return collect($balances);
     }
 }

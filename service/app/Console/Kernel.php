@@ -22,12 +22,12 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        PullBlockDataCommand::class,
+        CheckMinterNodeListCommand::class,
+        PullMinterApiDataCommand::class,
         FillTxPerDayTableCommand::class,
         TxPerDaySaveCommand::class,
         AddressBalanceClientCommand::class,
         FillBalanceTableCommand::class,
-        CheckMinterNodeListCommand::class,
     ];
 
     /**

@@ -12,21 +12,20 @@ class TransactionRepository implements TransactionRepositoryInterface
 {
 
     /**
-     * Сохранить транзакцию
+     * Store transaction
      * @param Transaction $transaction
+     * @param Collection|null $tags
+     * @return Transaction
      */
-    public function save(Transaction $transaction): void
+    public function save(Transaction $transaction, Collection $tags = null): Transaction
     {
         $transaction->save();
-    }
 
-    /**
-     * Сохранить тэги транзакции
-     * @param Transaction $transaction
-     * @param Collection $tags
-     */
-    public function saveTransactionTags(Transaction $transaction, Collection $tags): void{
-        $transaction->tags()->saveMany($tags);
+        if($tags){
+            $transaction->tags()->saveMany($tags);
+        }
+
+        return $transaction;
     }
 
     /**
@@ -93,7 +92,6 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Получить количество транзакций за последние 24 часа
      * @return int
      * @throws \Exception
      */
@@ -101,8 +99,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         $dt = new \DateTime();
         $dt->modify('-1 day');
-        //TODO: Возможно стоит брать транзакции на начало часа, что позволит кэшировать данные на час
-        return Block::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->sum('tx_count');
+        return Transaction::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))->count();
     }
 
     /**

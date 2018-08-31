@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Helpers\DateTimeHelper;
 use App\Models\MinterNode;
 use App\Services\MinterApiService;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 
 /**
@@ -94,9 +95,10 @@ class CheckMinterNodeListCommand extends Command
     private function isNodeSynced(MinterNode $node): bool
     {
         $apiService = new MinterApiService($node);
-        $data = $apiService->getNodeStatusData();
 
-        if (!isset($data['latest_block_time'])){
+        try {
+            $data = $apiService->getNodeStatusData();
+        } catch (GuzzleException $e) {
             return false;
         }
 

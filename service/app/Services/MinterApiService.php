@@ -2,20 +2,26 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client as HttpClient;
+use App\Helpers\StringHelper;
 use App\Models\MinterNode;
+use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Log;
 
+/**
+ * Class MinterApiService
+ * @package App\Services
+ */
 class MinterApiService implements MinterApiServiceInterface
 {
+    /** @var HttpClient */
     protected $httpClient;
 
+    /** @var MinterNode */
     protected $node;
 
     /**
      * MinterApiService constructor.
-     * @param $node
+     * @param MinterNode $node
      */
     public function __construct(MinterNode $node)
     {
@@ -29,25 +35,84 @@ class MinterApiService implements MinterApiServiceInterface
     }
 
     /**
+     * @return MinterNode
+     */
+    public function getNode(): MinterNode
+    {
+        return $this->node;
+    }
+
+    /**
      * Get node status data
      * @return array
+     * @throws GuzzleException
      */
     public function getNodeStatusData(): array
     {
-        try {
-            $res = $this->httpClient->request('GET', 'api/status');
-            $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
-            return $data['result'];
-        } catch (GuzzleException $e) {
+        $res = $this->httpClient->request('GET', 'api/status');
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
 
-                Log::channel('api')->error(
-                    $e->getFile() .
-                    ' line ' .
-                    $e->getLine() . ': ' .
-                    $e->getMessage()
-                );
+    /**
+     * Get last block from Minter Node API
+     * @return int
+     * @throws GuzzleException
+     */
+    public function getLastBlock(): int
+    {
+        $result = $this->getNodeStatusData();
+        return $result['latest_block_height'];
+    }
 
-                return [];
-        }
+    /**
+     * Get block data
+     * @param int $blockHeight
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getBlockData(int $blockHeight): array
+    {
+        $res = $this->httpClient->request('GET', 'api/block/' . $blockHeight);
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
+
+    /**
+     * Get block validators data
+     * @param int $blockHeight
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getBlockValidatorsData(int $blockHeight): array
+    {
+        $res = $this->httpClient->request('GET', 'api/validators/', ['block' => $blockHeight]);
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
+
+    /**
+     * Get block validators data
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getCandidatesData(): array
+    {
+        $res = $this->httpClient->request('GET', 'api/candidates/');
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
+
+    /**
+     * Get address balance
+     * @param string $address
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getAddressBalance(string $address): array
+    {
+        $res = $this->httpClient->request('GET', 'api/balance/' . StringHelper::mb_ucfirst($address));
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
     }
 }

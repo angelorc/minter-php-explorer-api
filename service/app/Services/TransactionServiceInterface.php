@@ -8,18 +8,11 @@ use Illuminate\Support\Collection;
 interface TransactionServiceInterface
 {
     /**
-     * Получить колекцию транзакций из данных API
+     * Store transactions to DB
      * @param array $data
      * @return Collection
      */
-    public function decodeTransactionsFromApiData(array $data): Collection;
-
-    /**
-     * Получить колекцию тэгов транзакций из данных API
-     * @param array $data
-     * @return array
-     */
-    public function decodeTxTagsFromApiData(array $data): array;
+    public function createFromAipData(array $data): Collection;
 
     /**
      * Количество транзакций

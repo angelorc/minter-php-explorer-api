@@ -11,29 +11,12 @@ class BlockRepository implements BlockRepositoryInterface
 {
     /**
      * @param Block $block
-     * @param Collection|null $transactions
-     * @param Collection|null $validators
+     * @return Block
      */
-    public function save(Block $block, Collection $transactions = null, Collection $validators = null): void
+    public function save(Block $block): Block
     {
         $block->save();
-
-        /** Collections $transactions */
-        if ($transactions) {
-            $chunks = $transactions->chunk(300);
-            foreach ($chunks as $chunk) {
-                DB::transaction(function () use ($block, $chunk) {
-                    $block->transactions()->saveMany($chunk);
-                });
-            }
-        }
-
-        /** Collections $validators */
-        if ($validators) {
-            DB::transaction(function () use ($block, $validators) {
-                $block->validators()->saveMany($validators);
-            });
-        }
+        return $block;
 
     }
 
@@ -112,5 +95,15 @@ class BlockRepository implements BlockRepositoryInterface
         ', ['date' => $dt->format('Y-m-d H:i:s')]);
 
         return  $result[0]->avg ?? 0;
+    }
+
+
+    /**
+     * Get last block by height
+     * @return mixed
+     */
+    public function getLastBlock(): ?Block
+    {
+        return Block::orderByDesc('height')->first();
     }
 }

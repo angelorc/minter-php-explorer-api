@@ -18,7 +18,7 @@ class CreateMinterNodesTable extends Migration
             $table->increments('id');
             $table->string('host', 0);
             $table->integer('port')->default(8841);
-            $table->decemal('ping', 7,3)->default(false);
+            $table->decimal('ping', 7,3)->default(0);
             $table->boolean('is_secure')->default(false);
             $table->boolean('is_active')->default(false);
             $table->boolean('is_excluded')->default(false);
