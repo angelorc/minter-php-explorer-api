@@ -38,7 +38,7 @@ class BalanceRepository extends ModelRepository implements BalanceRepositoryInte
     public function updateByAddressAndCoin(string $address, string $coin, string $value): Balance
     {
         return Balance::updateOrCreate(
-            ['address' => StringHelper::mb_ucfirst($address), 'coin' => mb_strtoupper($coin)],
+            ['address' => mb_strtolower($address), 'coin' => mb_strtoupper($coin)],
             ['amount' => $value]
         );
     }
