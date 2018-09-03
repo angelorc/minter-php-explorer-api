@@ -54,7 +54,7 @@ class Block extends Model
      */
     public function validators()
     {
-        return $this->belongsToMany(Validator::class, 'block_validator', 'height', 'block_id');
+        return $this->belongsToMany(Validator::class);
     }
 
     public function getFormattedDateAttribute()

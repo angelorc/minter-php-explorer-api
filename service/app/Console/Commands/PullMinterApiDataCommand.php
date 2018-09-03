@@ -86,7 +86,7 @@ class PullMinterApiDataCommand extends Command
 
                 $start = microtime(1);
 
-                if ($this->blockService->getExplorerLastBlockHeight() != $explorerCurrentBlockHeight) {
+                if ($this->blockService->getExplorerLastBlockHeight() !== $explorerCurrentBlockHeight) {
                     $minterService->storeNodeData($explorerCurrentBlockHeight);
                 }
 

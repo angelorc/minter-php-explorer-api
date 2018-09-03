@@ -47,7 +47,7 @@ class Validator extends Model
      */
     public function blocks()
     {
-        return $this->belongsTo(Block::class);
+        return $this->belongsToMany(Block::class);
     }
 
 }

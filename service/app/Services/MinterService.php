@@ -78,8 +78,8 @@ class MinterService extends MinterApiService implements MinterServiceInterface
             });
         }
 
-//        $validatorsData = $this->getBlockValidatorsData($blockHeight);
-//        $validators = $this->validatorService->createFromAipData($validatorsData['result']);
-//        $block->validators()->saveMany($validators);
+        $validatorsData = $this->getBlockValidatorsData($blockHeight);
+        $validators = $this->validatorService->createFromAipData($validatorsData);
+        $block->validators()->saveMany($validators);
     }
 }
