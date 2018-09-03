@@ -26,7 +26,6 @@ class Kernel extends ConsoleKernel
         PullMinterApiDataCommand::class,
         FillTxPerDayTableCommand::class,
         TxPerDaySaveCommand::class,
-        AddressBalanceClientCommand::class,
         FillBalanceTableCommand::class,
     ];
 

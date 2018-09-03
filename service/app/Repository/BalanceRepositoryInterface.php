@@ -22,4 +22,16 @@ interface BalanceRepositoryInterface
      * @return Balance
      */
     public function updateByAddressAndCoin(string $address, string $coin, string $value): Balance;
+
+    /**
+     * Get channels for WS broadcast
+     * @param string $address
+     * @return Collection
+     */
+    public function getChannelsForBalanceAddress(string $address): Collection;
+
+    /**
+     * Delete channels older than 10 days
+     */
+    public function deleteOldChannels(): void;
 }

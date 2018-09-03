@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Balance;
 use App\Models\MinterNode;
 use App\Models\Transaction;
 use GuzzleHttp\Exception\GuzzleException;
@@ -62,20 +63,22 @@ class MinterService extends MinterApiService implements MinterServiceInterface
 
         if ($transactions->count()) {
 
-            $broadcast =  collect([]);
+            $balances =  collect([]);
 
-            $transactions->each(function ($transaction) use(&$broadcast){
+            $transactions->each(function ($transaction) use(&$balances){
                 /** @var Transaction $transaction */
                 $data = $this->getAddressBalance($transaction->from);
-                $broadcast = $broadcast->merge(
+                $balances = $balances->merge(
                     $this->balanceService->updateAddressBalanceFromAipData($transaction->from, $data['balance']));
 
                 if (isset($transaction->to) && $transaction->from !== $transaction->to) {
                     $data = $this->getAddressBalance($transaction->to);
-                    $broadcast = $broadcast->merge(
+                    $balances = $balances->merge(
                         $this->balanceService->updateAddressBalanceFromAipData($transaction->to, $data['balance']));
                 }
             });
+
+            $this->balanceService->broadcastNewBalances($balances);
         }
 
         $validatorsData = $this->getBlockValidatorsData($blockHeight);
