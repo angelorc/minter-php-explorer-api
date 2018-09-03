@@ -12,7 +12,7 @@ class CreateMinterNodesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('minter_nodes', function (Blueprint $table) {
             $table->increments('id');
@@ -21,6 +21,7 @@ class CreateMinterNodesTable extends Migration
             $table->decimal('ping', 7,3)->default(0);
             $table->boolean('is_secure')->default(false);
             $table->boolean('is_active')->default(false);
+            $table->boolean('is_local')->default(false);
             $table->boolean('is_excluded')->default(false);
         });
     }
@@ -30,7 +31,7 @@ class CreateMinterNodesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('minter_nodes');
     }

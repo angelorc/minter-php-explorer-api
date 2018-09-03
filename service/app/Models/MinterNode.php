@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float ping
  * @property bool is_secure
  * @property bool is_active
+ * @property bool is_local
  * @property bool is_excluded
  */
 class MinterNode extends Model
