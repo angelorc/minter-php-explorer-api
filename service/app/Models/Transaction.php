@@ -43,7 +43,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int block
  * @property int type
  * @property int nonce
- * @property int validator_id
  * @property int gas_price
  * @property int gas_wanted
  * @property int gas_used
@@ -100,7 +99,7 @@ class Transaction extends Model
      */
     public function block()
     {
-        return $this->belongsTo(Block::class);
+        return $this->belongsTo(Block::class, 'block_id', 'height');
     }
 
     /**

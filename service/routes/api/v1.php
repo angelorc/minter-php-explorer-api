@@ -9,6 +9,7 @@ $router->get('txCountChartData', StatusController::class . '@txCountChartData');
 $router->get('tx-count-chart-cata', StatusController::class . '@txCountChartData');
 $router->get('status_page', StatusController::class . '@statusPage'); //Для совместимости со старыми версиями
 $router->get('status-page', StatusController::class . '@statusPage');
+$router->get('get-actual-node', StatusController::class . '@getActualNode');
 
 $router->get('blocks', BlockController::class. '@getList');
 $router->get('block/{height}', BlockController::class. '@getBlockByHeight');

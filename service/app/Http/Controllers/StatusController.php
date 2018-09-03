@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TxCountCollection;
+use App\Models\MinterNode;
 use App\Models\TxPerDay;
 use App\Services\BlockServiceInterface;
 use App\Services\StatusServiceInterface;
@@ -205,5 +206,28 @@ class StatusController extends Controller
                 'totalCommission' => $transactionData['sum'],
             ]
         ];
+    }
+
+    /**
+     * Get actual minter node
+     * @return array
+     */
+    public function getActualNode():array
+    {
+        /** @var MinterNode $node */
+        $node = MinterNode::where('is_active', true)->where('is_local', false)->orderBy('ping', 'asc')->first();
+
+        if ($node){
+            return [
+                'data' => [
+                    'protocol' => $node->is_secure ? 'https' : 'http',
+                    'host' => $node->host,
+                    'port' => $node->port,
+                    'link' => $node->fullLink
+                ]
+            ];
+        }
+
+        return [ 'data' => [] ];
     }
 }

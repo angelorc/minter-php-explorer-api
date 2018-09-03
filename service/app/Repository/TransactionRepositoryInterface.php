@@ -12,15 +12,10 @@ interface TransactionRepositoryInterface
     /**
      * Сохранить транзакцию
      * @param Transaction $transaction
+     * @param Collection|null $tags
+     * @return Transaction
      */
-    public function save(Transaction $transaction): void;
-
-    /**
-     * Сохранить транзакцию
-     * @param Transaction $transaction
-     * @param Collection $tags
-     */
-    public function saveTransactionTags(Transaction $transaction, Collection $tags): void;
+    public function save(Transaction $transaction, Collection $tags = null): Transaction;
 
     /**
      * Найти транзакцию по Id

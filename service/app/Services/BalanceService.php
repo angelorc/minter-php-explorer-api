@@ -9,39 +9,24 @@ use App\Models\BalanceChannel;
 use App\Models\Coin;
 use App\Repository\BalanceRepositoryInterface;
 use Illuminate\Support\Collection;
-use GuzzleHttp\Client as GuzzleHttpClient;
 
 class BalanceService implements BalanceServiceInterface
 {
-    /**
-     * @var BalanceRepositoryInterface
-     */
+    /** @var BalanceRepositoryInterface  */
     protected $balanceRepository;
 
-    /**
-     * @var GuzzleHttpClient
-     */
-    protected $httpClient;
-
-    /**
-     * @var \phpcent\Client
-     */
+    /** @var \phpcent\Client */
     protected $centrifuge;
 
     /**
      * BalanceService constructor.
      * @param BalanceRepositoryInterface $balanceRepository
      * @param \phpcent\Client $centrifuge
-     * @param GuzzleHttpClient $httpClient
      */
-    public function __construct(
-        BalanceRepositoryInterface $balanceRepository,
-        \phpcent\Client $centrifuge,
-        GuzzleHttpClient $httpClient
-    ) {
+    public function __construct(BalanceRepositoryInterface $balanceRepository, \phpcent\Client $centrifuge)
+    {
         $this->balanceRepository = $balanceRepository;
         $this->centrifuge = $centrifuge;
-        $this->httpClient = $httpClient;
     }
 
     /**
@@ -54,7 +39,6 @@ class BalanceService implements BalanceServiceInterface
         $result = $this->balanceRepository->getBalanceByAddress($address)->map(function ($item) {
 
             $coin = new Coin($item->coin, $item->amount);
-
             return [
                 'coin' => $coin->getName(),
                 'amount' => $coin->getAmount(),
@@ -63,62 +47,44 @@ class BalanceService implements BalanceServiceInterface
             ];
 
         });
-
         return $result;
     }
 
     /**
-     * Обновить баланс адреса данными из ноды
      * @param string $address
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @param array $data
+     * @return Collection
      */
-    public function updateAddressBalanceFromNodeAPI(string $address): void
+    public function updateAddressBalanceFromAipData(string $address, array $data): Collection
     {
-        $res = $this->httpClient->request('GET', 'api/balance/' . StringHelper::mb_ucfirst($address));
-        $data = json_decode($res->getBody()->getContents(), 1);
-
-        Balance::where('address', 'ilike', $address)->delete();
-
-        foreach ($data['result']['balance'] as $coin => $value) {
-            $balance = new Balance;
-            $balance->address = mb_strtolower($address);
-            $balance->coin = mb_strtoupper($coin);
-            $balance->amount = $value;
-            $balance->save();
+        $balances = [];
+        foreach ($data as $coin => $val){
+            $balances[] = $this->balanceRepository->updateByAddressAndCoin($address, $coin, $val);
         }
+        return collect($balances);
     }
 
     /**
-     * @param string $address
+     * Inform about balance change via WS
+     * @param Collection $balances
      */
-    public function broadcastNewBalances(string $address): void
+    public function broadcastNewBalances(Collection $balances): void
     {
-        $channels = [];
-        $balances = null;
+        $balances->each(function($balance){
+            /** @var Balance $balance */
+            $channels = $this->balanceRepository->getChannelsForBalanceAddress($balance->address);
 
-        /** @var Collection $bl */
-        $balanceChannelList = BalanceChannel::where('address', 'ilike', $address)->get();
+            $channels->each(function ($channel) use($balance){
+                /** @var BalanceChannel $channel */
+                $this->centrifuge->publish($channel->name,[
+                    'address' => StringHelper::mb_ucfirst($balance->address),
+                    'coin' => mb_strtoupper($balance->coin),
+                    'amount' => $balance->amount,
+                ]);
+            });
 
-        if (\count($balanceChannelList)) {
-            $balance = Balance::where('address', 'ilike', $address)->get();
+        });
 
-            foreach ($balanceChannelList as $balanceChannel) {
-                /** BalanceChannel $balanceChannel */
-                $channels[$balanceChannel->name] = $balance;
-            }
-        }
-
-        if (\count($channels)) {
-            foreach ($channels as $name => $balances) {
-                foreach ($balances as $balance) {
-                    $this->centrifuge->publish($name, [
-                        'address' => mb_strtolower($balance->address),
-                        'coin' => mb_strtoupper($balance->coin),
-                        'amount' => $balance->amount
-                    ]);
-                }
-            }
-        }
-
+        $this->balanceRepository->deleteOldChannels();
     }
 }

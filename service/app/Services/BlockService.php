@@ -5,168 +5,52 @@ namespace App\Services;
 use App\Helpers\DateTimeHelper;
 use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
-use Carbon\Carbon;
-use DateTimeZone;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Cache;
-use Minter\SDK\MinterReward;
 
 class BlockService implements BlockServiceInterface
 {
-
     protected const DEFAULT_BLOCK_TIME = 5;
 
     /** @var BlockRepositoryInterface */
     protected $blockRepository;
-    /** @var TransactionServiceInterface */
-    protected $transactionService;
-    /** @var Client */
-    protected $client;
-    /** @var ValidatorServiceInterface */
-    protected $validatorService;
 
     /**
      * BlockService constructor.
      * @param BlockRepositoryInterface $blockRepository
-     * @param TransactionServiceInterface $transactionService
-     * @param ValidatorServiceInterface $validatorService
-     * @param Client $client
      */
-    public function __construct(
-        BlockRepositoryInterface $blockRepository,
-        TransactionServiceInterface $transactionService,
-        ValidatorServiceInterface $validatorService,
-        Client $client
-    ) {
-        $this->client = $client;
-
+    public function __construct(BlockRepositoryInterface $blockRepository)
+    {
         $this->blockRepository = $blockRepository;
-
-        $this->transactionService = $transactionService;
-
-        $this->validatorService = $validatorService;
     }
 
     /**
-     * Получить высоту последнего блока из API
-     * @return int
-     * @throws \RuntimeException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getLatestBlockHeight(): int
-    {
-        $res = $this->client->request('GET', 'api/status');
-
-        $data = json_decode($res->getBody()->getContents(), 1);
-
-        return $data['result']['latest_block_height'];
-    }
-
-    /**
-     * Получить данные блока по высоте из API
-     * @param int $blockHeight
-     * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function pullBlockData(int $blockHeight): array
-    {
-        $res = $this->client->request('GET', "api/block/{$blockHeight}");
-
-        $data = json_decode($res->getBody()->getContents(), 1);
-
-        return $data['result'];
-    }
-
-    /**
-     * Сохранить блок в базу из данных полученных через API
+     * СStore block data to DB
      * @param array $blockData
+     * @return Block
      */
-    public function saveFromApiData(array $blockData): void
+    public function createFromAipData(array $blockData): Block
     {
-        if (!$blockData) {
-            return;
-        }
-
-        $blockTime = DateTimeHelper::getDateTimeFromNanoSeconds($blockData['time']);
+        $blockTime = DateTimeHelper::parse($blockData['time']);
 
         $block = new Block();
         $block->height = $blockData['height'];
-        $block->timestamp = DateTimeHelper::getDateTimeAsFloat($blockData['time']);
         $block->created_at = $blockTime->format('Y-m-d H:i:sO');
         $block->tx_count = $blockData['num_txs'];
         $block->hash = 'Mh' . mb_strtolower($blockData['hash']);
         $block->block_reward = $blockData['block_reward'];
+        $block->size = 0; //TODO: получать из API
+        $block->timestamp = DateTimeHelper::getDateTimeAsFloat($blockData['time']);
         $block->block_time = $this->calculateBlockTime($block->timestamp);
 
-        $transactions = null;
-        $validators = null;
-        $tags = [];
-
-        if ($block->tx_count > 0) {
-            $transactions = $this->transactionService->decodeTransactionsFromApiData($blockData);
-            $block->size = $this->getBlockSize($blockData);
-            $tags = $this->transactionService->decodeTxTagsFromApiData($blockData);
-        } else {
-            $block->size = 0;
-        }
-
-        $validators = $this->validatorService->saveValidatorsFromApiData($block->height);
-
-        $this->blockRepository->save($block, $transactions, $validators);
-
-        if(\count($tags)){
-            $this->transactionService->saveTransactionsTags($tags);
-        }
-
-        $expiresAt = new \DateTime();
-        try {
-            $expiresAt->add(new \DateInterval('PT4S'));
-        } catch (\Exception $e) {
-        }
-
-        Cache::forget('last_block_time');
-        Cache::forget('last_block_height');
-
-        Cache::put('last_block_time', $blockTime->getTimestamp(), 1);
-        Cache::put('last_block_height', $block->height, $expiresAt);
+        return $this->blockRepository->save($block);
     }
 
     /**
-     * @param string $currentBlockTime
-     * @return float
-     */
-    private function calculateBlockTime(string $currentBlockTime): float
-    {
-        $lastBlock = Block::orderBy('created_at', 'desc')->limit(1)->first();
-
-        if (!$lastBlock) {
-            return $this::DEFAULT_BLOCK_TIME;
-        }
-
-        return (float)$currentBlockTime - (float)$lastBlock->timestamp;
-    }
-
-    /**
-     * Получить размер блока
-     * @param array $blockData
+     * Get max block height
      * @return int
      */
-    private function getBlockSize(array $blockData): int
+    public function getExplorerLastBlockHeight(): int
     {
-        //TODO: получать из API
-
-        return 0;
-    }
-
-    /**
-     * Получить высоту последнего блока из Базы
-     * @return int
-     */
-    public function getExplorerLatestBlockHeight(): int
-    {
-        $block = Block::orderByDesc('height')->first();
-
-        return $block->height ?? 0;
+        return $this->blockRepository->getLastBlock()->height ?? 0;
     }
 
     /**
@@ -179,4 +63,20 @@ class BlockService implements BlockServiceInterface
 
         return round($blocks / 86400, 8);
     }
+
+    /**
+     * @param string $currentBlockTime
+     * @return float
+     */
+    private function calculateBlockTime(string $currentBlockTime): float
+    {
+        $lastBlock = $this->blockRepository->getLastBlock();
+
+        if (!$lastBlock) {
+            return $this::DEFAULT_BLOCK_TIME;
+        }
+
+        return (float)$currentBlockTime - (float)$lastBlock->timestamp;
+    }
+
 }
