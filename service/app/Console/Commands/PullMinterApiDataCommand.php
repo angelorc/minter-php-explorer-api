@@ -9,6 +9,7 @@ use App\Services\MinterApiService;
 use App\Services\MinterService;
 use App\Services\TransactionServiceInterface;
 use App\Services\ValidatorServiceInterface;
+use App\Traits\NodeTrait;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Log;
  */
 class PullMinterApiDataCommand extends Command
 {
+    use NodeTrait;
 
     /**
      * Time between API request, ms
@@ -69,7 +71,7 @@ class PullMinterApiDataCommand extends Command
      */
     public function handle(): void
     {
-        $minterService = new MinterService($this->getNode(), $this->blockService, $this->transactionService, $this->validatorService, $this->balanceService);
+        $minterService = new MinterService($this->getActualNode(), $this->blockService, $this->transactionService, $this->validatorService, $this->balanceService);
 
         $this->info('Start pulling data from Minter Node API (' . $minterService->getNode()->fullLink . ')');
 
@@ -111,7 +113,7 @@ class PullMinterApiDataCommand extends Command
 
         } catch (GuzzleException $exception) {
             //Try new node
-            $minterService = new MinterService($this->getNode(), $this->blockService, $this->transactionService, $this->validatorService, $this->balanceService);
+            $minterService = new MinterService($this->getActualNode(), $this->blockService, $this->transactionService, $this->validatorService, $this->balanceService);
 
             $this->warn('Minter Node URL has been changed to ' . $minterService->getNode()->fullLink);
 
@@ -128,27 +130,5 @@ class PullMinterApiDataCommand extends Command
             );
         }
 
-    }
-
-    /**
-     *  Get actual Minter node
-     */
-    private function getNode(): MinterNode
-    {
-        $node = MinterNode::where('is_excluded', '!=', true)
-            ->where('is_active', true)
-            ->orderBy('ping')
-            ->first();
-
-        if (!$node) {
-            $apiLink = explode(':', env('MINTER_API'));
-            $node = new MinterNode;
-            $node->is_active = true;
-            $node->ping = 0;
-            $node->host = $apiLink[0];
-            $node->port = $apiLink[1];
-        }
-
-        return $node;
     }
 }

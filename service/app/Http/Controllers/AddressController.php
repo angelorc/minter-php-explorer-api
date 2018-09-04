@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\BalanceChannel;
 use App\Services\BalanceServiceInterface;
+use App\Services\MinterApiService;
 use App\Services\TransactionServiceInterface;
+use App\Traits\NodeTrait;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class AddressController extends Controller
 {
+    use NodeTrait;
+
     /**
      * @var TransactionServiceInterface
      */
@@ -150,6 +156,19 @@ class AddressController extends Controller
      */
     public function address(string $address): array
     {
+        $apiService = new MinterApiService($this->getActualNode());
+
+        try {
+            $data = $apiService->getAddressBalance($address);
+            $this->balanceService->updateAddressBalanceFromAipData($address, $data['balance']);
+        } catch (GuzzleException $exception) {
+            Log::channel('api')->error(
+                $exception->getFile() . ' line ' .
+                $exception->getLine() . ': ' .
+                $exception->getMessage()
+            );
+        }
+
         return [
             'data' => [
                 'txCount' => $this->transactionService->getTotalTransactionsCount($address),
