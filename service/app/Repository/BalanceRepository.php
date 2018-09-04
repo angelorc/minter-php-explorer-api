@@ -62,4 +62,13 @@ class BalanceRepository extends ModelRepository implements BalanceRepositoryInte
         $dt->modify('-10 days');
         BalanceChannel::whereDate('created_at', '<=', $dt->format('Y-m-d H:i:s'));
     }
+
+    /**
+     * Remove balances by address
+     * @param string $address
+     */
+    public function deleteBalancesByAddress(string $address): void
+    {
+        Balance::where('address', 'ilike', $address)->delete();
+    }
 }

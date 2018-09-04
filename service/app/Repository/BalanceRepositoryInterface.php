@@ -15,13 +15,19 @@ interface BalanceRepositoryInterface
     public function getBalanceByAddress(string $address): Collection;
 
     /**
-     * Updete or create balance for address
+     * Update or create balance for address
      * @param string $address
      * @param string $coin
      * @param string $value
      * @return Balance
      */
     public function updateByAddressAndCoin(string $address, string $coin, string $value): Balance;
+
+    /**
+     * Remove balances by address
+     * @param string $address
+     */
+    public function deleteBalancesByAddress(string $address): void;
 
     /**
      * Get channels for WS broadcast

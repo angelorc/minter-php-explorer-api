@@ -58,7 +58,7 @@ class BalanceService implements BalanceServiceInterface
     public function updateAddressBalanceFromAipData(string $address, array $data): Collection
     {
         $balances = [];
-        Balance::where('address', 'ilike', $address)->delete();
+        $this->balanceRepository->deleteBalancesByAddress($address);
         foreach ($data as $coin => $val){
             $balances[] = $this->balanceRepository->updateByAddressAndCoin($address, $coin, $val);
         }
@@ -83,7 +83,6 @@ class BalanceService implements BalanceServiceInterface
                     'amount' => $balance->amount,
                 ]);
             });
-
         });
 
         $this->balanceRepository->deleteOldChannels();

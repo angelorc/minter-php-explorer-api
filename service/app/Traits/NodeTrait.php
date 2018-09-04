@@ -6,7 +6,6 @@ use App\Models\MinterNode;
 
 trait NodeTrait
 {
-
     /**
      * Get actual Minter node
      * @return MinterNode

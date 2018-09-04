@@ -6,29 +6,11 @@ namespace App\Services;
 use App\Helpers\StringHelper;
 use App\Models\Block;
 use App\Models\Validator;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 
 class ValidatorService implements ValidatorServiceInterface
 {
-    /**
-     * @var Client
-     */
-    protected $httpClient;
-
-    /**
-     * ValidatorService constructor.
-     * @param Client $client
-     */
-    public function __construct(Client $client)
-    {
-        $this->httpClient = $client;
-    }
-
     /**
      * Get Active Validators Count
      * @return int

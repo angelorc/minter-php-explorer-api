@@ -49,7 +49,7 @@ class CreateTransactionsTable extends Migration
             $table->boolean('status');
             $table->timestampsTz();
             $table->softDeletesTz();
-            $table->foreign('block_id')->references('id')->on('blocks');
+            $table->foreign('block_id')->references('height')->on('blocks');
         });
     }
 

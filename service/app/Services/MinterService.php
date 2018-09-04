@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Jobs\SaveValidatorsJob;
 use App\Models\Balance;
 use App\Models\MinterNode;
 use App\Models\Transaction;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Facades\Queue;
 
 /**
  * Class MinterService
@@ -81,8 +83,6 @@ class MinterService extends MinterApiService implements MinterServiceInterface
             $this->balanceService->broadcastNewBalances($balances);
         }
 
-        $validatorsData = $this->getBlockValidatorsData($blockHeight);
-        $validators = $this->validatorService->createFromAipData($validatorsData);
-        $block->validators()->saveMany($validators);
+        Queue::push(new SaveValidatorsJob($block));
     }
 }
