@@ -16,6 +16,8 @@ class SaveValidatorsJob extends Job
     /** @var Block */
     protected $block;
 
+    public $queue = 'validators';
+
     /**
      * Create a new job instance.
      *

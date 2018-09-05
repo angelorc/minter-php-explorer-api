@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\SaveValidatorsJob;
+use App\Jobs\UpdateBalanceJob;
 use App\Models\Balance;
 use App\Models\MinterNode;
 use App\Models\Transaction;
@@ -63,26 +64,11 @@ class MinterService extends MinterApiService implements MinterServiceInterface
         $block = $this->blockService->createFromAipData($blockData);
         $transactions = $this->transactionService->createFromAipData($blockData);
 
+        Queue::push(new SaveValidatorsJob($block));
+
         if ($transactions->count()) {
-
-            $balances =  collect([]);
-
-            $transactions->each(function ($transaction) use(&$balances){
-                /** @var Transaction $transaction */
-                $data = $this->getAddressBalance($transaction->from);
-                $balances = $balances->merge(
-                    $this->balanceService->updateAddressBalanceFromAipData($transaction->from, $data['balance']));
-
-                if (isset($transaction->to) && $transaction->from !== $transaction->to) {
-                    $data = $this->getAddressBalance($transaction->to);
-                    $balances = $balances->merge(
-                        $this->balanceService->updateAddressBalanceFromAipData($transaction->to, $data['balance']));
-                }
-            });
-
-            $this->balanceService->broadcastNewBalances($balances);
+            Queue::push(new UpdateBalanceJob($transactions));
         }
 
-        Queue::push(new SaveValidatorsJob($block));
     }
 }
