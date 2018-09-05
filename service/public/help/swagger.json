@@ -184,6 +184,40 @@
                 }
             }
         },
+        "/api/v1/coins": {
+            "get": {
+                "tags": [
+                    "Coins"
+                ],
+                "summary": "List of coins",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "symbol",
+                        "in": "query",
+                        "description": "Part of coin's symbol",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Coin"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/status": {
             "get": {
                 "tags": [
@@ -721,6 +755,19 @@
                     "items": {
                         "$ref": "#/definitions/Validator"
                     }
+                }
+            },
+            "type": "object"
+        },
+        "Coin": {
+            "properties": {
+                "symbol": {
+                    "type": "string",
+                    "example": "MNT"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Minter Coin"
                 }
             },
             "type": "object"

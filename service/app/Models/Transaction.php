@@ -111,6 +111,15 @@ class Transaction extends Model
     }
 
     /**
+     * Get transaction coin
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function coin()
+    {
+        return $this->hasOne(Coin::class, 'symbol', 'coin');
+    }
+
+    /**
      * Get transaction commission
      * @return string
      */

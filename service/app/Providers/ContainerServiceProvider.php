@@ -7,12 +7,16 @@ use App\Repository\BalanceRepository;
 use App\Repository\BalanceRepositoryInterface;
 use App\Repository\BlockRepository;
 use App\Repository\BlockRepositoryInterface;
+use App\Repository\CoinsRepository;
+use App\Repository\CoinsRepositoryInterface;
 use App\Repository\TransactionRepository;
 use App\Repository\TransactionRepositoryInterface;
 use App\Services\BalanceService;
 use App\Services\BalanceServiceInterface;
 use App\Services\BlockService;
 use App\Services\BlockServiceInterface;
+use App\Services\CoinService;
+use App\Services\CoinServiceInterface;
 use App\Services\StatusService;
 use App\Services\StatusServiceInterface;
 use App\Services\TransactionService;
@@ -41,6 +45,7 @@ class ContainerServiceProvider extends ServiceProvider
         $this->app->singleton(BalanceRepositoryInterface::class, BalanceRepository::class);
         $this->app->singleton(BlockRepositoryInterface::class, BlockRepository::class);
         $this->app->singleton(TransactionRepositoryInterface::class, TransactionRepository::class);
+        $this->app->singleton(CoinsRepositoryInterface::class, CoinsRepository::class);
 
         /** Services */
         $this->app->singleton(BalanceServiceInterface::class, BalanceService::class);
@@ -48,18 +53,10 @@ class ContainerServiceProvider extends ServiceProvider
         $this->app->singleton(StatusServiceInterface::class, StatusService::class);
         $this->app->singleton(TransactionServiceInterface::class, TransactionService::class);
         $this->app->singleton(ValidatorServiceInterface::class, ValidatorService::class);
+        $this->app->singleton(CoinServiceInterface::class, CoinService::class);
 
         $this->app->singleton(RmqHelper::class, function () {
             return new RmqHelper(config('rmq.explorer.general'));
-        });
-
-        $this->app->singleton(Client::class, function () {
-            return new Client([
-                'base_uri' => 'http://' . env('MINTER_API'),
-                'Connection' => 'close',
-                CURLOPT_FORBID_REUSE => true,
-                CURLOPT_FRESH_CONNECT => true,
-            ]);
         });
 
         $this->app->singleton(\phpcent\Client::class, function () {

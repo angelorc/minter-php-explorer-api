@@ -29,7 +29,7 @@ class CreateTransactionsTable extends Migration
             $table->decimal('commission', 300, 0)->nullable();
             $table->decimal('initial_amount', 300, 0)->nullable();
             $table->decimal('initial_reserve', 300, 0)->nullable();
-            $table->decimal('constant_reserve_ratio', 100, 0)->nullable();
+            $table->decimal('constant_reserve_ratio', 300, 0)->nullable();
             $table->decimal('gas_wanted', 300, 0)->nullable();
             $table->decimal('gas_used', 300, 0)->nullable();
             $table->integer('gas_price');

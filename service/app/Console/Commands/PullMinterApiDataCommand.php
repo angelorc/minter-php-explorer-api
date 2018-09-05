@@ -96,7 +96,7 @@ class PullMinterApiDataCommand extends Command
                 $spentTime = $end - $start;
 
                 if (env('APP_DEBUG', false)) {
-                    $this->info('Block have been saving in ' . $spentTime . ' sec');
+                    $this->info('Block has been saved in ' . $spentTime . ' sec');
                 }
 
                 $apiCurrentBlockHeight = $minterService->getLastBlock();

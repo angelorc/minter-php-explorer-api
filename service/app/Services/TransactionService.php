@@ -15,18 +15,20 @@ use Illuminate\Support\Facades\Log;
 
 class TransactionService implements TransactionServiceInterface
 {
-    /**
-     * @var TransactionRepositoryInterface
-     */
+    /** @var TransactionRepositoryInterface */
     protected $transactionRepository;
+
+    /** @var CoinServiceInterface */
+    protected $coinService;
 
     /**
      * TransactionService constructor.
      * @param TransactionRepositoryInterface $transactionRepository
      */
-    public function __construct(TransactionRepositoryInterface $transactionRepository)
+    public function __construct(TransactionRepositoryInterface $transactionRepository, CoinServiceInterface $coinService)
     {
         $this->transactionRepository = $transactionRepository;
+        $this->coinService = $coinService;
     }
 
     /**
@@ -39,7 +41,7 @@ class TransactionService implements TransactionServiceInterface
     {
         $transactions = [];
         $txs = $data['transactions'];
-        $blockTime = DateTimeHelper::parse($data['time']);
+        $blockTime = DateTimeHelper::parse($data['time']) ?? new \DateTime();
 
         foreach ($txs as $tx) {
             try {
@@ -80,6 +82,7 @@ class TransactionService implements TransactionServiceInterface
                         $transaction->initial_amount = $tx['data']['initial_amount'] ?? null;
                         $transaction->initial_reserve = $tx['data']['initial_reserve'] ?? null;
                         $transaction->constant_reserve_ratio = $tx['data']['constant_reserve_ratio'] ?? null;
+                        $this->coinService->createCoinFromTransactions($transaction);
                         break;
                     case Transaction::TYPE_DECLARE_CANDIDACY:
                         $transaction->address = StringHelper::mb_ucfirst($tx['data']['address']);

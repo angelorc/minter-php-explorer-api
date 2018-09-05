@@ -2,14 +2,33 @@
 
 namespace App\Models;
 
-use App\Helpers\MathHelper;
+use Illuminate\Database\Eloquent\Model;
 
 
 /**
  * Class Coin
  * @package App\Models
+ *
+ * @property string  symbol
+ * @property string  name
+ * @property integer crr
+ * @property string  volume
+ * @property string  reserve_balance
+ * @property string  creator
+ * @property string  created_at
  */
-class Coin
+
+/**
+ * @SWG\Definition(
+ *     definition="Coin",
+ *     type="object",
+ *
+ *     @SWG\Property(property="symbol", type="string", example="MNT"),
+ *     @SWG\Property(property="name",   type="string", example="Minter Coin"),
+ * )
+ */
+
+class Coin extends Model
 {
     /**
      * PIP coefficient
@@ -19,50 +38,15 @@ class Coin
     public const UNIT = 10 ** -15;
     public const UNIT_STR = '0.000000000000001';
 
-    /**
-     * @var string
-     */
-    protected $name;
+    protected $dateFormat = 'Y-m-d H:i:sO';
 
-    /**
-     * @var string
-     */
-    protected $pipAmount;
-
-    /**
-     * Coin constructor.
-     *
-     * @param $name
-     * @param $pipAmount
-     */
-    public function __construct(string $name, string $pipAmount)
-    {
-        $this->name      = mb_strtolower($name);
-        $this->pipAmount = $pipAmount;
-    }
-
-    /**
-     * @return String
-     */
-    public function getName(): String
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAmount(): string
-    {
-        return MathHelper::makeAmountFromIntString($this->pipAmount);
-    }
-
-    /**
-     * @return string
-     */
-    public function getUsdAmount(): string
-    {
-        //TODO: перенести конвертацию в сервис, как будет понятно откуда брать курс
-        return bcmul($this->getAmount(), '0.000075', 24);
-    }
+    protected $fillable = [
+        'symbol',
+        'name',
+        'crr',
+        'volume',
+        'reserve_balance',
+        'creator',
+        'created_at',
+    ];
 }

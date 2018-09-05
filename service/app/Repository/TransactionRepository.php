@@ -199,6 +199,10 @@ class TransactionRepository implements TransactionRepositoryInterface
             });
         }
 
+        if(isset($filter['type'])){
+            $query->where('type', $filter['type']);
+        }
+
         return $query;
     }
 

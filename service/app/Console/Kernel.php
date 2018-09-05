@@ -11,6 +11,7 @@ use App\Console\Commands\FillTxPerDayTableCommand;
 use App\Console\Commands\PullBlockDataCommand;
 use App\Console\Commands\PullMinterApiDataCommand;
 use App\Console\Commands\TxPerDaySaveCommand;
+use App\Console\Commands\UpdateCoinTableCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
         FillTxPerDayTableCommand::class,
         TxPerDaySaveCommand::class,
         FillBalanceTableCommand::class,
+        UpdateCoinTableCommand::class,
     ];
 
     /**

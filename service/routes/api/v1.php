@@ -20,3 +20,5 @@ $router->get('transaction/{hash}', TransactionController::class. '@getTransactio
 $router->get('address/get-balance-channel', AddressController::class . '@getBalanceWsChannel');
 $router->get('address/{address}', AddressController::class. '@address');
 $router->get('address', AddressController::class. '@addresses');
+
+$router->get('coins', CoinController::class . '@getList');
