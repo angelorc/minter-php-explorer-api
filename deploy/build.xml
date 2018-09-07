@@ -42,6 +42,7 @@
         <fail unless="env.db_username" message="db_username environment variable is not set"/>
         <fail unless="env.db_password" message="db_password environment variable is not set"/>
         <fail unless="env.cache_driver" message="cache_driver environment variable is not set"/>
+        <fail unless="env.queue_driver" message="queue_driver environment variable is not set"/>
         <fail unless="env.session_driver" message="session_driver environment variable is not set"/>
         <fail unless="env.session_lifetime" message="session_lifetime environment variable is not set"/>
         <fail unless="env.redis_host" message="redis_host environment variable is not set"/>
