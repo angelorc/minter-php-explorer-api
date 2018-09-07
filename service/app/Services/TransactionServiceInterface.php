@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Models\Transaction;
 use Illuminate\Support\Collection;
 
 interface TransactionServiceInterface
@@ -13,6 +14,19 @@ interface TransactionServiceInterface
      * @return Collection
      */
     public function createFromAipData(array $data): Collection;
+
+    /**
+     * @param array $data
+     */
+    public function createFromAipDataAsync(array $data): void;
+
+    /**
+     * @param array $txData
+     * @param int $blockHeight
+     * @param \DateTime $blockTime
+     * @return Transaction|null
+     */
+    public function createTransactionFromApiData(array $txData, int $blockHeight, \DateTime $blockTime): ?Transaction;
 
     /**
      * Количество транзакций

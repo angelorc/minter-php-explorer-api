@@ -63,20 +63,6 @@ return [
             'retry_after' => 60,
         ],
 
-        'validators' => [
-            'driver' => 'redis',
-            'connection' => 'validators',
-            'queue' => 'validators',
-            'retry_after' => 60,
-        ],
-
-        'balance' => [
-            'driver' => 'redis',
-            'connection' => 'balance',
-            'queue' => 'balance',
-            'retry_after' => 60,
-        ],
-
     ],
 
     /*

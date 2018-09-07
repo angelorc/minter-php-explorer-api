@@ -3,10 +3,7 @@
 namespace App\Services;
 
 use App\Jobs\SaveValidatorsJob;
-use App\Jobs\UpdateBalanceJob;
-use App\Models\Balance;
 use App\Models\MinterNode;
-use App\Models\Transaction;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Queue;
 
@@ -62,13 +59,12 @@ class MinterService extends MinterApiService implements MinterServiceInterface
         $blockData = $this->getBlockData($blockHeight);
 
         $block = $this->blockService->createFromAipData($blockData);
-        $transactions = $this->transactionService->createFromAipData($blockData);
 
-        Queue::push(new SaveValidatorsJob($block));
-
-        if ($transactions->count()) {
-            Queue::push(new UpdateBalanceJob($transactions));
+        if ($block->tx_count) {
+            $this->transactionService->createFromAipDataAsync($blockData);
         }
+
+        Queue::pushOn('validators', new SaveValidatorsJob($block));
 
     }
 }
