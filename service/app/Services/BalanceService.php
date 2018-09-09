@@ -38,11 +38,13 @@ class BalanceService implements BalanceServiceInterface
     {
         $result = $this->balanceRepository->getBalanceByAddress($address)->map(function ($item) {
 
+            $amount = MathHelper::makeAmountFromIntString($item->amount);
+
             return [
                 'coin' => $item->coin,
-                'amount' => MathHelper::makeAmountFromIntString($item->amount),
+                'amount' => $amount,
                 'baseCoinAmount' => MathHelper::makeAmountFromIntString($item->amount),
-                'usdAmount' => bcmul($item->amount, '0.000075', 24)
+                'usdAmount' => bcmul($amount, '0.0000637485', 24)
             ];
 
         });
