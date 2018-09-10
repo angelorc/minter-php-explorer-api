@@ -44,7 +44,7 @@ class BalanceService implements BalanceServiceInterface
                 'coin' => $item->coin,
                 'amount' => $amount,
                 'baseCoinAmount' => MathHelper::makeAmountFromIntString($item->amount),
-                'usdAmount' => bcmul($amount, '0.0000637485', 24)
+                'usdAmount' => bcmul($amount, '0.01', 24)
             ];
 
         });
