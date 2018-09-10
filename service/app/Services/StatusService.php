@@ -148,9 +148,7 @@ class StatusService implements StatusServiceInterface
         foreach ($coins as $coin => $amount) {
             if ($coin !== 'MNT') {
                 $data = $apiService->getBaseCoinValue($coin, $amount);
-                $coins[$coin] = $data['will_get'];
-
-                $result = bcadd($result, $data['will_get']);
+                $result = bcadd($result, $data);
             }
         }
 

@@ -121,19 +121,23 @@ class MinterApiService implements MinterApiServiceInterface
      * Get amount in base coin
      * @param string $coin
      * @param string $value
-     * @return mixed
-     * @throws GuzzleException
+     * @return string
      */
-    public function getBaseCoinValue(string $coin, string $value)
+    public function getBaseCoinValue(string $coin, string $value): string
     {
         $baseCoin = env('MINTER_BASE_COIN', 'MNT');
-        $res = $this->httpClient->request('GET', 'api/estimateCoinSell',
-            ['query' => [
-                'coin_to_sell' => $coin,
-                'value_to_sell' => $value,
-                'coin_to_buy' => $baseCoin
-            ]]);
-        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
-        return $data['result'];
+        try {
+            $res = $this->httpClient->request('GET', 'api/estimateCoinSell',
+                ['query' => [
+                    'coin_to_sell' => $coin,
+                    'value_to_sell' => $value,
+                    'coin_to_buy' => $baseCoin
+                ]]);
+            $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+            return $data['result']['will_get'];
+        } catch (GuzzleException $e) {
+            return 0;
+        }
+
     }
 }
