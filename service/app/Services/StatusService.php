@@ -3,13 +3,17 @@
 namespace App\Services;
 
 
+use App\Helpers\MathHelper;
 use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
 use App\Repository\TransactionRepositoryInterface;
+use App\Traits\NodeTrait;
 use Illuminate\Support\Facades\Cache;
 
 class StatusService implements StatusServiceInterface
 {
+    use NodeTrait;
+
     /**
      * Время от последнего блока при котором статус счетается активным в секундах
      */
@@ -30,20 +34,27 @@ class StatusService implements StatusServiceInterface
      */
     protected $blockService;
 
+    /** @var CoinServiceInterface */
+    protected $coinService;
+
     /**
      * StatusService constructor.
      * @param BlockRepositoryInterface $blockRepository
      * @param TransactionRepositoryInterface $transactionRepository
      * @param BlockServiceInterface $blockService
+     * @param CoinServiceInterface $coinService
      */
     public function __construct(
         BlockRepositoryInterface $blockRepository,
         TransactionRepositoryInterface $transactionRepository,
-        BlockServiceInterface $blockService
-    ) {
+        BlockServiceInterface $blockService,
+        CoinServiceInterface $coinService
+    )
+    {
         $this->blockRepository = $blockRepository;
         $this->transactionRepository = $transactionRepository;
         $this->blockService = $blockService;
+        $this->coinService = $coinService;
     }
 
     /**
@@ -54,7 +65,7 @@ class StatusService implements StatusServiceInterface
     {
         $height = Cache::get('latest_block_height');
 
-        if (!$height){
+        if (!$height) {
             return Block::orderBy('created_at', 'desc')->first()->height ?? 0;
         }
 
@@ -100,7 +111,7 @@ class StatusService implements StatusServiceInterface
         $slow = Block::whereDate('created_at', '>=', $dt->format('Y-m-d H:i:s'))
             ->where('block_time', '>=', 6)->count();
 
-        if($total){
+        if ($total) {
             return 1 - $slow / $total;
         }
 
@@ -115,6 +126,34 @@ class StatusService implements StatusServiceInterface
      */
     public function getGetCurrentFiatPrice(string $coin = 'MNT', string $currency = 'USD'): float
     {
+        //TODO: заменить расчетом
         return 0.01;
+    }
+
+    /**
+     * Get market capitalization value
+     * @return float
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getMarketCap(): float
+    {
+        $apiService = new MinterApiService($this->getActualNode());
+
+        $baseCoinUsdPrice = $this->getGetCurrentFiatPrice();
+
+        $coins = $this->coinService->getTotalAmountByCoins();
+
+        $result = $coins['MNT'];
+
+        foreach ($coins as $coin => $amount) {
+            if ($coin !== 'MNT') {
+                $data = $apiService->getBaseCoinValue($coin, $amount);
+                $coins[$coin] = $data['will_get'];
+
+                $result = bcadd($result, $data['will_get']);
+            }
+        }
+
+        return bcmul(MathHelper::makeAmountFromIntString($result), $baseCoinUsdPrice, 4);
     }
 }

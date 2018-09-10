@@ -14,4 +14,10 @@ interface CoinServiceInterface
      * @return Coin
      */
     public function createCoinFromTransactions(Transaction $transaction): ?Coin;
+
+    /**
+     * Total coins in network by coin
+     * @return array
+     */
+    public function getTotalAmountByCoins(): array;
 }

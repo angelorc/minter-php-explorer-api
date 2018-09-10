@@ -24,4 +24,10 @@ interface CoinsRepositoryInterface
      * @return Collection
      */
     public function getList(array $filters = []): Collection;
+
+    /**
+     * Total coins in network by coin
+     * @return array
+     */
+    public function getTotalAmountByCoins(): array;
 }

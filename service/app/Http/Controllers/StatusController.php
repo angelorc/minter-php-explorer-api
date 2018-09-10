@@ -102,7 +102,7 @@ class StatusController extends Controller
             'bipPriceUsd' => $this->statusService->getGetCurrentFiatPrice('MNT', 'USD'),
             'bipPriceBtc' => 0.0000015883176063418346,
             'bipPriceChange' => 10,
-            'marketCap' => 10000000000 * 0.00007453,
+            'marketCap' => $this->statusService->getMarketCap(),
             'latestBlockHeight' => $block->height,
             'latestBlockTime' => $block->block_time,
             'totalTransactions' => $this->transactionService->getTotalTransactionsCount(),

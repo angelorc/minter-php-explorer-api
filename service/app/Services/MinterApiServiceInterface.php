@@ -44,4 +44,12 @@ interface MinterApiServiceInterface
      */
     public function getAddressBalance(string $address): array;
 
+    /**
+     * Get amount in base coin
+     * @param string $coin
+     * @param string $value
+     * @return mixed
+     */
+    public function getBaseCoinValue(string $coin, string $value);
+
 }

@@ -49,4 +49,9 @@ class Coin extends Model
         'creator',
         'created_at',
     ];
+
+    public function fiatPrices()
+    {
+        return $this->hasMany(FiatPrice::class);
+    }
 }

@@ -115,4 +115,25 @@ class MinterApiService implements MinterApiServiceInterface
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }
+
+
+    /**
+     * Get amount in base coin
+     * @param string $coin
+     * @param string $value
+     * @return mixed
+     * @throws GuzzleException
+     */
+    public function getBaseCoinValue(string $coin, string $value)
+    {
+        $baseCoin = env('MINTER_BASE_COIN', 'MNT');
+        $res = $this->httpClient->request('GET', 'api/estimateCoinSell',
+            ['query' => [
+                'coin_to_sell' => $coin,
+                'value_to_sell' => $value,
+                'coin_to_buy' => $baseCoin
+            ]]);
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
 }

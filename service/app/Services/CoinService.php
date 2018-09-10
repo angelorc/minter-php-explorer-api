@@ -34,4 +34,13 @@ class CoinService implements CoinServiceInterface
 
         return null;
     }
+
+    /**
+     * Total coins in network by coin
+     * @return array
+     */
+    public function getTotalAmountByCoins(): array
+    {
+        return $this->coinsRepository->getTotalAmountByCoins();
+    }
 }

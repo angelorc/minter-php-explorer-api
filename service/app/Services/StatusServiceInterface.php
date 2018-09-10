@@ -39,4 +39,10 @@ interface StatusServiceInterface
      * @return float
      */
     public function getGetCurrentFiatPrice(string $coin, string $currency): float;
+
+    /**
+     * Get market capitalization value
+     * @return float
+     */
+    public function getMarketCap(): float;
 }
