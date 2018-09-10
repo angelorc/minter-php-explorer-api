@@ -50,7 +50,7 @@ class BlockService implements BlockServiceInterface
      */
     public function getExplorerLastBlockHeight(): int
     {
-        return $this->blockRepository->getLastBlock()->height ?? 0;
+        return $this->getExplorerLastBlock()->height ?? 0;
     }
 
     /**
@@ -79,4 +79,12 @@ class BlockService implements BlockServiceInterface
         return (float)$currentBlockTime - (float)$lastBlock->timestamp;
     }
 
+    /**
+     * Get last block form DB
+     * @return Block
+     */
+    public function getExplorerLastBlock(): Block
+    {
+        return $this->blockRepository->getLastBlock();
+    }
 }

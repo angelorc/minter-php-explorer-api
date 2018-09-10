@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTransactionsTable extends Migration
 {
@@ -44,7 +44,6 @@ class CreateTransactionsTable extends Migration
             $table->text('raw_check')->nullable();
             $table->string('proof')->nullable();
             $table->string('name')->nullable();
-            $table->string('symbol')->nullable();
             $table->string('log')->nullable();
             $table->boolean('status');
             $table->timestampsTz();

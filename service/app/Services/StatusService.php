@@ -4,7 +4,6 @@ namespace App\Services;
 
 
 use App\Models\Block;
-use Carbon\Carbon;
 use App\Repository\BlockRepositoryInterface;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Support\Facades\Cache;
@@ -107,5 +106,15 @@ class StatusService implements StatusServiceInterface
 
         return false;
 
+    }
+
+    /**
+     * @param string $coin
+     * @param string $currency
+     * @return float
+     */
+    public function getGetCurrentFiatPrice(string $coin = 'MNT', string $currency = 'USD'): float
+    {
+        return 0.01;
     }
 }

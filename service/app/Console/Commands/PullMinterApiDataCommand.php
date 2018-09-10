@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\MinterNode;
 use App\Services\BalanceServiceInterface;
 use App\Services\BlockServiceInterface;
-use App\Services\MinterApiService;
 use App\Services\MinterService;
 use App\Services\TransactionServiceInterface;
 use App\Services\ValidatorServiceInterface;
@@ -107,7 +105,7 @@ class PullMinterApiDataCommand extends Command
 
                 // If requests has been handled faster than 2.5 seconds
                 if (2.5 > $spentTime && $blocksDiff <= 2) {
-                    usleep(2500000 - round($spentTime * 10 ** 6));
+                    usleep($this::SLEEP_TIME - round($spentTime * 10 ** 6));
                 }
             }
 

@@ -26,4 +26,10 @@ interface BlockServiceInterface
      */
     public function getExplorerLastBlockHeight(): int;
 
+    /**
+     * Get last block form DB
+     * @return Block
+     */
+    public function getExplorerLastBlock(): Block;
+
 }

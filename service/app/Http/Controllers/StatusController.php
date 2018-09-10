@@ -95,14 +95,16 @@ class StatusController extends Controller
      */
     public function status(): array
     {
+        $block = $this->blockService->getExplorerLastBlock();
+
         //TODO: поменять значения, как станет ясно откуда брать
         return [
-            'bipPriceUsd' => 0.00007453,
-            'bipPriceBtc' => 0.00000001,
+            'bipPriceUsd' => $this->statusService->getGetCurrentFiatPrice('MNT', 'USD'),
+            'bipPriceBtc' => 0.0000015883176063418346,
             'bipPriceChange' => 10,
             'marketCap' => 10000000000 * 0.00007453,
-            'latestBlockHeight' => $this->statusService->getLastBlockHeight(),
-            'latestBlockTime' => Cache::get('last_block_time', null),
+            'latestBlockHeight' => $block->height,
+            'latestBlockTime' => $block->block_time,
             'totalTransactions' => $this->transactionService->getTotalTransactionsCount(),
             'transactionsPerSecond' => $this->transactionService->getTransactionsSpeed(),
             'averageBlockTime' => $this->statusService->getAverageBlockTime(),
