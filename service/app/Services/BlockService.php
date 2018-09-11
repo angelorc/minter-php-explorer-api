@@ -29,7 +29,7 @@ class BlockService implements BlockServiceInterface
      */
     public function createFromAipData(array $blockData): Block
     {
-        $blockTime = DateTimeHelper::parse($blockData['time']);
+        $blockTime = DateTimeHelper::parse($blockData['time']) ?? new \DateTime();
 
         $block = new Block();
         $block->height = $blockData['height'];

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\LogHelper;
 use App\Services\BalanceServiceInterface;
 use App\Services\BlockServiceInterface;
 use App\Services\MinterService;
@@ -10,7 +11,6 @@ use App\Services\ValidatorServiceInterface;
 use App\Traits\NodeTrait;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class PullMinterApiDataCommand
@@ -112,20 +112,10 @@ class PullMinterApiDataCommand extends Command
         } catch (GuzzleException $exception) {
             //Try new node
             $minterService = new MinterService($this->getActualNode(), $this->blockService, $this->transactionService, $this->validatorService, $this->balanceService);
-
             $this->warn('Minter Node URL has been changed to ' . $minterService->getNode()->fullLink);
-
-            Log::channel('api')->error(
-                $exception->getFile() . ' line ' .
-                $exception->getLine() . ': ' .
-                $exception->getMessage()
-            );
+            LogHelper::apiError($exception);
         } catch (\Exception $exception) {
-            Log::error(
-                $exception->getFile() . ' line ' .
-                $exception->getLine() . ': ' .
-                $exception->getMessage()
-            );
+            LogHelper::error($exception);
         }
 
     }

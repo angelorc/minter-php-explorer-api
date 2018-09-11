@@ -2,12 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Helpers\LogHelper;
 use App\Models\Block;
 use App\Services\MinterApiService;
 use App\Services\ValidatorService;
 use App\Traits\NodeTrait;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class SaveValidatorsJob extends Job
 {
@@ -40,14 +41,13 @@ class SaveValidatorsJob extends Job
 
         try {
             $validatorsData = $apiService->getBlockValidatorsData($this->block->height);
+            Cache::put('activeValidators', \count($validatorsData), new \DateInterval('PT6S'));
             $validators = $validatorService->createFromAipData($validatorsData);
             $this->block->validators()->saveMany($validators);
         } catch (GuzzleException $exception) {
-            Log::channel('api')->error(
-                $exception->getFile() . ' line ' .
-                $exception->getLine() . ': ' .
-                $exception->getMessage()
-            );
+            LogHelper::apiError($exception);
+        } catch (\Exception $exception) {
+            LogHelper::error($exception);
         }
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Helpers\RmqHelper;
 use App\Repository\BalanceRepository;
 use App\Repository\BalanceRepositoryInterface;
 use App\Repository\BlockRepository;
@@ -23,7 +22,6 @@ use App\Services\TransactionService;
 use App\Services\TransactionServiceInterface;
 use App\Services\ValidatorService;
 use App\Services\ValidatorServiceInterface;
-use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
 
@@ -54,10 +52,6 @@ class ContainerServiceProvider extends ServiceProvider
         $this->app->singleton(TransactionServiceInterface::class, TransactionService::class);
         $this->app->singleton(ValidatorServiceInterface::class, ValidatorService::class);
         $this->app->singleton(CoinServiceInterface::class, CoinService::class);
-
-        $this->app->singleton(RmqHelper::class, function () {
-            return new RmqHelper(config('rmq.explorer.general'));
-        });
 
         $this->app->singleton(\phpcent\Client::class, function () {
             $centrifuge = new \phpcent\Client(env('CENTRIFUGE_URL', 'http://localhost:8000'));
