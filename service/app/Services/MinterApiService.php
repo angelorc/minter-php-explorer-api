@@ -86,19 +86,20 @@ class MinterApiService implements MinterApiServiceInterface
      */
     public function getBlockValidatorsData(int $blockHeight): array
     {
-        $res = $this->httpClient->request('GET', 'api/validators/', ['block' => $blockHeight]);
+        $res = $this->httpClient->request('GET', 'api/validators/', ['query' => ['block' => $blockHeight]]);
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }
 
     /**
      * Get block validators data
+     * @param int $blockHeight
      * @return array
      * @throws GuzzleException
      */
-    public function getCandidatesData(): array
+    public function getCandidatesData(int $blockHeight): array
     {
-        $res = $this->httpClient->request('GET', 'api/candidates/');
+        $res = $this->httpClient->request('GET', 'api/candidates/', ['query' => ['block' => $blockHeight]]);
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }

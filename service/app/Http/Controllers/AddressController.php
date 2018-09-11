@@ -9,7 +9,6 @@ use App\Services\TransactionServiceInterface;
 use App\Traits\NodeTrait;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class AddressController extends Controller
@@ -246,20 +245,5 @@ class AddressController extends Controller
                 'token' => $token,
             ]
         ];
-    }
-
-    /**
-     * Посчитать суммарный баланс адреса
-     * @param Collection $coins
-     * @return float
-     */
-    private function getTotalBalance(Collection $coins): float
-    {
-        return $coins->reduce(function ($sum, $item) {
-            foreach ($item as $amount) {
-                $sum += $amount;
-            }
-            return $sum;
-        }, 0);
     }
 }

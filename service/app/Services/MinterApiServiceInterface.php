@@ -33,9 +33,10 @@ interface MinterApiServiceInterface
 
     /**
      * Get candidates data
+     * @param int $blockHeight
      * @return array
      */
-    public function getCandidatesData(): array;
+    public function getCandidatesData(int $blockHeight): array;
 
     /**
      * Get address balance

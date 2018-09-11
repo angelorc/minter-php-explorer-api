@@ -22,3 +22,5 @@ $router->get('address/{address}', AddressController::class. '@address');
 $router->get('address', AddressController::class. '@addresses');
 
 $router->get('coins', CoinController::class . '@getList');
+
+$router->get('settings/get-ws-data', SettingsController::class . '@getWsConnectData');
