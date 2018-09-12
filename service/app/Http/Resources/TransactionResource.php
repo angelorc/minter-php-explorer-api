@@ -6,6 +6,32 @@ use App\Helpers\MathHelper;
 use App\Models\Transaction;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @SWG\Definition(
+ *     definition="TransactionMetaData",
+ *     type="object",
+ *
+ *     @SWG\Property(property="current_page", type="integer", example="1"),
+ *     @SWG\Property(property="from",         type="integer", example="2"),
+ *     @SWG\Property(property="last_page",    type="integer", example="4"),
+ *     @SWG\Property(property="path",         type="string",  example="http://localhost:8000/api/v1/transactions"),
+ *     @SWG\Property(property="per_page",     type="integer", example="50"),
+ *     @SWG\Property(property="to",           type="integer", example="50"),
+ *     @SWG\Property(property="total",        type="integer", example="130")
+ * )
+ **/
+
+/**
+ * @SWG\Definition(
+ *     definition="TransactionLinksData",
+ *     type="object",
+ *
+ *     @SWG\Property(property="first", type="string", example="http://localhost:8000/api/v1/transactions?page=1"),
+ *     @SWG\Property(property="last",  type="string", example="http://localhost:8000/api/v1/transactions?page=2"),
+ *     @SWG\Property(property="prev",  type="string", example="null"),
+ *     @SWG\Property(property="next",  type="string", example="http://localhost:8000/api/v1/transactions?page=2")
+ * )
+ **/
 class TransactionResource extends JsonResource
 {
     public function toArray($request): array

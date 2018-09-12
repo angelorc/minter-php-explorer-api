@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\BlockCollection;
 use App\Http\Resources\BlockResource;
 use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
@@ -55,13 +54,13 @@ class BlockController extends Controller
      * )
      *
      * @param Request $request
-     * @return BlockCollection
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function getList(Request $request):BlockCollection
+    public function getList(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $query = Block::with('validators');
 
-        return new BlockCollection($query->orderByDesc('height')->paginate($this::BLOCKS_PER_PAGE));
+        return BlockResource::collection($query->orderByDesc('height')->paginate($this::BLOCKS_PER_PAGE));
     }
 
     /**

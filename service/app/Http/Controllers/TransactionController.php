@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TransactionCollection;
 use App\Http\Resources\TransactionResource;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Http\Request;
