@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Model;
  *     definition="TransactionData",
  *     type="object",
  *
- *     @SWG\Property(property="from",  type="string", example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
- *     @SWG\Property(property="to",    type="string", example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
- *     @SWG\Property(property="coin",  type="string", example="MNT"),
+ *     @SWG\Property(property="from",   type="string", example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
+ *     @SWG\Property(property="to",     type="string", example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
+ *     @SWG\Property(property="coin",   type="string", example="MNT"),
  *     @SWG\Property(property="amount", type="float",  example="23.93674623")
  * )
  */
@@ -139,8 +139,6 @@ class Transaction extends Model
     }
 
     /**
-     * @TODO: Centralize transaction outputs
-     *
      * Get transaction type
      * @return string
      */
