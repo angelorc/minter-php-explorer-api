@@ -125,7 +125,7 @@ class Transaction extends Model
      */
     public function getFeeMntAttribute(): string
     {
-        $result = bcmul($this->fee, Coin::UNIT_STR);
+        $result = bcmul($this->fee, 10 ** 15);
         return MathHelper::makeAmountFromIntString($result);
     }
 
@@ -144,7 +144,7 @@ class Transaction extends Model
      */
     public function getTypeStringAttribute(): string
     {
-        switch ($this->type){
+        switch ($this->type) {
             case $this::TYPE_SEND:
                 return 'send';
             case $this::TYPE_SELL_ALL_COIN:
