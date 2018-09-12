@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TransactionCollection;
 use App\Http\Resources\TransactionResource;
-use App\Models\Transaction;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -58,9 +57,9 @@ class TransactionController extends Controller
      * Получить список транзакций
      *
      * @param Request $request
-     * @return TransactionCollection
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function getList(Request $request): TransactionCollection
+    public function getList(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $filter = [
             'block' =>  $request->get('block'),
@@ -76,7 +75,7 @@ class TransactionController extends Controller
 
         $query = $this->transactionRepository->getAllQuery($filter);
 
-        return new TransactionCollection($query->orderByDesc('created_at')->paginate($perPage));
+        return TransactionResource::collection($query->orderByDesc('created_at')->paginate($perPage));
 
     }
 
@@ -101,12 +100,12 @@ class TransactionController extends Controller
      * Получить информацию по транзакции по хэш-сумме
      *
      * @param string $hash
-     * @return TransactionResource
+     * @return array
      */
-    public function getTransactionByHash(string $hash): TransactionResource
+    public function getTransactionByHash(string $hash): array
     {
         $transaction = $this->transactionRepository->findByHash($hash);
 
-        return new TransactionResource($transaction);
+        return ['data' => new TransactionResource($transaction)];
     }
 }

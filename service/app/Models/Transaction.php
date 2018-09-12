@@ -162,7 +162,7 @@ class Transaction extends Model
             case $this::TYPE_DELEGATE:
                 return 'delegate';
             case $this::TYPE_UNBOUND:
-                return 'unbound';
+                return 'unbond';
             case $this::TYPE_REDEEM_CHECK:
                 return 'redeemCheckData';
             case $this::TYPE_SET_CANDIDATE_ONLINE:
