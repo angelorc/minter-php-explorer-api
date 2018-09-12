@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\LogHelper;
 use App\Http\Resources\TxCountCollection;
 use App\Models\MinterNode;
 use App\Models\TxPerDay;
@@ -98,66 +97,7 @@ class StatusController extends Controller
      */
     public function status(): array
     {
-        $baseCoin = env('MINTER_BASE_COIN', 'MNT');
-        $interval = 1;
-        try {
-            $interval = new \DateInterval('PT3S');
-        } catch (\Exception $e) {
-            LogHelper::error($e);
-        }
-
-        $bipPriceUsd = Cache::get('bipPriceUsd', null);
-        if (!$bipPriceUsd) {
-            $bipPriceUsd = $this->statusService->getGetCurrentFiatPrice($baseCoin, 'USD');
-            Cache::put('bipPriceUsd', $bipPriceUsd, $interval);
-        }
-
-        $marketCap = Cache::get('marketCap', null);
-        if (!$marketCap) {
-            $marketCap = $this->statusService->getMarketCap();
-            Cache::put('marketCap', $marketCap, $interval);
-        }
-
-        $latestBlockHeight = Cache::get('latestBlockHeight', null);
-        $latestBlockTime = Cache::get('latestBlockTime', null);
-        if (!$latestBlockHeight || !$latestBlockTime) {
-            $block = $this->blockService->getExplorerLastBlock();
-            $latestBlockHeight = $block->height;
-            $latestBlockTime = $block->block_time;
-            Cache::put('latestBlockHeight', $latestBlockHeight, $interval);
-            Cache::put('latestBlockTime', $latestBlockTime, $interval);
-        }
-
-        $totalTransactions = Cache::get('totalTransactions', null);
-        if (!$totalTransactions) {
-            $totalTransactions = $this->transactionService->getTotalTransactionsCount();
-            Cache::put('totalTransactions', $totalTransactions, $interval);
-        }
-
-        $transactionsPerSecond = Cache::get('transactionsPerSecond', null);
-        if (!$transactionsPerSecond) {
-            $transactionsPerSecond = $this->transactionService->getTransactionsSpeed();
-            Cache::put('transactionsPerSecond', $transactionsPerSecond, $interval);
-        }
-
-        $averageBlockTime = Cache::get('averageBlockTime', null);
-        if (!$averageBlockTime) {
-            $averageBlockTime = $this->statusService->getAverageBlockTime();
-            Cache::put('averageBlockTime', $averageBlockTime, $interval);
-        }
-
-        //TODO: поменять значения, как станет ясно откуда брать
-        return [
-            'bipPriceUsd' => $bipPriceUsd,
-            'bipPriceBtc' => 0.0000015883176063418346,
-            'bipPriceChange' => 10,
-            'marketCap' => $marketCap,
-            'latestBlockHeight' => $latestBlockHeight,
-            'latestBlockTime' => $latestBlockTime,
-            'totalTransactions' => $totalTransactions,
-            'transactionsPerSecond' => $transactionsPerSecond,
-            'averageBlockTime' => $averageBlockTime,
-        ];
+        return $this->statusService->getStatusInfo();
     }
 
     /**

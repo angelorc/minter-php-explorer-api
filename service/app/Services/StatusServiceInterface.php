@@ -45,4 +45,9 @@ interface StatusServiceInterface
      * @return float
      */
     public function getMarketCap(): float;
+
+    /**
+     * @return array
+     */
+    public function getStatusInfo(): array;
 }

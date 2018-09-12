@@ -3,10 +3,10 @@
 namespace App\Services;
 
 
+use App\Helpers\LogHelper;
 use App\Helpers\MathHelper;
 use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
-use App\Repository\TransactionRepositoryInterface;
 use App\Traits\NodeTrait;
 use Illuminate\Support\Facades\Cache;
 
@@ -14,24 +14,16 @@ class StatusService implements StatusServiceInterface
 {
     use NodeTrait;
 
-    /**
-     * Время от последнего блока при котором статус счетается активным в секундах
-     */
+    /** Время от последнего блока при котором статус счетается активным в секундах */
     public const IS_ACTIVE_PERIOD = 15;
 
-    /**
-     * @var BlockRepositoryInterface
-     */
+    /** @var BlockRepositoryInterface */
     protected $blockRepository;
 
-    /**
-     * @var TransactionRepositoryInterface
-     */
-    protected $transactionRepository;
+    /** @var TransactionServiceInterface */
+    protected $transactionService;
 
-    /**
-     * @var BlockServiceInterface
-     */
+    /**  @var BlockServiceInterface */
     protected $blockService;
 
     /** @var CoinServiceInterface */
@@ -40,19 +32,19 @@ class StatusService implements StatusServiceInterface
     /**
      * StatusService constructor.
      * @param BlockRepositoryInterface $blockRepository
-     * @param TransactionRepositoryInterface $transactionRepository
+     * @param TransactionServiceInterface $transactionService
      * @param BlockServiceInterface $blockService
      * @param CoinServiceInterface $coinService
      */
     public function __construct(
         BlockRepositoryInterface $blockRepository,
-        TransactionRepositoryInterface $transactionRepository,
+        TransactionServiceInterface $transactionService,
         BlockServiceInterface $blockService,
         CoinServiceInterface $coinService
     )
     {
         $this->blockRepository = $blockRepository;
-        $this->transactionRepository = $transactionRepository;
+        $this->transactionService = $transactionService;
         $this->blockService = $blockService;
         $this->coinService = $coinService;
     }
@@ -153,5 +145,75 @@ class StatusService implements StatusServiceInterface
         }
 
         return bcmul(MathHelper::makeAmountFromIntString($result), $baseCoinUsdPrice, 4);
+    }
+
+
+    /**
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     */
+    public function getStatusInfo(): array
+    {
+        $baseCoin = env('MINTER_BASE_COIN', 'MNT');
+        $interval = 1;
+        try {
+            $interval = new \DateInterval('PT3S');
+        } catch (\Exception $e) {
+            LogHelper::error($e);
+        }
+
+        $bipPriceUsd = Cache::get('bipPriceUsd', null);
+        if (!$bipPriceUsd) {
+            $bipPriceUsd = $this->getGetCurrentFiatPrice($baseCoin, 'USD');
+            Cache::put('bipPriceUsd', $bipPriceUsd, $interval);
+        }
+
+        $marketCap = Cache::get('marketCap', null);
+        if (!$marketCap) {
+            $marketCap = $this->getMarketCap();
+            Cache::put('marketCap', $marketCap, $interval);
+        }
+
+        $latestBlockHeight = Cache::get('latestBlockHeight', null);
+        $latestBlockTime = Cache::get('latestBlockTime', null);
+        if (!$latestBlockHeight || !$latestBlockTime) {
+            $block = $this->blockService->getExplorerLastBlock();
+            $latestBlockHeight = $block->height;
+            $latestBlockTime = $block->block_time;
+            Cache::put('latestBlockHeight', $latestBlockHeight, $interval);
+            Cache::put('latestBlockTime', $latestBlockTime, $interval);
+        }
+
+        $totalTransactions = Cache::get('totalTransactions', null);
+        if (!$totalTransactions) {
+            $totalTransactions = $this->transactionService->getTotalTransactionsCount();
+            Cache::put('totalTransactions', $totalTransactions, $interval);
+        }
+
+        $transactionsPerSecond = Cache::get('transactionsPerSecond', null);
+        if (!$transactionsPerSecond) {
+            $transactionsPerSecond = $this->transactionService->getTransactionsSpeed();
+            Cache::put('transactionsPerSecond', $transactionsPerSecond, $interval);
+        }
+
+        $averageBlockTime = Cache::get('averageBlockTime', null);
+        if (!$averageBlockTime) {
+            $averageBlockTime = $this->getAverageBlockTime();
+            Cache::put('averageBlockTime', $averageBlockTime, $interval);
+        }
+
+        //TODO: поменять значения, как станет ясно откуда брать
+        return [
+            'bipPriceUsd' => $bipPriceUsd,
+            'bipPriceBtc' => 0.0000015883176063418346,
+            'bipPriceChange' => 10,
+            'marketCap' => $marketCap,
+            'latestBlockHeight' => $latestBlockHeight,
+            'latestBlockTime' => $latestBlockTime,
+            'totalTransactions' => $totalTransactions,
+            'transactionsPerSecond' => $transactionsPerSecond,
+            'averageBlockTime' => $averageBlockTime,
+        ];
     }
 }
