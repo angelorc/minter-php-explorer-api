@@ -98,7 +98,8 @@ trait TransactionTrait
                 $transaction->value_to_buy = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
             }
             if ($transaction->type === Transaction::TYPE_SELL_ALL_COIN) {
-                $transaction->value_to_sell = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
+                $transaction->value_to_buy = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
+                $transaction->value_to_sell = $this->getValueFromTxTag($tx['tx_result']['tags'], 'tx.sell_amount') ?? 0;
             }
             if ($transaction->type === Transaction::TYPE_BUY_COIN) {
                 $transaction->value_to_buy = $tx['data']['value_to_buy'] ?? 0;
@@ -155,13 +156,14 @@ trait TransactionTrait
 
     /**
      * @param array $tagsData
+     * @param string $tagName
      * @return null|string
      */
-    private function getValueFromTxTag(array $tagsData): ?string
+    private function getValueFromTxTag(array $tagsData, string $tagName = 'tx.return'): ?string
     {
         $tags = $this->decodeTxTags($tagsData);
         foreach ($tags as $tag) {
-            if ($tag->key === 'tx.return') {
+            if ($tag->key === $tagName) {
                 return $tag->value;
             }
         }
