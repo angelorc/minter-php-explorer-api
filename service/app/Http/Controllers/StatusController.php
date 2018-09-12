@@ -239,26 +239,14 @@ class StatusController extends Controller
      */
     public function statusPage(): array
     {
-        $interval = 1;
-        try {
-            $interval = new \DateInterval('PT10S');
-        } catch (\Exception $e) {
-            LogHelper::error($e);
-        }
-
 
         $transactionData = $this->transactionService->get24hTransactionsData();
+        $activeValidators = $this->validatorService->getActiveValidatorsCount();
 
         $status = Cache::get('explorer_status', false);
 
         if (!$status) {
             $status = $this->statusService->isActiveStatus() ? 'active' : 'down';
-        }
-
-        $activeValidators = Cache::get('activeValidators', null);
-        if (!$activeValidators || $activeValidators === 0) {
-            $activeValidators = $this->validatorService->getActiveValidatorsCount();
-            Cache::put('activeValidators', $activeValidators, $interval);
         }
 
         return [
@@ -271,7 +259,7 @@ class StatusController extends Controller
                 'tx24hCount' => $transactionData['count'],
                 'txPerSecond' => $transactionData['perSecond'],
                 'activeValidators' => $activeValidators,
-                'totalValidatorsCount' => $this->validatorService->getTotalValidatorsCount(),
+                'activeCandidates' => $activeValidators,
                 'averageTxCommission' => $transactionData['avg'],
                 'totalCommission' => $transactionData['sum'],
             ]

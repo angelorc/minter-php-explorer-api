@@ -41,6 +41,8 @@ class Block extends Model
 {
     protected $dateFormat = 'Y-m-d H:i:sO';
 
+    protected $hidden = ['id'];
+
     /**
      * The transactions that belong to the block.
      */
