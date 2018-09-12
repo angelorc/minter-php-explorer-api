@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  *     definition="TransactionData",
  *     type="object",
  *
- *     @SWG\Property(property="from",   type="string", example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
  *     @SWG\Property(property="to",     type="string", example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
  *     @SWG\Property(property="coin",   type="string", example="MNT"),
  *     @SWG\Property(property="amount", type="float",  example="23.93674623")
@@ -24,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  *     type="object",
  *
  *     @SWG\Property(property="hash",      type="string",  example="f86e020101a6e58a4d4e540000000000000094a93163..."),
+ *     @SWG\Property(property="from",      type="string",  example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
  *     @SWG\Property(property="nonce",     type="integer", example="2"),
  *     @SWG\Property(property="block",     type="integer", example="1023"),
  *     @SWG\Property(property="timestamp", type="string",  example="2018-05-14 14:17:56+03"),
@@ -125,7 +125,7 @@ class Transaction extends Model
      */
     public function getFeeMntAttribute(): string
     {
-        $result = bcmul($this->fee, 10 ** 15);
+        $result = bcmul($this->fee, Coin::UNIT_STR);
         return MathHelper::makeAmountFromIntString($result);
     }
 
