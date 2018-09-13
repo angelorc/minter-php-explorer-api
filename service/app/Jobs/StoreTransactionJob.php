@@ -42,7 +42,7 @@ class StoreTransactionJob extends Job
     {
         $tx = $this->createTransactionFromApiData($this->transactionData, $this->blockHeight, $this->blockTime);
         if ($tx) {
-            Queue::pushOn('broadcast', new BroadcastTransactionJob($tx));
+            Queue::pushOn('broadcast_tx', new BroadcastTransactionJob($tx));
             Queue::pushOn('balance', new UpdateBalanceJob(collect([$tx])));
         }
     }
