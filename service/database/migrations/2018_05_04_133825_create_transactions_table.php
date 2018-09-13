@@ -36,7 +36,7 @@ class CreateTransactionsTable extends Migration
             $table->string('gas_coin')->nullable();
             $table->string('coin')->nullable();
             $table->integer('nonce');
-            $table->string('payload')->nullable();
+            $table->text('payload')->nullable();
             $table->string('service_data')->nullable();
             $table->string('address')->nullable();
             $table->string('coin_to_sell')->nullable();
