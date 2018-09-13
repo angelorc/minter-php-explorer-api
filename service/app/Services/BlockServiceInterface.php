@@ -30,6 +30,6 @@ interface BlockServiceInterface
      * Get last block form DB
      * @return Block
      */
-    public function getExplorerLastBlock(): Block;
+    public function getExplorerLastBlock(): ?Block;
 
 }

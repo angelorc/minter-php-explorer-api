@@ -17,7 +17,7 @@ class LogHelper
         );
     }
 
-    public static function transactionsError(GuzzleException $exception, int $blockHeight, string $hash): void
+    public static function transactionsError(\Exception $exception, int $blockHeight, string $hash): void
     {
         Log::channel('transactions')->error(
             $exception->getFile() . ' ' .

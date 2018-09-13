@@ -135,7 +135,7 @@ class StatusService implements StatusServiceInterface
 
         $coins = $this->coinService->getTotalAmountByCoins();
 
-        $result = $coins['MNT'];
+        $result = $coins['MNT'] ?? 0;
 
         foreach ($coins as $coin => $amount) {
             if ($coin !== 'MNT') {
@@ -179,10 +179,16 @@ class StatusService implements StatusServiceInterface
         $latestBlockTime = Cache::get('latestBlockTime', null);
         if (!$latestBlockHeight || !$latestBlockTime) {
             $block = $this->blockService->getExplorerLastBlock();
-            $latestBlockHeight = $block->height;
-            $latestBlockTime = $block->block_time;
-            Cache::put('latestBlockHeight', $latestBlockHeight, $interval);
-            Cache::put('latestBlockTime', $latestBlockTime, $interval);
+
+            if ($block) {
+                $latestBlockHeight = $block->height;
+                $latestBlockTime = $block->block_time;
+                Cache::put('latestBlockHeight', $latestBlockHeight, $interval);
+                Cache::put('latestBlockTime', $latestBlockTime, $interval);
+            } else {
+                $latestBlockHeight = 0;
+                $latestBlockTime = 0;
+            }
         }
 
         $totalTransactions = Cache::get('totalTransactions', null);

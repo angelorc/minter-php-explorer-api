@@ -37,9 +37,10 @@ class BlockService implements BlockServiceInterface
         $block->tx_count = $blockData['num_txs'];
         $block->hash = 'Mh' . mb_strtolower($blockData['hash']);
         $block->block_reward = $blockData['block_reward'];
-        $block->size = 0; //TODO: получать из API
+        $block->size = $blockData['size'];
         $block->timestamp = DateTimeHelper::getDateTimeAsFloat($blockData['time']);
         $block->block_time = $this->calculateBlockTime($block->timestamp);
+
 
         return $this->blockRepository->save($block);
     }
@@ -83,7 +84,7 @@ class BlockService implements BlockServiceInterface
      * Get last block form DB
      * @return Block
      */
-    public function getExplorerLastBlock(): Block
+    public function getExplorerLastBlock(): ?Block
     {
         return $this->blockRepository->getLastBlock();
     }

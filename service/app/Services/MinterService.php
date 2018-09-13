@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Jobs\BroadcastBlockJob;
 use App\Jobs\BroadcastStatusInfoJob;
 use App\Jobs\SaveValidatorsJob;
+use App\Jobs\StoreBlockEventsJob;
 use App\Models\MinterNode;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Queue;
@@ -66,6 +67,10 @@ class MinterService extends MinterApiService implements MinterServiceInterface
 
         if ($block->tx_count) {
             $this->transactionService->createFromAipDataAsync($blockData);
+        }
+
+        if (isset($blockData['events'])) {
+            Queue::pushOn('block-events', new StoreBlockEventsJob($blockData));
         }
     }
 }

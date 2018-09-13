@@ -3,11 +3,11 @@
 namespace App\Traits;
 
 
+use App\Helpers\LogHelper;
 use App\Helpers\StringHelper;
 use App\Models\Transaction;
 use App\Models\TxTag;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 trait TransactionTrait
 {
@@ -37,9 +37,9 @@ trait TransactionTrait
             $payload = strip_tags(base64_decode($tx['payload']));
             $transaction->payload = '' !== $payload ? $payload : null;
             $transaction->status = true;
+            $transaction->log = $tx['log'] ?? null;
 
             if (isset($tx['code'])) {
-                $transaction->log = $tx['log'] ?? null;
                 $transaction->status = false;
             }
 
@@ -117,7 +117,7 @@ trait TransactionTrait
             return $transaction;
 
         } catch (\Exception $exception) {
-            Log::transactionsError($exception, $blockHeight, $tx['hash']);
+            LogHelper::transactionsError($exception, $blockHeight, $tx['hash']);
             return null;
         }
     }
