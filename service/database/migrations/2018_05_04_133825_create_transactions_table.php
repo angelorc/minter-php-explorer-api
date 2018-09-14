@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTransactionsTable extends Migration
 {
@@ -29,14 +29,14 @@ class CreateTransactionsTable extends Migration
             $table->decimal('commission', 300, 0)->nullable();
             $table->decimal('initial_amount', 300, 0)->nullable();
             $table->decimal('initial_reserve', 300, 0)->nullable();
-            $table->decimal('constant_reserve_ratio', 100, 0)->nullable();
+            $table->decimal('constant_reserve_ratio', 300, 0)->nullable();
             $table->decimal('gas_wanted', 300, 0)->nullable();
             $table->decimal('gas_used', 300, 0)->nullable();
             $table->integer('gas_price');
             $table->string('gas_coin')->nullable();
             $table->string('coin')->nullable();
             $table->integer('nonce');
-            $table->string('payload')->nullable();
+            $table->text('payload')->nullable();
             $table->string('service_data')->nullable();
             $table->string('address')->nullable();
             $table->string('coin_to_sell')->nullable();
@@ -44,12 +44,11 @@ class CreateTransactionsTable extends Migration
             $table->text('raw_check')->nullable();
             $table->string('proof')->nullable();
             $table->string('name')->nullable();
-            $table->string('symbol')->nullable();
             $table->string('log')->nullable();
             $table->boolean('status');
             $table->timestampsTz();
             $table->softDeletesTz();
-            $table->foreign('block_id')->references('id')->on('blocks');
+            $table->foreign('block_id')->references('height')->on('blocks');
         });
     }
 

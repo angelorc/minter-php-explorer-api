@@ -11,10 +11,9 @@ interface BlockRepositoryInterface
     /**
      * Сохранить блок
      * @param Block $block
-     * @param Collection|null $transactions
-     * @param Collection|null $validators
+     * @return Block
      */
-    public function save(Block $block, Collection $transactions = null, Collection $validators = null): void;
+    public function save(Block $block): Block;
 
     /**
      * Найти блок по Id
@@ -51,5 +50,11 @@ interface BlockRepositoryInterface
      * @return float
      */
     public function getAverageBlockTime(\DateTime $startDate = null): float;
+
+    /**
+     * Get last block by height
+     * @return mixed
+     */
+    public function getLastBlock(): ?Block;
 
 }

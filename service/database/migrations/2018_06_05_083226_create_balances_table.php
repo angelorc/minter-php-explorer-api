@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateBalancesTable extends Migration
 {
@@ -17,7 +17,7 @@ class CreateBalancesTable extends Migration
             $table->bigIncrements('id');
             $table->string('address');
             $table->string('coin');
-            $table->decimal('amount',100,0);
+            $table->decimal('amount', 300, 0);
             $table->timestampsTz();
             $table->softDeletesTz();
         });

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateValidatorsTable extends Migration
 {
@@ -16,10 +16,10 @@ class CreateValidatorsTable extends Migration
         Schema::create('validators', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->default('');
-            $table->decimal('accumulated_reward', 50, 0);
+            $table->decimal('accumulated_reward', 300, 0);
             $table->bigInteger('absent_times');
             $table->string('address');
-            $table->decimal('total_stake', 50, 0);
+            $table->decimal('total_stake', 300, 0);
             $table->string('public_key')->unique();
             $table->bigInteger('commission');
             $table->smallInteger('status');

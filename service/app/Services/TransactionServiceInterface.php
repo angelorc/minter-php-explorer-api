@@ -3,23 +3,30 @@
 namespace App\Services;
 
 
+use App\Models\Transaction;
 use Illuminate\Support\Collection;
 
 interface TransactionServiceInterface
 {
     /**
-     * Получить колекцию транзакций из данных API
+     * Store transactions to DB
      * @param array $data
      * @return Collection
      */
-    public function decodeTransactionsFromApiData(array $data): Collection;
+    public function createFromAipData(array $data): Collection;
 
     /**
-     * Получить колекцию тэгов транзакций из данных API
      * @param array $data
-     * @return array
      */
-    public function decodeTxTagsFromApiData(array $data): array;
+    public function createFromAipDataAsync(array $data): void;
+
+    /**
+     * @param array $txData
+     * @param int $blockHeight
+     * @param \DateTime $blockTime
+     * @return Transaction|null
+     */
+    public function createTransactionFromApiData(array $txData, int $blockHeight, \DateTime $blockTime): ?Transaction;
 
     /**
      * Количество транзакций

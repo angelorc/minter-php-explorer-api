@@ -4,11 +4,15 @@ namespace App\Console;
 
 use App\Console\Commands\AddressBalanceClientCommand;
 use App\Console\Commands\BlocksQueueWorkerCommand;
+use App\Console\Commands\CheckMinterNodeListCommand;
 use App\Console\Commands\DeclareQueuesCommand;
 use App\Console\Commands\FillBalanceTableCommand;
 use App\Console\Commands\FillTxPerDayTableCommand;
+use App\Console\Commands\FlushQueueCommand;
 use App\Console\Commands\PullBlockDataCommand;
+use App\Console\Commands\PullMinterApiDataCommand;
 use App\Console\Commands\TxPerDaySaveCommand;
+use App\Console\Commands\UpdateCoinTableCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -20,11 +24,13 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        PullBlockDataCommand::class,
+        CheckMinterNodeListCommand::class,
+        PullMinterApiDataCommand::class,
         FillTxPerDayTableCommand::class,
         TxPerDaySaveCommand::class,
-        AddressBalanceClientCommand::class,
         FillBalanceTableCommand::class,
+        UpdateCoinTableCommand::class,
+        FlushQueueCommand::class,
     ];
 
     /**

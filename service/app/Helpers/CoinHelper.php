@@ -8,6 +8,6 @@ class CoinHelper
 
     public static function convertUnitToMnt($value)
     {
-        return $value * CoinHelper::MNT_IN_UNIT;
+        return $value * self::MNT_IN_UNIT;
     }
 }

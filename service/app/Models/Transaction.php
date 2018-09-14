@@ -11,9 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  *     definition="TransactionData",
  *     type="object",
  *
- *     @SWG\Property(property="from",  type="string", example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
- *     @SWG\Property(property="to",    type="string", example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
- *     @SWG\Property(property="coin",  type="string", example="MNT"),
+ *     @SWG\Property(property="to",     type="string", example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
+ *     @SWG\Property(property="coin",   type="string", example="MNT"),
  *     @SWG\Property(property="amount", type="float",  example="23.93674623")
  * )
  */
@@ -24,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  *     type="object",
  *
  *     @SWG\Property(property="hash",      type="string",  example="f86e020101a6e58a4d4e540000000000000094a93163..."),
+ *     @SWG\Property(property="from",      type="string",  example="Mxa93163fdf10724dc4785ff5cbfb9ac0b5949409f"),
  *     @SWG\Property(property="nonce",     type="integer", example="2"),
  *     @SWG\Property(property="block",     type="integer", example="1023"),
  *     @SWG\Property(property="timestamp", type="string",  example="2018-05-14 14:17:56+03"),
@@ -43,7 +43,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int block
  * @property int type
  * @property int nonce
- * @property int validator_id
  * @property int gas_price
  * @property int gas_wanted
  * @property int gas_used
@@ -100,7 +99,7 @@ class Transaction extends Model
      */
     public function block()
     {
-        return $this->belongsTo(Block::class);
+        return $this->belongsTo(Block::class, 'block_id', 'height');
     }
 
     /**
@@ -109,6 +108,15 @@ class Transaction extends Model
     public function tags()
     {
         return $this->hasMany(TxTag::class);
+    }
+
+    /**
+     * Get transaction coin
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function coin()
+    {
+        return $this->hasOne(Coin::class, 'symbol', 'coin');
     }
 
     /**
@@ -131,14 +139,12 @@ class Transaction extends Model
     }
 
     /**
-     * @TODO: Centralize transaction outputs
-     *
      * Get transaction type
      * @return string
      */
     public function getTypeStringAttribute(): string
     {
-        switch ($this->type){
+        switch ($this->type) {
             case $this::TYPE_SEND:
                 return 'send';
             case $this::TYPE_SELL_ALL_COIN:
@@ -154,7 +160,7 @@ class Transaction extends Model
             case $this::TYPE_DELEGATE:
                 return 'delegate';
             case $this::TYPE_UNBOUND:
-                return 'unbound';
+                return 'unbond';
             case $this::TYPE_REDEEM_CHECK:
                 return 'redeemCheckData';
             case $this::TYPE_SET_CANDIDATE_ONLINE:

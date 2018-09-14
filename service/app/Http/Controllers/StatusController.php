@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TxCountCollection;
+use App\Models\MinterNode;
 use App\Models\TxPerDay;
 use App\Services\BlockServiceInterface;
 use App\Services\StatusServiceInterface;
@@ -45,7 +46,8 @@ class StatusController extends Controller
         TransactionServiceInterface $transactionService,
         BlockServiceInterface $blockService,
         ValidatorServiceInterface $validatorService
-    ) {
+    )
+    {
         $this->statusService = $statusService;
         $this->transactionService = $transactionService;
         $this->blockService = $blockService;
@@ -88,24 +90,14 @@ class StatusController extends Controller
      *
      * @return array
      */
+
     /**
      * Статут сети
      * @return array
      */
     public function status(): array
     {
-        //TODO: поменять значения, как станет ясно откуда брать
-        return [
-            'bipPriceUsd' => 0.00007453,
-            'bipPriceBtc' => 0.00000001,
-            'bipPriceChange' => 10,
-            'marketCap' => 10000000000 * 0.00007453,
-            'latestBlockHeight' => $this->statusService->getLastBlockHeight(),
-            'latestBlockTime' => Cache::get('last_block_time', null),
-            'totalTransactions' => $this->transactionService->getTotalTransactionsCount(),
-            'transactionsPerSecond' => $this->transactionService->getTransactionsSpeed(),
-            'averageBlockTime' => $this->statusService->getAverageBlockTime(),
-        ];
+        return $this->statusService->getStatusInfo();
     }
 
     /**
@@ -140,7 +132,12 @@ class StatusController extends Controller
      */
     public function txCountChartData(): TxCountCollection
     {
-        return new TxCountCollection(TxPerDay::limit(14)->orderBy('date', 'desc')->get());
+        $txCount = Cache::get('txCountChartData', null);
+        if (!$txCount) {
+            $txCount = TxPerDay::limit(14)->orderBy('date', 'desc')->get();
+            Cache::put('txCountChartData', $txCount, 60);
+        }
+        return new TxCountCollection($txCount);
     }
 
     /**
@@ -182,11 +179,13 @@ class StatusController extends Controller
      */
     public function statusPage(): array
     {
+
         $transactionData = $this->transactionService->get24hTransactionsData();
+        $activeValidators = $this->validatorService->getActiveValidatorsCount();
 
         $status = Cache::get('explorer_status', false);
 
-        if(!$status){
+        if (!$status) {
             $status = $this->statusService->isActiveStatus() ? 'active' : 'down';
         }
 
@@ -199,11 +198,34 @@ class StatusController extends Controller
                 'txTotalCount' => $this->transactionService->getTotalTransactionsCount(),
                 'tx24hCount' => $transactionData['count'],
                 'txPerSecond' => $transactionData['perSecond'],
-                'activeValidators' => $this->validatorService->getActiveValidatorsCount(),
-                'totalValidatorsCount' => $this->validatorService->getTotalValidatorsCount(),
+                'activeValidators' => $activeValidators,
+                'activeCandidates' => $activeValidators,
                 'averageTxCommission' => $transactionData['avg'],
                 'totalCommission' => $transactionData['sum'],
             ]
         ];
+    }
+
+    /**
+     * Get actual minter node
+     * @return array
+     */
+    public function getActualNode(): array
+    {
+        /** @var MinterNode $node */
+        $node = MinterNode::where('is_active', true)->where('is_local', false)->orderBy('ping', 'asc')->first();
+
+        if ($node) {
+            return [
+                'data' => [
+                    'protocol' => $node->is_secure ? 'https' : 'http',
+                    'host' => $node->host,
+                    'port' => $node->port,
+                    'link' => $node->fullLink
+                ]
+            ];
+        }
+
+        return ['data' => []];
     }
 }

@@ -29,7 +29,25 @@ interface StatusServiceInterface
     public function isActiveStatus(): bool;
 
     /**
-     * @return int
+     * @return float
      */
     public function getUpTime(): float;
+
+    /**
+     * @param string $coin
+     * @param string $currency
+     * @return float
+     */
+    public function getGetCurrentFiatPrice(string $coin, string $currency): float;
+
+    /**
+     * Get market capitalization value
+     * @return float
+     */
+    public function getMarketCap(): float;
+
+    /**
+     * @return array
+     */
+    public function getStatusInfo(): array;
 }
