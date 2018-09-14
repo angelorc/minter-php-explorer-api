@@ -17,6 +17,17 @@ class LogHelper
         );
     }
 
+    public static function transactionsError(\Exception $exception, int $blockHeight, string $hash): void
+    {
+        Log::channel('transactions')->error(
+            $exception->getFile() . ' ' .
+            $exception->getLine() . ': ' .
+            $exception->getMessage() .
+            ' Block: ' . $blockHeight .
+            ' Transaction: ' . $hash
+        );
+    }
+
     public static function error(\Exception $exception): void
     {
         Log::error(

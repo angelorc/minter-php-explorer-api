@@ -3,11 +3,11 @@
 namespace App\Traits;
 
 
+use App\Helpers\LogHelper;
 use App\Helpers\StringHelper;
 use App\Models\Transaction;
 use App\Models\TxTag;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 trait TransactionTrait
 {
@@ -32,17 +32,15 @@ trait TransactionTrait
             $transaction->service_data = $tx['serviceData'] ?? null;
             $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
             $transaction->gas_coin = $tx['gas_coin'] ?? null;
-
+            $transaction->gas_wanted = $tx['gas_wanted'] ?? null;
+            $transaction->gas_used = $tx['gas_used'] ?? null;
             $payload = strip_tags(base64_decode($tx['payload']));
             $transaction->payload = '' !== $payload ? $payload : null;
+            $transaction->status = true;
+            $transaction->log = $tx['log'] ?? null;
 
-            if (isset($tx['tx_result']['code'])) {
+            if (isset($tx['code'])) {
                 $transaction->status = false;
-                $transaction->log = $tx['tx_result']['log'] ?? null;
-            } else {
-                $transaction->status = true;
-                $transaction->gas_wanted = $tx['tx_result']['gas_wanted'] ?? null;
-                $transaction->gas_used = $tx['tx_result']['gas_used'] ?? null;
             }
 
             switch ($transaction->type) {
@@ -95,20 +93,20 @@ trait TransactionTrait
             }
             if ($transaction->type === Transaction::TYPE_SELL_COIN) {
                 $transaction->value_to_sell = $tx['data']['value_to_sell'] ?? 0;
-                $transaction->value_to_buy = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
+                $transaction->value_to_buy = $this->getValueFromTxTag($tx['tags']) ?? 0;
             }
             if ($transaction->type === Transaction::TYPE_SELL_ALL_COIN) {
-                $transaction->value_to_buy = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
-                $transaction->value_to_sell = $this->getValueFromTxTag($tx['tx_result']['tags'], 'tx.sell_amount') ?? 0;
+                $transaction->value_to_buy = $this->getValueFromTxTag($tx['tags']) ?? 0;
+                $transaction->value_to_sell = $this->getValueFromTxTag($tx['tags'], 'tx.sell_amount') ?? 0;
             }
             if ($transaction->type === Transaction::TYPE_BUY_COIN) {
                 $transaction->value_to_buy = $tx['data']['value_to_buy'] ?? 0;
-                $transaction->value_to_sell = $this->getValueFromTxTag($tx['tx_result']['tags']) ?? 0;
+                $transaction->value_to_sell = $this->getValueFromTxTag($tx['tags']) ?? 0;
             }
 
             $tags = null;
-            if (isset($tx['tx_result']['tags'])) {
-                $tags = $this->decodeTxTags($tx['tx_result']['tags']);
+            if (isset($tx['tags'])) {
+                $tags = $this->getTxTags($tx['tags']);
             }
 
             $transaction->save();
@@ -119,39 +117,26 @@ trait TransactionTrait
             return $transaction;
 
         } catch (\Exception $exception) {
-            Log::channel('transactions')->error(
-                $exception->getFile() . ' ' .
-                $exception->getLine() . ': ' .
-                $exception->getMessage() .
-                ' Block: ' . $blockHeight .
-                ' Transaction: ' . $tx['hash']
-            );
+            LogHelper::transactionsError($exception, $blockHeight, $tx['hash']);
             return null;
         }
     }
-
 
     /**
      * @param array $tagsData
      * @return Collection
      */
-    private function decodeTxTags(array $tagsData): Collection
+    private function getTxTags(array $tagsData): Collection
     {
-        return collect(array_map(function ($el) {
+        $result = [];
+
+        foreach ($tagsData as $k => $v) {
             $tag = new TxTag();
-            $tag->key = base64_decode($el['key']);
-            $tag->value = '';
-            try {
-                $tag->value = base64_decode($el['value']);
-            } catch (\Exception $exception) {
-                Log::channel('transactions')->error(
-                    $exception->getFile() . ' ' .
-                    $exception->getLine() . 'Tag decode: ' .
-                    $exception->getMessage()
-                );
-            }
-            return $tag;
-        }, $tagsData));
+            $tag->key = base64_decode($k);
+            $tag->value = $v;
+        }
+
+        return collect($result);
     }
 
     /**
@@ -161,10 +146,9 @@ trait TransactionTrait
      */
     private function getValueFromTxTag(array $tagsData, string $tagName = 'tx.return'): ?string
     {
-        $tags = $this->decodeTxTags($tagsData);
-        foreach ($tags as $tag) {
-            if ($tag->key === $tagName) {
-                return $tag->value;
+        foreach ($tagsData as $k => $v) {
+            if ($k === $tagName) {
+                return $v;
             }
         }
         return null;
