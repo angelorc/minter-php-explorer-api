@@ -8,6 +8,7 @@ use App\Console\Commands\CheckMinterNodeListCommand;
 use App\Console\Commands\DeclareQueuesCommand;
 use App\Console\Commands\FillBalanceTableCommand;
 use App\Console\Commands\FillTxPerDayTableCommand;
+use App\Console\Commands\FlushQueueCommand;
 use App\Console\Commands\PullBlockDataCommand;
 use App\Console\Commands\PullMinterApiDataCommand;
 use App\Console\Commands\TxPerDaySaveCommand;
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
         TxPerDaySaveCommand::class,
         FillBalanceTableCommand::class,
         UpdateCoinTableCommand::class,
+        FlushQueueCommand::class,
     ];
 
     /**
