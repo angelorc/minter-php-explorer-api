@@ -73,7 +73,7 @@ class MinterApiService implements MinterApiServiceInterface
      */
     public function getBlockData(int $blockHeight): array
     {
-        $res = $this->httpClient->request('GET', 'api/block/' . $blockHeight);
+        $res = $this->httpClient->request('GET', 'api/block/' . $blockHeight, ['query' => ['withEvents' => true]]);
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }
@@ -116,7 +116,6 @@ class MinterApiService implements MinterApiServiceInterface
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }
-
 
     /**
      * Get amount in base coin

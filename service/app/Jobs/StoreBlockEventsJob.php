@@ -33,7 +33,7 @@ class StoreBlockEventsJob extends Job
         foreach ($this->blockData['events'] as $event) {
             if ($event['type'] === 'minter/RewardEvent') {
                 $reward = new Reward();
-                $reward->block_height = $event['height '];
+                $reward->block_height = $this->blockData['height'];
                 $reward->address = $event['value']['address'];
                 $reward->role = $event['value']['role'];
                 $reward->amount = $event['value']['amount'];
@@ -42,7 +42,7 @@ class StoreBlockEventsJob extends Job
             }
             if ($event['type'] === 'minter/SlashEvent') {
                 $slash = new Slash();
-                $slash->block_height = $event['height '];
+                $slash->block_height = $this->blockData['height'];
                 $slash->address = $event['value']['address'];
                 $slash->coin = $event['value']['coin'];
                 $slash->amount = $event['value']['amount'];
