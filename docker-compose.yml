@@ -81,19 +81,19 @@ services:
       - 8010:80
     networks:
       - explorer-network
-  #  explorer:
-  #    container_name: "minter_explorer_web"
-  #    image: minterteam/explorer-minter-network:1.0-alpine
-  #    build:
-  #      context: https://github.com/MinterTeam/docker-explorer-web-minter.git
-  #      dockerfile: alpine/Dockerfile
-  #      args:
-  #        EXPLORER_URL: "http://localhost:8000"
-  #        EXPLORER_RTM_URL: "http://localhost:8800"
-  #    ports:
-  #      - 8011:80
-  #    networks:
-  #      - explorer-network
+  explorer:
+    container_name: "minter_explorer_web"
+    image: minterteam/explorer-minter-network:1.1-alpine
+    build:
+      context: https://github.com/MinterTeam/docker-explorer-web-minter.git
+      dockerfile: alpine/Dockerfile
+      args:
+        EXPLORER_URL: "http://localhost:8000"
+        EXPLORER_RTM_URL: "http://localhost:8800"
+    ports:
+    - 8011:80
+    networks:
+    - explorer-network
   tests:
     container_name: "minter_explorer_tests"
     build: ./docker/tests

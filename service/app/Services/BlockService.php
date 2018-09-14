@@ -37,7 +37,7 @@ class BlockService implements BlockServiceInterface
         $block->tx_count = $blockData['num_txs'];
         $block->hash = 'Mh' . mb_strtolower($blockData['hash']);
         $block->block_reward = $blockData['block_reward'];
-        $block->size = $blockData['size'];
+        $block->size = $blockData['size'] ?? 0;
         $block->timestamp = DateTimeHelper::getDateTimeAsFloat($blockData['time']);
         $block->block_time = $this->calculateBlockTime($block->timestamp);
 
