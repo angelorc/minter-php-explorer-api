@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMinterNodesTable extends Migration
 {
@@ -19,6 +19,7 @@ class CreateMinterNodesTable extends Migration
             $table->string('host', 0);
             $table->integer('port')->default(8841);
             $table->decimal('ping', 7,3)->default(0);
+            $table->string('version')->nullable();
             $table->boolean('is_secure')->default(false);
             $table->boolean('is_active')->default(false);
             $table->boolean('is_local')->default(false);
