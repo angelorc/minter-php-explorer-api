@@ -19,7 +19,7 @@ class CreateBlocksTable extends Migration
             $table->decimal('timestamp', 20, 10);
             $table->integer('tx_count');
             $table->integer('size');
-            $table->decimal('block_time', 12, 9);
+            $table->decimal('block_time', 20, 9);
             $table->string('hash');
             $table->decimal('block_reward', 50, 0);
             $table->timestampsTz();
