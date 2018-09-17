@@ -14,6 +14,7 @@ trait NodeTrait
     {
         $node = MinterNode::where('is_excluded', '!=', true)
             ->where('is_active', true)
+            ->orderBy('version', 'desc')
             ->orderBy('ping')
             ->first();
 

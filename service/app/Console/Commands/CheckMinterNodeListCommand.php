@@ -98,6 +98,8 @@ class CheckMinterNodeListCommand extends Command
 
         try {
             $data = $apiService->getNodeStatusData();
+            $node->version = $data['version'];
+            $node->save();
         } catch (GuzzleException $e) {
             return false;
         }

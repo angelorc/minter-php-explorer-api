@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer id
  * @property string host
  * @property string fullLink
+ * @property string version
  * @property integer port
  * @property float ping
  * @property bool is_secure
