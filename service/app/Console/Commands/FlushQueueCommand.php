@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Redis;
  */
 class FlushQueueCommand extends Command
 {
-    protected $signature = 'minter:queue:flush';
+    protected $signature = 'minter:queue:flush {--queue=}';
 
     /** @var string */
     protected $description = 'Flush queue';
@@ -29,6 +29,19 @@ class FlushQueueCommand extends Command
      */
     public function handle(): void
     {
-        Redis::connection()->del(['queues:broadcast']);
+        if ($this->option('queue')) {
+            Redis::connection()->del([
+                $this->option('queue')
+            ]);
+        } else {
+            Redis::connection()->del([
+                'queues:transactions',
+                'queues:balance',
+                'queues:validators',
+                'queues:broadcast',
+                'queues:broadcast_tx',
+                'queues:events',
+            ]);
+        }
     }
 }
