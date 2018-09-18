@@ -125,7 +125,6 @@ class StatusService implements StatusServiceInterface
     /**
      * Get market capitalization value
      * @return float
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getMarketCap(): float
     {
@@ -150,7 +149,6 @@ class StatusService implements StatusServiceInterface
 
     /**
      * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
      */
     public function getStatusInfo(): array

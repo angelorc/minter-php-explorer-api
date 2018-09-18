@@ -18,7 +18,7 @@ class ValidatorService implements ValidatorServiceInterface
     public function getActiveValidatorsCount(): int
     {
 
-        $block = Block::with('validators')->orderByDesc('height')->first();
+        $block = Block::with('validators')->orderByDesc('height')->offset(1)->first();
 
         if ($block) {
             return $block->validators->count();

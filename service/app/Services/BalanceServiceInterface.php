@@ -21,7 +21,6 @@ interface BalanceServiceInterface
      */
     public function updateAddressBalanceFromAipData(string $address, array $balanceData): Collection;
 
-
     /**
      * Inform about balance change via WS
      * @param Collection $balances
