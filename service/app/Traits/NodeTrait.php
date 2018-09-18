@@ -23,8 +23,8 @@ trait NodeTrait
             $node = new MinterNode;
             $node->is_active = true;
             $node->ping = 0;
-            $node->host = $apiLink[0];
-            $node->port = $apiLink[1];
+            $node->host = $apiLink[0] ?? 'node';
+            $node->port = $apiLink[1] ?? 8841;
         }
 
         return $node;
