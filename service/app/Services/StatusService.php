@@ -177,12 +177,13 @@ class StatusService implements StatusServiceInterface
 
         $latestBlockHeight = Cache::get('latestBlockHeight', null);
         $latestBlockTime = Cache::get('latestBlockTime', null);
+
         if (!$latestBlockHeight || !$latestBlockTime) {
             $block = $this->blockService->getExplorerLastBlock();
 
             if ($block) {
                 $latestBlockHeight = $block->height;
-                $latestBlockTime = $block->block_time;
+                $latestBlockTime = $block->formattedDate;
                 Cache::put('latestBlockHeight', $latestBlockHeight, $interval);
                 Cache::put('latestBlockTime', $latestBlockTime, $interval);
             } else {
