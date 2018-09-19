@@ -5,9 +5,11 @@ namespace App\Traits;
 
 use App\Helpers\LogHelper;
 use App\Helpers\StringHelper;
+use App\Jobs\CreateCoinFromTransactionJob;
 use App\Models\Transaction;
 use App\Models\TxTag;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Queue;
 
 trait TransactionTrait
 {
@@ -112,6 +114,10 @@ trait TransactionTrait
             $transaction->save();
             if ($tags) {
                 $transaction->tags()->saveMany($tags);
+            }
+
+            if ($transaction->type === Transaction::TYPE_CREATE_COIN) {
+                Queue::pushOn('main', new CreateCoinFromTransactionJob($transaction));
             }
 
             return $transaction;
