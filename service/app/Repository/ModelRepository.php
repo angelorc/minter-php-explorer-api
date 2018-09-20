@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class ModelRepository implements ModelRepositoryInterface
@@ -12,31 +13,29 @@ abstract class ModelRepository implements ModelRepositoryInterface
     protected $model;
 
     /**
+     * @param array $filters
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(): \Illuminate\Database\Eloquent\Builder
+    public function query(array $filters = []): \Illuminate\Database\Eloquent\Builder
     {
-        return $this->model->query();
+        $query = $this->model->query();
+
+        if (\count($filters)) {
+            $this->applyFilters($filters, $query);
+        }
+
+        return $query;
     }
 
     /**
      * Получить список
      *
-     * @param string $valueField
-     * @param null|string $keyField
-     * @return array
+     * @param array $filters
+     * @return Collection
      */
-    public function getList($valueField = 'name', $keyField = null): array
+    public function getList(array $filters = []): Collection
     {
-        $keyField = $keyField ?? $this->model->getKeyName();
-
-        $list = $this->model->query()
-            ->pluck($valueField, $keyField)
-            ->toArray();
-
-        asort($list);
-
-        return $list;
+        return $this->query($filters)->get();
     }
 
     /**
@@ -131,6 +130,26 @@ abstract class ModelRepository implements ModelRepositoryInterface
         $model = $id instanceof Model ? $id : $this->findOrFail($id);
 
         return $model->delete();
+    }
+
+
+    /**
+     * @param array $filters
+     * @param $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function applyFilters(array $filters, &$query): \Illuminate\Database\Eloquent\Builder
+    {
+        foreach ($filters as $filter) {
+            if (strpos($filter['field'], 'start_') !== false || strpos($filter['field'], 'end_') !== false) {
+                $field = explode('_', $filter['field'])[1];
+                $query->where($field, $filter['sign'], $filter['value']);
+            } else {
+                $query->where($filter['field'], $filter['sign'], $filter['value']);
+            }
+        }
+
+        return $query;
     }
 
 }

@@ -2,26 +2,28 @@
 
 namespace app\Repository;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 interface ModelRepositoryInterface
 {
 
     /**
      * Прлучить запрос
+     * @param array $filters
      * @return Builder
      */
-    public function query(): Builder;
+    public function query(array $filters): Builder;
 
     /**
      * Получить список
      *
-     * @param string $valueField
-     * @param null|string $keyField
-     * @return array
+     * @param array $filters
+     * @return Collection
      */
-    public function getList($valueField = 'name', $keyField = null): array;
+    public function getList(array $filters): Collection;
+
     /**
      * Получить все записи
      *
@@ -59,6 +61,7 @@ interface ModelRepositoryInterface
      * @return bool|int
      */
     public function updateById($id, $data);
+
     /**
      * Update model
      *
@@ -74,7 +77,7 @@ interface ModelRepositoryInterface
      * @param array $data
      * @return Model
      */
-    public function create(array $data);
+    public function create(array $data): Model;
 
     /**
      * Delete model
