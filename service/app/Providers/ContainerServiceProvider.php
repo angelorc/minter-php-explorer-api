@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Reward;
+use App\Models\Slash;
 use App\Repository\BalanceRepository;
 use App\Repository\BalanceRepositoryInterface;
 use App\Repository\BlockRepository;
@@ -11,6 +12,8 @@ use App\Repository\CoinsRepository;
 use App\Repository\CoinsRepositoryInterface;
 use App\Repository\RewardsRepository;
 use App\Repository\RewardsRepositoryInterface;
+use App\Repository\SlashesRepository;
+use App\Repository\SlashesRepositoryInterface;
 use App\Repository\TransactionRepository;
 use App\Repository\TransactionRepositoryInterface;
 use App\Services\BalanceService;
@@ -49,6 +52,9 @@ class ContainerServiceProvider extends ServiceProvider
         $this->app->singleton(CoinsRepositoryInterface::class, CoinsRepository::class);
         $this->app->singleton(RewardsRepositoryInterface::class, function () {
             return new RewardsRepository(new Reward());
+        });
+        $this->app->singleton(SlashesRepositoryInterface::class, function () {
+            return new SlashesRepository(new Slash());
         });
 
         /** Services */

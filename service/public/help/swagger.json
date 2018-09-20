@@ -220,6 +220,46 @@
           }
         }
       },
+      "/api/v1/events/slashes": {
+        "get": {
+          "tags": [
+            "Events"
+          ],
+          "summary": "List of slashes",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "address",
+              "in": "query",
+              "description": "Address",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/Slash"
+                    }
+                  },
+                  "links": {
+                    "$ref": "#/definitions/BlockLinksData"
+                  },
+                  "meta": {
+                    "$ref": "#/definitions/BlockMetaData"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/api/v1/address/get-balance-channel": {
         "get": {
           "tags": [
@@ -871,17 +911,46 @@
                 "example": "Developers"
               },
               "address": {
-                    "type": "string",
+                "type": "string",
                 "example": "Mx444c4f1953ea170f74eabef4eee52ed8276a7d5e"
               },
               "validator": {
                 "type": "string",
                 "example": "Mpee580b2be5176c054beb65e7c0d5cbea6307d6e3dc1c8ba68e2ec6c9cc7f1ccc"
-                },
+              },
               "amount": {
                 "type": "float",
                 "example": "26.056374544"
               }
+            },
+        "type": "object"
+      },
+      "Slash": {
+        "properties": {
+          "block": {
+            "type": "integer",
+            "example": "12345"
+          },
+          "timestamp": {
+            "type": "timestamp",
+            "example": "2018-05-18 15:06:10+00"
+          },
+          "coin": {
+            "type": "string",
+            "example": "MNT"
+          },
+          "address": {
+                    "type": "string",
+            "example": "Mx444c4f1953ea170f74eabef4eee52ed8276a7d5e"
+          },
+          "validator": {
+            "type": "string",
+            "example": "Mpee580b2be5176c054beb65e7c0d5cbea6307d6e3dc1c8ba68e2ec6c9cc7f1ccc"
+                },
+          "amount": {
+            "type": "float",
+            "example": "26.056374544"
+          }
             },
         "type": "object"
       },

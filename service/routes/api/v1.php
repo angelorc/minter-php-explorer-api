@@ -28,3 +28,4 @@ $router->get('settings/get-ws-data', SettingsController::class . '@getWsConnectD
 
 
 $router->get('events/rewards', EventController::class . '@getRewardsList');
+$router->get('events/slashes', EventController::class . '@getSlashesList');
