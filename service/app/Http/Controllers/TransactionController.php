@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TransactionResource;
 use App\Repository\TransactionRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TransactionController extends Controller
 {
@@ -99,12 +100,19 @@ class TransactionController extends Controller
      * Получить информацию по транзакции по хэш-сумме
      *
      * @param string $hash
-     * @return array
+     * @return array| Response
      */
-    public function getTransactionByHash(string $hash): array
+    public function getTransactionByHash(string $hash)
     {
         $transaction = $this->transactionRepository->findByHash($hash);
 
-        return ['data' => new TransactionResource($transaction)];
+        if ($transaction) {
+            return ['data' => new TransactionResource($transaction)];
+        }
+
+        return new Response([
+            'error' => 'Transaction not found',
+            'code' => 404
+        ], 404);
     }
 }
