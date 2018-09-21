@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Http\Resources\TransactionResource;
-use App\Models\Block;
 use App\Models\Transaction;
 
 class BroadcastTransactionJob extends Job
@@ -19,7 +18,7 @@ class BroadcastTransactionJob extends Job
     /**
      * Create a new job instance.
      *
-     * @param Block $transaction
+     * @param Transaction $transaction
      */
     public function __construct(Transaction $transaction)
     {

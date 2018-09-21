@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 
-use App\Models\Block;
 use App\Models\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +28,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Найти транзакцию по Id
+     * Find transactions by Id
      * @param int $id
      * @return Transaction|null
      */
@@ -39,7 +38,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Найти транзакцию по hash
+     * Find by hash
      * @param string $hash
      * @return Transaction|null
      */
@@ -55,8 +54,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Получить количество транзакций за сутки
-     * Если дата не передается, возвращается количество за предыдущие сутки
+     * Get transactions count per day
      * @param \DateTime|null $dateTime
      * @return int
      * @throws \Exception
@@ -75,7 +73,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Количество транзакций
+     * Get total transactions count for address
      * @param string|null $address
      * @return int
      */
@@ -92,6 +90,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
+     * Get transactions count in 24h
      * @return int
      * @throws \Exception
      */
@@ -103,7 +102,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Получить количество транзакций за последние 24 часа
+     * Get average commission in 24h
      * @return string
      * @throws \Exception
      */
@@ -117,7 +116,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Получить транзакции за последние 24 часа
+     * Get transactions in 24h
      * @return Collection
      * @throws \Exception
      */
@@ -130,7 +129,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Получить все транзакции
+     *  Get all transactions
      * @param array $filter
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -207,7 +206,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Получить коммисию транзакции за последние 24 часа
+     * Get commission in 24h
      * @return Collection
      */
     public function get24hTransactionsCommission(): string
@@ -219,7 +218,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     }
 
     /**
-     * Данные по трнзакциям за 24 часа
+     * Get summary transactions data
      * @return array
      */
     public function get24hTransactionsData(): array

@@ -92,7 +92,7 @@ class StatusController extends Controller
      */
 
     /**
-     * Статут сети
+     * Network status info
      * @return array
      */
     public function status(): array

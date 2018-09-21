@@ -10,14 +10,14 @@ interface ModelRepositoryInterface
 {
 
     /**
-     * Прлучить запрос
+     * Get query
      * @param array $filters
      * @return Builder
      */
     public function query(array $filters): Builder;
 
     /**
-     * Получить список
+     * Get list
      *
      * @param array $filters
      * @return Collection
@@ -25,7 +25,7 @@ interface ModelRepositoryInterface
     public function getList(array $filters): Collection;
 
     /**
-     * Получить все записи
+     * Get all records
      *
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */

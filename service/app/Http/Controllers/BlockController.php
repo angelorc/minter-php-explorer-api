@@ -7,6 +7,7 @@ use App\Models\Block;
 use App\Repository\BlockRepositoryInterface;
 use App\Services\StatusServiceInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class BlockController extends Controller
 {
@@ -82,9 +83,9 @@ class BlockController extends Controller
      * )
      *
      * @param string $height
-     * @return BlockResource
+     * @return BlockResource|Response
      */
-    public function getBlockByHeight(string $height): ?BlockResource
+    public function getBlockByHeight(string $height)
     {
         $block = $this->blockRepository->findByHeight($height);
 
@@ -92,6 +93,9 @@ class BlockController extends Controller
             return new BlockResource($block, $this->statusService->getLastBlockHeight());
         }
 
-        return null;
+        return new Response([
+            'error' => 'Block not found',
+            'code' => 404
+        ], 404);
     }
 }

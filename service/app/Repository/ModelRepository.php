@@ -28,7 +28,7 @@ abstract class ModelRepository implements ModelRepositoryInterface
     }
 
     /**
-     * Получить список
+     * Get list
      *
      * @param array $filters
      * @return Collection
@@ -39,7 +39,7 @@ abstract class ModelRepository implements ModelRepositoryInterface
     }
 
     /**
-     * Получить все записи
+     * Get all records
      *
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */

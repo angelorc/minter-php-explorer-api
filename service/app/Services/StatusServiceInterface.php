@@ -11,19 +11,19 @@ interface StatusServiceInterface
 {
 
     /**
-     * Получить высоту последнего блока
+     * Get height of last block
      * @return int
      */
     public function getLastBlockHeight(): int;
 
     /**
-     * Получить среднее время обработки блока в секундах
+     * Get average block time
      * @return float
      */
     public function getAverageBlockTime(): float;
 
     /**
-     * Получить статус
+     * Get network status
      * @return bool
      */
     public function isActiveStatus(): bool;
