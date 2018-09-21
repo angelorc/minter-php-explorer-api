@@ -80,16 +80,16 @@ class TransactionService implements TransactionServiceInterface
     }
 
     /**
-     * Скорость обработки транзакций
+     * Transactions per second
      * @return float
      */
     public function getTransactionsSpeed(): float
     {
-        return round($this->get24hTransactionsCount() / (24 * 3600), 8);
+        return round($this->get24hTransactionsCount() / 86400, 8);
     }
 
     /**
-     * Количество транзакций за последние 24 часа
+     * Get transactions count in 24h
      * @return int
      */
     public function get24hTransactionsCount(): int
@@ -98,7 +98,7 @@ class TransactionService implements TransactionServiceInterface
     }
 
     /**
-     * Получить сумму комиссии за транзакции с даты
+     * Get commission in period
      * @param \DateTime $startTime
      * @return string
      */
@@ -108,7 +108,7 @@ class TransactionService implements TransactionServiceInterface
     }
 
     /**
-     * Получить среднюю комиссиию за транзакции с даты
+     * Get average commission in period
      * @param \DateTime $startTime
      * @return string
      */
@@ -118,7 +118,7 @@ class TransactionService implements TransactionServiceInterface
     }
 
     /**
-     * Данные по трнзакциям за 24 часа
+     * Summary transactions data in 24h
      * @return array
      */
     public function get24hTransactionsData(): array
@@ -134,6 +134,7 @@ class TransactionService implements TransactionServiceInterface
     }
 
     /**
+     * Store transaction tags
      * @param array $txTags
      */
     public function saveTransactionsTags(array $txTags): void

@@ -54,7 +54,7 @@ class TransactionController extends Controller
      *     )
      * )
      *
-     * Получить список транзакций
+     * Get transactions list
      *
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -97,7 +97,7 @@ class TransactionController extends Controller
      *     )
      * )
      *
-     * Получить информацию по транзакции по хэш-сумме
+     * Find transaction by hash
      *
      * @param string $hash
      * @return array| Response

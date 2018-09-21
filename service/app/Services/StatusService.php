@@ -14,7 +14,7 @@ class StatusService implements StatusServiceInterface
 {
     use NodeTrait;
 
-    /** Время от последнего блока при котором статус счетается активным в секундах */
+    /** Max time between blocks when network status is active */
     public const IS_ACTIVE_PERIOD = 15;
 
     /** @var BlockRepositoryInterface */
@@ -50,7 +50,7 @@ class StatusService implements StatusServiceInterface
     }
 
     /**
-     * Получить высоту последнего блока
+     * Get height of last block
      * @return int
      */
     public function getLastBlockHeight(): int
@@ -65,7 +65,7 @@ class StatusService implements StatusServiceInterface
     }
 
     /**
-     * Получить среднее время обработки блока в секундах
+     * Get average block time
      * @return float
      * @throws \Exception
      */
@@ -75,7 +75,7 @@ class StatusService implements StatusServiceInterface
     }
 
     /**
-     * Получить статус
+     * Get network status
      * @return bool
      */
     public function isActiveStatus(): bool
@@ -118,7 +118,7 @@ class StatusService implements StatusServiceInterface
      */
     public function getGetCurrentFiatPrice(string $coin = 'MNT', string $currency = 'USD'): float
     {
-        //TODO: заменить расчетом
+        //TODO: replace with calculation
         return 0.01;
     }
 

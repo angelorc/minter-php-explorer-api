@@ -29,33 +29,33 @@ interface TransactionServiceInterface
     public function createTransactionFromApiData(array $txData, int $blockHeight, \DateTime $blockTime): ?Transaction;
 
     /**
-     * Количество транзакций
+     * Get total transactions count
      * @param string $address
      * @return int
      */
     public function getTotalTransactionsCount(string $address = null): int;
 
     /**
-     * Количество транзакций за последние 24 часа
+     * Get transactions count in 24h
      * @return int
      */
     public function get24hTransactionsCount(): int;
 
     /**
-     * Скорость обработки транзакций
+     * Transactions per second
      * @return float
      */
     public function getTransactionsSpeed(): float;
 
     /**
-     * Получить сумму комиссии за транзакции с даты
+     * Get commission in period
      * @param \DateTime $startTime
      * @return string
      */
     public function getCommission(\DateTime $startTime = null): string;
 
     /**
-     * Получить среднюю комиссиию за транзакции с даты
+     * Get average commission in period
      * @param \DateTime $startTime
      * @return string
      */
@@ -63,13 +63,12 @@ interface TransactionServiceInterface
 
 
     /**
-     * Данные по трнзакциям за 24 часа
      * @return array
      */
     public function get24hTransactionsData(): array;
 
     /**
-     * Сохранить тэги транзакций
+     * Store transaction tags
      * @param array $txTags
      */
     public function saveTransactionsTags(array $txTags): void;
