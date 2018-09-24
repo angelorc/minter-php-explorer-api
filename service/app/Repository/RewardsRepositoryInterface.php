@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 
-interface RewardsRepositoryInterface extends ModelRepositoryInterface
+interface RewardsRepositoryInterface extends EventsRepositoryInterface
 {
-
 }
