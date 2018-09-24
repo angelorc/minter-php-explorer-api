@@ -273,7 +273,7 @@
             {
               "name": "scale",
               "in": "query",
-              "description": "Time period: day|hour|day (default)",
+              "description": "Time period: minute|hour|day (default)",
               "type": "string"
             },
             {
