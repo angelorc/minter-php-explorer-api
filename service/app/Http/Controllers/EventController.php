@@ -142,7 +142,7 @@ class EventController extends Controller
      *     summary="Rewards amount by minutes/hours/days",
      *     produces={"application/json"},
      *
-     *     @SWG\Parameter(in="query", name="scale",     type="string", description="Time period: day|hour|day (default)"),
+     *     @SWG\Parameter(in="query", name="scale",     type="string", description="Time period: minute|hour|day (default)"),
      *     @SWG\Parameter(in="query", name="startTime", type="string", description="Start time. Formats: YYYY-MM-DD | YYYY-MM-DD HH:MM:SS| YYYY-MM-DD HH:MM:SS+ZZ"),
      *     @SWG\Parameter(in="query", name="endTime",   type="string", description="End time. Formats: YYYY-MM-DD | YYYY-MM-DD HH:MM:SS| YYYY-MM-DD HH:MM:SS+ZZ"),
      *
