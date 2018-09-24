@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\EventChartCollection;
 use App\Http\Resources\RewardResource;
 use App\Http\Resources\SlashResource;
+use App\Repository\EventsRepositoryInterface;
 use App\Repository\RewardsRepositoryInterface;
 use App\Repository\SlashesRepositoryInterface;
 use Illuminate\Http\Request;
@@ -22,8 +24,10 @@ class EventController extends Controller
      * CoinController constructor.
      * @param RewardsRepositoryInterface $rewardsRepository
      */
-    public function __construct(RewardsRepositoryInterface $rewardsRepository, SlashesRepositoryInterface $slashesRepository)
-    {
+    public function __construct(
+        RewardsRepositoryInterface $rewardsRepository,
+        SlashesRepositoryInterface $slashesRepository
+    ) {
         $this->rewardsRepository = $rewardsRepository;
         $this->slashesRepository = $slashesRepository;
     }
@@ -120,5 +124,79 @@ class EventController extends Controller
             ->paginate($this::EVENTS_PER_PAGE);
 
         return SlashResource::collection($data);
+    }
+
+    /**
+     *  * @SWG\Definition(
+     *     definition="RewardChartData",
+     *     type="object",
+     *
+     *     @SWG\Property(property="block",     type="float",     example="3484320.973646"),
+     *     @SWG\Property(property="timestamp", type="timestamp", example="2018-05-18 15:06:10+00")
+     * )
+     */
+    /**
+     * @SWG\Get(
+     *     path="/api/v1/events/rewards/chart",
+     *     tags={"Events"},
+     *     summary="Rewards amount by minutes/hours/days",
+     *     produces={"application/json"},
+     *
+     *     @SWG\Parameter(in="query", name="scale",     type="string", description="Time period: day|hour|day (default)"),
+     *     @SWG\Parameter(in="query", name="startTime", type="string", description="Start time. Formats: YYYY-MM-DD | YYYY-MM-DD HH:MM:SS| YYYY-MM-DD HH:MM:SS+ZZ"),
+     *     @SWG\Parameter(in="query", name="endTime",   type="string", description="End time. Formats: YYYY-MM-DD | YYYY-MM-DD HH:MM:SS| YYYY-MM-DD HH:MM:SS+ZZ"),
+     *
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success",
+     *         @SWG\Schema(
+     *             @SWG\Property(property="data", type="array",
+     *                @SWG\Items(ref="#/definitions/RewardChartData")
+     *             )
+     *         ),
+     *     )
+     * )
+     */
+    /**
+     * @param Request $request
+     * @return EventChartCollection
+     */
+    public function getRewardsChartData(Request $request): EventChartCollection
+    {
+        return $this->getChartData($request, $this->rewardsRepository);
+    }
+
+    /**
+     * @param Request $request
+     * @param $repository
+     * @return EventChartCollection
+     */
+    private function getChartData(Request $request, EventsRepositoryInterface $repository): EventChartCollection
+    {
+        $scale = $request->get('scale', 'day');
+
+        if ($scale !== 'minute' || $scale !== 'hour' || $scale !== 'day') {
+            $scale = 'day';
+        }
+
+        if ($request->get('startTime', false)) {
+            $startTime = new \DateTime($request->get('startTime', false));
+        } else {
+            $startTime = new \DateTime();
+            $startTime->modify('-30 day');
+        }
+
+        if ($request->get('endTime', false)) {
+            $endTime = new \DateTime($request->get('endTime', false));
+        } else {
+            $endTime = new \DateTime();
+        }
+
+        $startTime->setTimezone(new \DateTimeZone('UTC'));
+        $endTime->setTimezone(new \DateTimeZone('UTC'));
+
+        $result = $repository->getChartData($scale, $startTime, $endTime);
+
+        return new EventChartCollection(collect($result));
     }
 }

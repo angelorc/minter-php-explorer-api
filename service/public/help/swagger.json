@@ -260,6 +260,52 @@
           }
         }
       },
+      "/api/v1/events/rewards/chart": {
+        "get": {
+          "tags": [
+            "Events"
+          ],
+          "summary": "Rewards amount by minutes/hours/days",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "scale",
+              "in": "query",
+              "description": "Time period: day|hour|day (default)",
+              "type": "string"
+            },
+            {
+              "name": "startTime",
+              "in": "query",
+              "description": "Start time. Formats: YYYY-MM-DD | YYYY-MM-DD HH:MM:SS| YYYY-MM-DD HH:MM:SS+ZZ",
+              "type": "string"
+            },
+            {
+              "name": "endTime",
+              "in": "query",
+              "description": "End time. Formats: YYYY-MM-DD | YYYY-MM-DD HH:MM:SS| YYYY-MM-DD HH:MM:SS+ZZ",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/RewardChartData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/api/v1/address/get-balance-channel": {
         "get": {
           "tags": [
@@ -597,6 +643,19 @@
                     }
                 }
             },
+          "type": "object"
+        },
+      "RewardChartData": {
+        "properties": {
+          "block": {
+            "type": "float",
+            "example": "3484320.973646"
+          },
+          "timestamp": {
+            "type": "timestamp",
+            "example": "2018-05-18 15:06:10+00"
+          }
+        },
             "type": "object"
         },
         "AddressBalanceChannel": {
