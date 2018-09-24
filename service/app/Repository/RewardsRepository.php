@@ -19,22 +19,24 @@ class RewardsRepository extends ModelRepository implements RewardsRepositoryInte
     }
 
     /**
+     * @param string $address
      * @param string $scale
      * @param \DateTime $startTime
      * @param \DateTime $endTime
      * @return array
      */
-    public function getChartData(string $scale, \DateTime $startTime, \DateTime $endTime): array
+    public function getChartData(string $address, string $scale, \DateTime $startTime, \DateTime $endTime): array
     {
-        $result = DB::select("
+        $result = DB::select('
             select sum (r.amount) as amount,  date_trunc(:scale, b.created_at) as time
             FROM rewards r
                    left join blocks b on b.height = r.block_height
-            where b.created_at >= :start AND b.created_at <= :end 
+            where r.address ilike :address AND b.created_at >= :start AND b.created_at <= :end
             group by date_trunc(:scale, b.created_at)
             order by time
-        ", [
+        ', [
             'scale' => $scale,
+            'address' => $address,
             'start' => $startTime->format('Y-m-d H:i:s'),
             'end' => $endTime->format('Y-m-d H:i:s'),
         ]);

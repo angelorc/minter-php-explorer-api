@@ -260,7 +260,7 @@
           }
         }
       },
-      "/api/v1/events/rewards/chart": {
+      "/api/v1/events/rewards/chart/{address}": {
         "get": {
           "tags": [
             "Events"

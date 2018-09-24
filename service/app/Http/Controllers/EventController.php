@@ -137,7 +137,7 @@ class EventController extends Controller
      */
     /**
      * @SWG\Get(
-     *     path="/api/v1/events/rewards/chart",
+     *     path="/api/v1/events/rewards/chart/{address}",
      *     tags={"Events"},
      *     summary="Rewards amount by minutes/hours/days",
      *     produces={"application/json"},
@@ -158,20 +158,26 @@ class EventController extends Controller
      * )
      */
     /**
+     * @param string $address
      * @param Request $request
      * @return EventChartCollection
      */
-    public function getRewardsChartData(Request $request): EventChartCollection
+    public function getRewardsChartData(string $address, Request $request): EventChartCollection
     {
-        return $this->getChartData($request, $this->rewardsRepository);
+        return $this->getChartData($address, $request, $this->rewardsRepository);
     }
 
     /**
+     * @param string $address
      * @param Request $request
-     * @param $repository
+     * @param EventsRepositoryInterface $repository
      * @return EventChartCollection
      */
-    private function getChartData(Request $request, EventsRepositoryInterface $repository): EventChartCollection
+    private function getChartData(
+        string $address,
+        Request $request,
+        EventsRepositoryInterface $repository
+    ): EventChartCollection
     {
         $scale = $request->get('scale', 'day');
 
@@ -195,7 +201,7 @@ class EventController extends Controller
         $startTime->setTimezone(new \DateTimeZone('UTC'));
         $endTime->setTimezone(new \DateTimeZone('UTC'));
 
-        $result = $repository->getChartData($scale, $startTime, $endTime);
+        $result = $repository->getChartData($address, $scale, $startTime, $endTime);
 
         return new EventChartCollection(collect($result));
     }
