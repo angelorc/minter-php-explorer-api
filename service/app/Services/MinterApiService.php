@@ -140,4 +140,17 @@ class MinterApiService implements MinterApiServiceInterface
         }
 
     }
+
+    /**
+     * Get transactions count for address
+     * @param string $address
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getTransactionsCountByAddress(string $address): array
+    {
+        $res = $this->httpClient->request('GET', 'api/transactionCount/' . StringHelper::mb_ucfirst($address));
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
 }

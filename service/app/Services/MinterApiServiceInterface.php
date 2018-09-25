@@ -62,4 +62,11 @@ interface MinterApiServiceInterface
      */
     public function getBaseCoinValue(string $coin, string $value);
 
+    /**
+     * Get transactions count for address
+     * @param string $address
+     * @return mixed
+     */
+    public function getTransactionsCountByAddress(string $address);
+
 }

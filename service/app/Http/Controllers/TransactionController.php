@@ -4,15 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TransactionResource;
 use App\Repository\TransactionRepositoryInterface;
+use App\Services\MinterApiService;
+use App\Traits\NodeTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class TransactionController extends Controller
 {
+    use NodeTrait;
+
     public const BLOCKS_PER_PAGE = 50;
 
     /** @var TransactionRepositoryInterface  */
     protected $transactionRepository;
+
+    /** @var MinterApiService */
+    protected $minterApiService;
 
     /**
      * Create a new controller instance.
@@ -22,6 +29,7 @@ class TransactionController extends Controller
     public function __construct(TransactionRepositoryInterface $transactionRepository)
     {
         $this->transactionRepository = $transactionRepository;
+        $this->minterApiService = new MinterApiService($this->getActualNode());
     }
 
     /**
@@ -114,5 +122,39 @@ class TransactionController extends Controller
             'error' => 'Transaction not found',
             'code' => 404
         ], 404);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/api/v1/transaction/get-count/{address}",
+     *     tags={"Transactions"},
+     *     summary="Get count by address",
+     *     produces={"application/json"},
+     *
+     *     @SWG\Parameter(in="path", name="address", type="string", description="Account address", required=true),
+     *
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success",
+     *         @SWG\Schema(
+     *             @SWG\Property(property="data",    type="object",
+     *                @SWG\Items(ref="#/definitions/Transaction")
+     *             ),
+     *             @SWG\Property(property="links", ref="#/definitions/TransactionLinksData"),
+     *             @SWG\Property(property="meta", ref="#/definitions/TransactionMetaData")
+     *         )
+     *     )
+     * )
+     **/
+    /**
+     * @param string $address
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getCountByAddress(string $address): array
+    {
+        return [
+            'data' => $this->minterApiService->getTransactionsCountByAddress($address)
+        ];
     }
 }
