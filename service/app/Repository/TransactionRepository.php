@@ -224,13 +224,14 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function get24hTransactionsData(): array
     {
         $dt = new \DateTime();
+        $dt->setTimezone(new \DateTimeZone('UTC'));
         $dt->modify('-1 day');
 
         $result = DB::select('
             select count(fee), sum(fee) as sum , avg(fee)  as avg
             from transactions
             where created_at >= :date ;
-        ', ['date' => $dt->format('Y-m-d H:i:s')]);
+        ', ['date' => $dt->format('Y-m-d H:i:sO')]);
 
         return [
             'count' => $result[0]->count ?? 0,
