@@ -32,3 +32,7 @@ $router->get('settings/get-ws-data', SettingsController::class . '@getWsConnectD
 $router->get('events/rewards/chart/{address}', EventController::class . '@getRewardsChartData');
 $router->get('events/rewards', EventController::class . '@getRewardsList');
 $router->get('events/slashes', EventController::class . '@getSlashesList');
+
+$router->get('estimate/tx-commission', EstimateController::class . '@txCommission');
+$router->get('estimate/coin-buy', EstimateController::class . '@buyCoin');
+$router->get('estimate/coin-sell', EstimateController::class . '@sellCoin');

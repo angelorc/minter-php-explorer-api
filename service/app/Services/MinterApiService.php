@@ -168,4 +168,57 @@ class MinterApiService implements MinterApiServiceInterface
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }
+
+    /**
+     * @param string $coinToSell
+     * @param string $coinToBuy
+     * @param string $valueToSell
+     * @return array
+     * @throws GuzzleException
+     */
+    public function estimateSellCoin(string $coinToSell, string $coinToBuy, string $valueToSell): array
+    {
+        $res = $this->httpClient->request('GET', 'api/estimateCoinSell',
+            ['query' => [
+                'coin_to_sell' => $coinToSell,
+                'value_to_sell' => $valueToSell,
+                'coin_to_buy' => $coinToBuy
+            ]]);
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
+
+    /**
+     * @param string $coinToSell
+     * @param string $coinToBuy
+     * @param string $valueToBuy
+     * @return array
+     * @throws GuzzleException
+     */
+    public function estimateBuyCoin(string $coinToSell, string $coinToBuy, string $valueToBuy): array
+    {
+        $res = $this->httpClient->request('GET', 'api/estimateCoinBuy',
+            ['query' => [
+                'coin_to_sell' => $coinToSell,
+                'value_to_buy' => $valueToBuy,
+                'coin_to_buy' => $coinToBuy
+            ]]);
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
+
+    /**
+     * @param string $tx
+     * @return array
+     * @throws GuzzleException
+     */
+    public function estimateTxCommission(string $tx): array
+    {
+        $res = $this->httpClient->request('GET', 'api/estimateTxCommission',
+            ['query' => [
+                'tx' => $tx,
+            ]]);
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
 }

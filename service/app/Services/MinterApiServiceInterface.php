@@ -76,4 +76,26 @@ interface MinterApiServiceInterface
      */
     public function pushTransactionToBlockChain(string $txHash): array;
 
+    /**
+     * @param string $coinToSell
+     * @param string $coinToBuy
+     * @param string $valueToSell
+     * @return array
+     */
+    public function estimateSellCoin(string $coinToSell, string $coinToBuy, string $valueToSell): array;
+
+    /**
+     * @param string $coinToSell
+     * @param string $coinToBuy
+     * @param string $valueToBuy
+     * @return array
+     */
+    public function estimateBuyCoin(string $coinToSell, string $coinToBuy, string $valueToBuy): array;
+
+    /**
+     * @param string $tx
+     * @return array
+     */
+    public function estimateTxCommission(string $tx): array;
+
 }
