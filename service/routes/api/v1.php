@@ -14,8 +14,10 @@ $router->get('get-actual-node', StatusController::class . '@getActualNode');
 $router->get('blocks', BlockController::class. '@getList');
 $router->get('block/{height}', BlockController::class. '@getBlockByHeight');
 
+$router->post('transaction/push', TransactionController::class . '@pushTransactionToBlockChain');
+$router->get('transaction/get-count/{address}', TransactionController::class . '@getCountByAddress');
+$router->get('transaction/{hash}', TransactionController::class . '@getTransactionByHash');
 $router->get('transactions', TransactionController::class. '@getList');
-$router->get('transaction/{hash}', TransactionController::class. '@getTransactionByHash');
 
 $router->get('address/get-balance-channel', SettingsController::class . '@getBalanceWsChannel');//Для совместимости со старыми версиями
 $router->get('address/{address}', AddressController::class. '@address');

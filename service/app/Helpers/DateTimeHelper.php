@@ -17,7 +17,7 @@ class DateTimeHelper
         preg_match_all('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}[\+\-]\d{2}:\d{2}/', $stringDateTime, $result);
         if (count($result[0])) {
             $format = 'Y-m-d H:i:s.uP';
-        };
+        }
 
         preg_match_all('/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z/', $stringDateTime, $result);
         if (count($result[0])) {

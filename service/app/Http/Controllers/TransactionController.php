@@ -4,15 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\TransactionResource;
 use App\Repository\TransactionRepositoryInterface;
+use App\Services\MinterApiService;
+use App\Traits\NodeTrait;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class TransactionController extends Controller
 {
+    use NodeTrait;
+
     public const BLOCKS_PER_PAGE = 50;
 
     /** @var TransactionRepositoryInterface  */
     protected $transactionRepository;
+
+    /** @var MinterApiService */
+    protected $minterApiService;
 
     /**
      * Create a new controller instance.
@@ -22,6 +30,7 @@ class TransactionController extends Controller
     public function __construct(TransactionRepositoryInterface $transactionRepository)
     {
         $this->transactionRepository = $transactionRepository;
+        $this->minterApiService = new MinterApiService($this->getActualNode());
     }
 
     /**
@@ -114,5 +123,103 @@ class TransactionController extends Controller
             'error' => 'Transaction not found',
             'code' => 404
         ], 404);
+    }
+
+    /**
+     * @SWG\Get(
+     *     path="/api/v1/transaction/get-count/{address}",
+     *     tags={"Transactions"},
+     *     summary="Get transactions count by address",
+     *     produces={"application/json"},
+     *
+     *     @SWG\Parameter(in="path", name="address", type="string", description="Account address", required=true),
+     *
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success",
+     *         @SWG\Schema(
+     *             @SWG\Property(property="data",    type="object",
+     *               @SWG\Property(property="count",   type="integer", example="60"),
+     *             )
+     *         )
+     *     )
+     * )
+     **/
+    /**
+     * @param string $address
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getCountByAddress(string $address): array
+    {
+        return [
+            'data' => $this->minterApiService->getTransactionsCountByAddress($address)
+        ];
+    }
+
+    /**
+     * @SWG\Post(
+     *     path="/api/v1/transaction/push",
+     *     tags={"Transactions"},
+     *     summary="Push transaction to blockchain",
+     *     produces={"application/json"},
+     *     consumes={"application/json"},
+     *
+     *     @SWG\Parameter(
+     *      in="body",
+     *      name="body", type="string",
+     *      description="Transaction hash",
+     *      required=true,
+     *
+     *      @SWG\Schema(
+     *           @SWG\Property(property="transaction", type="string", example="fb6d7c4f53e389b0d02b81b9b69023d784fa660f..."),
+     *      )
+     *     ),
+     *
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success",
+     *         @SWG\Schema(
+     *             @SWG\Property(property="data",    type="object",
+     *               @SWG\Property(property="hash",   type="string", example="Mtfb6d7c4f53e389b0d02b81b9b69023d784fa660f"),
+     *             )
+     *         )
+     *     ),
+     *
+     *     @SWG\Response(
+     *         response=400,
+     *         description="Error",
+     *         @SWG\Schema(
+     *             @SWG\Property(property="error",    type="object",
+     *                @SWG\Property(property="code",   type="integer", example="60"),
+     *                @SWG\Property(property="log",   type="string", example="Check tx error: Unexpected nonce. Expected: 1, got 17."),
+     *             )
+     *         )
+     *     )
+     * )
+     **/
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function pushTransactionToBlockChain(Request $request): Response
+    {
+        $transaction = $request->get('transaction', null);
+        try {
+            $result = $this->minterApiService->pushTransactionToBlockChain($transaction);
+        } catch (GuzzleException $e) {
+            $result = null;
+            preg_match_all('/.*\{.*\}/', $e->getMessage(), $result);
+            if (isset($result[0][0])) {
+                $result = json_decode($result[0][0], 1);
+            } else {
+                $result = [
+                    'code' => 1,
+                    'log' => $e->getMessage(),
+                ];
+            }
+            return new Response(['error' => $result], 400);
+        }
+        return new Response(['data' => $result], 200);
     }
 }

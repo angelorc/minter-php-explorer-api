@@ -140,4 +140,32 @@ class MinterApiService implements MinterApiServiceInterface
         }
 
     }
+
+    /**
+     * Get transactions count for address
+     * @param string $address
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getTransactionsCountByAddress(string $address): array
+    {
+        $res = $this->httpClient->request('GET', 'api/transactionCount/' . StringHelper::mb_ucfirst($address));
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
+
+    /**
+     * Push transaction data to blockchain
+     * @param string $txHash
+     * @return array
+     * @throws GuzzleException
+     */
+    public function pushTransactionToBlockChain(string $txHash): array
+    {
+        $res = $this->httpClient->request('POST', 'api/sendTransaction', [
+            'json' => ['transaction' => $txHash]
+        ]);
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
 }

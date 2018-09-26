@@ -62,4 +62,18 @@ interface MinterApiServiceInterface
      */
     public function getBaseCoinValue(string $coin, string $value);
 
+    /**
+     * Get transactions count for address
+     * @param string $address
+     * @return array
+     */
+    public function getTransactionsCountByAddress(string $address): array;
+
+    /**
+     * Push transaction data to blockchain
+     * @param string $txHash
+     * @return array
+     */
+    public function pushTransactionToBlockChain(string $txHash): array;
+
 }
