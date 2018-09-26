@@ -153,4 +153,19 @@ class MinterApiService implements MinterApiServiceInterface
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }
+
+    /**
+     * Push transaction data to blockchain
+     * @param string $txHash
+     * @return array
+     * @throws GuzzleException
+     */
+    public function pushTransactionToBlockChain(string $txHash): array
+    {
+        $res = $this->httpClient->request('POST', 'api/sendTransaction', [
+            'json' => ['transaction' => $txHash]
+        ]);
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
 }

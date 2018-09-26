@@ -575,6 +575,113 @@
                     }
                 }
             }
+        },
+      "/api/v1/transaction/get-count/{address}": {
+        "get": {
+          "tags": [
+            "Transactions"
+          ],
+          "summary": "Get transactions count by address",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "address",
+              "in": "path",
+              "description": "Account address",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "properties": {
+                  "data": {
+                    "properties": {
+                      "count": {
+                        "type": "integer",
+                        "example": "60"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/transaction/push": {
+        "post": {
+          "tags": [
+            "Transactions"
+          ],
+          "summary": "Push transaction to blockchain",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "Transaction hash",
+              "required": true,
+              "schema": {
+                "properties": {
+                  "transaction": {
+                    "type": "string",
+                    "example": "fb6d7c4f53e389b0d02b81b9b69023d784fa660f..."
+                  }
+                }
+              },
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "properties": {
+                  "data": {
+                    "properties": {
+                      "hash": {
+                        "type": "string",
+                        "example": "Mtfb6d7c4f53e389b0d02b81b9b69023d784fa660f"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Error",
+              "schema": {
+                "properties": {
+                  "error": {
+                    "properties": {
+                      "code": {
+                        "type": "integer",
+                        "example": "60"
+                      },
+                      "log": {
+                        "type": "string",
+                        "example": "Check tx error: Unexpected nonce. Expected: 1, got 17."
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
         }
     },
     "definitions": {
