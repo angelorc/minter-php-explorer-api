@@ -231,7 +231,7 @@ class TransactionRepository implements TransactionRepositoryInterface
             select count(fee), sum(fee) as sum , avg(fee)  as avg
             from transactions
             where created_at >= :date ;
-        ', ['date' => $dt->format('Y-m-d H:i:sO')]);
+        ', ['date' => $dt->format('Y-m-d H:iO')]);
 
         return [
             'count' => $result[0]->count ?? 0,
