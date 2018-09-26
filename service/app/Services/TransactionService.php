@@ -64,8 +64,13 @@ class TransactionService implements TransactionServiceInterface
         $txs = $data['transactions'];
         $blockTime = DateTimeHelper::parse($data['time']) ?? new \DateTime();
 
+        $i = 0;
+        $txCount = \count($txs);
         foreach ($txs as $tx) {
-            Queue::pushOn('transactions', new StoreTransactionJob($tx, $data['height'], $blockTime));
+            //If transactions more than 20 in block, push only last 20 to WebSocket
+            $shouldBroadcast = ($txCount - $i) <= 20;
+            Queue::pushOn('transactions', new StoreTransactionJob($tx, $data['height'], $blockTime, $shouldBroadcast));
+            $i++;
         }
     }
 
