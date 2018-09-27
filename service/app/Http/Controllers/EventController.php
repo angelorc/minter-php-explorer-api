@@ -181,7 +181,7 @@ class EventController extends Controller
     {
         $scale = $request->get('scale', 'day');
 
-        if ($scale !== 'minute' || $scale !== 'hour' || $scale !== 'day') {
+        if (!\in_array($scale, ['minute', 'hour', 'day'])) {
             $scale = 'day';
         }
 
