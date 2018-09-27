@@ -208,18 +208,25 @@ class TransactionController extends Controller
         try {
             $result = $this->minterApiService->pushTransactionToBlockChain($transaction);
         } catch (GuzzleException $e) {
-            $result = null;
-            preg_match_all('/.*\{.*\}/', $e->getMessage(), $result);
-            if (isset($result[0][0])) {
-                $result = json_decode($result[0][0], 1);
-            } else {
-                $result = [
-                    'code' => 1,
-                    'log' => $e->getMessage(),
-                ];
-            }
+            $result = $this->handleGuzzleException($e);
             return new Response(['error' => $result], 400);
         }
         return new Response(['data' => $result], 200);
+    }
+
+    private function handleGuzzleException(GuzzleException $e): array
+    {
+        $result = null;
+        preg_match_all('/.*\{.*\}/', $e->getMessage(), $result);
+        if (isset($result[0][0])) {
+            $result = json_decode($result[0][0], 1);
+        } else {
+            $result = [
+                'code' => 1,
+                'log' => $e->getMessage(),
+            ];
+        }
+
+        return $result;
     }
 }
