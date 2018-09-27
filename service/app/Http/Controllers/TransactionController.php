@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\MathHelper;
 use App\Http\Resources\TransactionResource;
 use App\Repository\TransactionRepositoryInterface;
 use App\Services\MinterApiService;
@@ -17,7 +18,7 @@ class TransactionController extends Controller
 
     public const BLOCKS_PER_PAGE = 50;
 
-    /** @var TransactionRepositoryInterface  */
+    /** @var TransactionRepositoryInterface */
     protected $transactionRepository;
 
     /** @var MinterApiService */
@@ -72,9 +73,9 @@ class TransactionController extends Controller
     public function getList(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $filter = [
-            'block' =>  $request->get('block'),
-            'address' =>  $request->get('address'),
-            'addresses' =>  $request->get('addresses'),
+            'block' => $request->get('block'),
+            'address' => $request->get('address'),
+            'addresses' => $request->get('addresses'),
             'hash' => $request->get('hash'),
             'hashes' => $request->get('hashes'),
             'pubKey' => $request->get('pubKey'),
@@ -223,6 +224,16 @@ class TransactionController extends Controller
 
     private function handleNodeException(ServerException $e): array
     {
-        return json_decode($e->getResponse()->getBody(true)->getContents(), 1);
+        $error = json_decode($e->getResponse()->getBody(true)->getContents(), 1);
+
+        if ($error['code'] === 107) {
+            $pattern = '/.*Wanted *(\d+).*/';
+            $error['log'] = preg_replace_callback($pattern, function ($matches) {
+                $val = round(MathHelper::makeAmountFromIntString($matches[1]), 4);
+                return str_replace($matches[1], $val, $matches[0]);
+            }, $error['log']);
+        }
+
+        return $error;
     }
 }
