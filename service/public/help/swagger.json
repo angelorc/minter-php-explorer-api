@@ -180,6 +180,156 @@
                 }
             }
         },
+      "/api/v1/estimate/coin-sell": {
+        "get": {
+          "tags": [
+            "Estimate"
+          ],
+          "summary": "Return estimate of sell coin transaction",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "coinToSell",
+              "in": "query",
+              "description": "Coin to sell",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "coinToBuy",
+              "in": "query",
+              "description": "Coin to buy",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "valueToSell",
+              "in": "query",
+              "description": "Value to sell",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "properties": {
+                  "data": {
+                    "properties": {
+                      "will_get": {
+                        "type": "string",
+                        "example": "13682"
+                      },
+                      "commission": {
+                        "type": "string",
+                        "example": "100000000000000000"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/estimate/coin-buy": {
+        "get": {
+          "tags": [
+            "Estimate"
+          ],
+          "summary": "Return estimate of buy coin transaction",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "coinToSell",
+              "in": "query",
+              "description": "Coin to sell",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "coinToBuy",
+              "in": "query",
+              "description": "Coin to buy",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "valueToBuy",
+              "in": "query",
+              "description": "Value to buy",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "properties": {
+                  "data": {
+                    "properties": {
+                      "will_pay": {
+                        "type": "string",
+                        "example": "13682"
+                      },
+                      "commission": {
+                        "type": "string",
+                        "example": "100000000000000000"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/v1/estimate/tx-commission": {
+        "get": {
+          "tags": [
+            "Estimate"
+          ],
+          "summary": "Get transaction commission",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "transaction",
+              "in": "query",
+              "description": "Transaction hash",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "properties": {
+                  "data": {
+                    "properties": {
+                      "commission": {
+                        "type": "string",
+                        "example": "100000000000000000"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "/api/v1/events/rewards": {
         "get": {
           "tags": [
