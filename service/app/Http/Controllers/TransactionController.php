@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\MathHelper;
+use App\Helpers\NodeExceptionHelper;
 use App\Http\Resources\TransactionResource;
 use App\Repository\TransactionRepositoryInterface;
 use App\Services\MinterApiService;
@@ -210,30 +210,10 @@ class TransactionController extends Controller
         try {
             $result = $this->minterApiService->pushTransactionToBlockChain($transaction);
         } catch (ServerException $e) {
-            $result = $this->handleNodeException($e);
-            return new Response(['error' => $result], 400);
+            return new Response(['error' => NodeExceptionHelper::handleServerException($e)], 400);
         } catch (GuzzleException $e) {
-            $result = [
-                'code' => 1,
-                'log' => $e->getMessage(),
-            ];
-            return new Response(['error' => $result], 400);
+            return new Response(['error' => NodeExceptionHelper::handleGuzzleException($e)], 400);
         }
         return new Response(['data' => $result], 200);
-    }
-
-    private function handleNodeException(ServerException $e): array
-    {
-        $error = json_decode($e->getResponse()->getBody(true)->getContents(), 1);
-
-        if ($error['code'] === 107) {
-            $pattern = '/.*Wanted *(\d+).*/';
-            $error['log'] = preg_replace_callback($pattern, function ($matches) {
-                $val = round(MathHelper::makeAmountFromIntString($matches[1]), 4);
-                return str_replace($matches[1], $val, $matches[0]);
-            }, $error['log']);
-        }
-
-        return $error;
     }
 }
