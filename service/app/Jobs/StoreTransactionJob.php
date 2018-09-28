@@ -29,8 +29,12 @@ class StoreTransactionJob extends Job
      * @param \DateTime $blockTime
      * @param bool $shouldBroadcast
      */
-    public function __construct(array $transactionData, int $blockHeight, \DateTime $blockTime, bool $shouldBroadcast = true)
-    {
+    public function __construct(
+        array $transactionData,
+        int $blockHeight,
+        \DateTime $blockTime,
+        bool $shouldBroadcast = true
+    ) {
         $this->transactionData = $transactionData;
         $this->blockHeight = $blockHeight;
         $this->blockTime = $blockTime;
@@ -39,12 +43,19 @@ class StoreTransactionJob extends Job
 
     /**
      * Execute the job.
-     *a
+     *
      * @return void
      */
     public function handle(): void
     {
         $tx = $this->createTransactionFromApiData($this->transactionData, $this->blockHeight, $this->blockTime);
+
+        if ($tx !== null) {
+            Queue::pushOn('balance', new UpdateBalanceJob($tx->from));
+        }
+        if ($tx !== null && isset($tx->to) && $tx->to === $tx->from) {
+            Queue::pushOn('balance', new UpdateBalanceJob($tx->to));
+        }
         if ($this->shouldBroadcast && $tx) {
             Queue::pushOn('broadcast_tx', new BroadcastTransactionJob($tx));
         }

@@ -3,13 +3,11 @@
 namespace App\Jobs;
 
 use App\Helpers\LogHelper;
-use App\Models\Transaction;
 use App\Services\BalanceServiceInterface;
 use App\Services\MinterApiService;
-use App\Services\MinterApiServiceInterface;
 use App\Traits\NodeTrait;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Queue;
 
 class UpdateBalanceJob extends Job
 {
@@ -17,28 +15,21 @@ class UpdateBalanceJob extends Job
 
     public $queue = 'balance';
 
-    /** @var Collection */
-    protected $transactions;
+    /** @var string */
+    protected $address;
 
     /** @var BalanceServiceInterface */
     protected $balanceService;
 
-    /** @var MinterApiServiceInterface */
-    protected $apiService;
-
-
     /**
      * Create a new job instance.
      *
-     * @param Collection $transactions
+     * @param string $address
      */
-    public function __construct(Collection $transactions)
+    public function __construct(string $address)
     {
-        $this->transactions = $transactions;
-
+        $this->address = $address;
         $this->balanceService = app(BalanceServiceInterface::class);
-
-        $this->apiService = new MinterApiService($this->getActualNode());
     }
 
     /**
@@ -48,25 +39,16 @@ class UpdateBalanceJob extends Job
      */
     public function handle(): void
     {
-        $balances = collect([]);
-        $this->transactions->each(function ($transaction) use (&$balances) {
-            try {
-                /** @var Transaction $transaction */
-                $data = $this->apiService->getAddressBalance($transaction->from);
-                $balances = $balances->merge(
-                    $this->balanceService->updateAddressBalanceFromAipData($transaction->from, $data['balance']));
-                if (isset($transaction->to) && $transaction->from !== $transaction->to) {
-                    $data = $this->apiService->getAddressBalance($transaction->to);
-                    $balances = $balances->merge(
-                        $this->balanceService->updateAddressBalanceFromAipData($transaction->to, $data['balance']));
-                }
-            } catch (GuzzleException $exception) {
-                LogHelper::apiError($exception);
-            } catch (\Exception $exception) {
-                LogHelper::error($exception);
-            }
-        });
+        $apiService = new MinterApiService($this->getActualNode());
 
-        $this->balanceService->broadcastNewBalances($balances);
+        try {
+            $data = $apiService->getAddressBalance($this->address);
+            $balances = $this->balanceService->updateAddressBalanceFromAipData($this->address, $data['balance']);
+            Queue::pushOn('broadcast-balance', new BroadcastBalanceJob($balances));
+        } catch (GuzzleException $exception) {
+            LogHelper::apiError($exception);
+        } catch (\Exception $exception) {
+            LogHelper::error($exception);
+        }
     }
 }
