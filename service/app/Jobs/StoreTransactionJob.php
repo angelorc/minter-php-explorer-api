@@ -53,7 +53,7 @@ class StoreTransactionJob extends Job
         if ($tx !== null) {
             Queue::pushOn('balance', new UpdateBalanceJob($tx->from));
         }
-        if ($tx !== null && isset($tx->to) && $tx->to === $tx->from) {
+        if ($tx !== null && isset($tx->to) && $tx->to !== $tx->from) {
             Queue::pushOn('balance', new UpdateBalanceJob($tx->to));
         }
         if ($this->shouldBroadcast && $tx) {
