@@ -20,6 +20,8 @@ class CreateSlashesTable extends Migration
             $table->decimal('amount', 300, 0);
             $table->string('address');
             $table->string('validator_pk');
+            $table->index('address');
+            $table->index('validator_pk');
         });
     }
 

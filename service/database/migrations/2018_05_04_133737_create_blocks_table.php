@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class CreateBlocksTable extends Migration
 {
@@ -25,6 +26,20 @@ class CreateBlocksTable extends Migration
             $table->timestampsTz();
             $table->softDeletesTz();
         });
+
+        DB::unprepared("
+          CREATE INDEX blocks_date_trunc_day_index 
+            ON blocks (date_trunc('day', created_at at time zone 'UTC'));
+        ");
+        DB::unprepared("
+          CREATE INDEX blocks_date_trunc_hour_index 
+            ON blocks (date_trunc('hour', created_at at time zone 'UTC'));
+        ");
+        DB::unprepared("
+          CREATE INDEX blocks_date_trunc_minute_index 
+            ON blocks (date_trunc('minute', created_at at time zone 'UTC'));
+        ");
+
     }
 
     /**

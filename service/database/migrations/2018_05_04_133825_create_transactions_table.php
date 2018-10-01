@@ -49,6 +49,11 @@ class CreateTransactionsTable extends Migration
             $table->timestampsTz();
             $table->softDeletesTz();
             $table->foreign('block_id')->references('height')->on('blocks');
+
+            $table->index('from');
+            $table->index('to');
+            $table->index('hash');
+            $table->index('address');
         });
     }
 
