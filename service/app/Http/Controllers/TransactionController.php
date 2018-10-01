@@ -7,8 +7,8 @@ use App\Http\Resources\TransactionResource;
 use App\Repository\TransactionRepositoryInterface;
 use App\Services\MinterApiService;
 use App\Traits\NodeTrait;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\ServerException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -209,8 +209,8 @@ class TransactionController extends Controller
         $transaction = $request->get('transaction', null);
         try {
             $result = $this->minterApiService->pushTransactionToBlockChain($transaction);
-        } catch (ServerException $e) {
-            return new Response(['error' => NodeExceptionHelper::handleServerException($e)], 400);
+        } catch (BadResponseException $e) {
+            return new Response(['error' => NodeExceptionHelper::handleNodeException($e)], 400);
         } catch (GuzzleException $e) {
             return new Response(['error' => NodeExceptionHelper::handleGuzzleException($e)], 400);
         }
