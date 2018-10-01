@@ -24,6 +24,7 @@ class EventController extends Controller
     /**
      * CoinController constructor.
      * @param RewardsRepositoryInterface $rewardsRepository
+     * @param SlashesRepositoryInterface $slashesRepository
      */
     public function __construct(
         RewardsRepositoryInterface $rewardsRepository,

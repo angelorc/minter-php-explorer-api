@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Helpers\NodeExceptionHelper;
 use App\Services\MinterApiService;
 use App\Traits\NodeTrait;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -101,9 +103,10 @@ class EstimateController
             $coinToBuy = $request->get('coinToBuy', null);
             $valueToBuy = $request->get('valueToBuy', null);
             $result = $this->minterApiService->estimateBuyCoin($coinToSell, $coinToBuy, $valueToBuy);
+        } catch (BadResponseException $e) {
+            return new Response(['error' => NodeExceptionHelper::handleNodeException($e)], 400);
         } catch (GuzzleException $e) {
-            $result = $this->handleGuzzleException($e);
-            return new Response(['error' => $result], 400);
+            return new Response(['error' => NodeExceptionHelper::handleGuzzleException($e)], 400);
         }
 
         return new Response(['data' => $result], 200);
