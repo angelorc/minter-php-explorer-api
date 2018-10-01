@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Helpers\StringHelper;
 use App\Http\Resources\EventChartCollection;
 use App\Http\Resources\RewardResource;
 use App\Http\Resources\SlashResource;
@@ -65,8 +66,8 @@ class EventController extends Controller
         if ($request->get('address', false)) {
             $filters[] = [
                 'field' => 'address',
-                'value' => $request->get('address'),
-                'sign' => 'ilike',
+                'value' => StringHelper::mb_ucfirst($request->get('address')),
+                'sign' => '=',
             ];
         }
 
@@ -177,8 +178,7 @@ class EventController extends Controller
         string $address,
         Request $request,
         EventsRepositoryInterface $repository
-    ): EventChartCollection
-    {
+    ): EventChartCollection {
         $scale = $request->get('scale', 'day');
 
         if (!\in_array($scale, ['minute', 'hour', 'day'])) {
