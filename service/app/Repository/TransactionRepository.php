@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 
+use App\Helpers\StringHelper;
 use App\Models\Transaction;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -163,8 +164,8 @@ class TransactionRepository implements TransactionRepositoryInterface
 
         } elseif (!empty($filter['address'])) {
             $query->where(function ($query) use ($filter) {
-                $query->where('transactions.from', 'ilike', $filter['address'])
-                    ->orWhere('transactions.to', 'ilike', $filter['address']);
+                $query->where('transactions.from', '=', StringHelper::mb_ucfirst($filter['address']))
+                    ->orWhere('transactions.to', '=', StringHelper::mb_ucfirst($filter['address']));
             });
         }
 
@@ -179,7 +180,7 @@ class TransactionRepository implements TransactionRepositoryInterface
 
         } elseif (!empty($filter['hash'])) {
             $query->where(function ($query) use ($filter) {
-                $query->where('transactions.hash', 'ilike', $filter['hash']);
+                $query->where('transactions.hash', '=', StringHelper::mb_ucfirst($filter['hash']));
             });
         }
 
