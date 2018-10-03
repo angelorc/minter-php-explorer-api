@@ -1,13 +1,16 @@
 <p align="center" background="black"><img src="minter-logo.svg" width="400"></p>
-<p align="center">
+
+<p align="center" style="text-align: center;">
 
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/MinterTeam/minter-php-explorer-api/blob/master/LICENSE)
 ![PHP from Travis config](https://img.shields.io/travis/php-v/symfony/symfony.svg)
 [![Website](https://img.shields.io/website-up-down-green-red/http/shields.io.svg?label=minter-explorer)](https://testnet.explorer.minter.network/)
 
+# Minter Explorer API
+
 </p>
 
-# Minter Explorer API
+
 
 The official Minter Explorer API repository.
 
