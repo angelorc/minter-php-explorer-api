@@ -7,6 +7,7 @@ use App\Helpers\LogHelper;
 use App\Helpers\StringHelper;
 use App\Jobs\CreateCoinFromTransactionJob;
 use App\Models\Transaction;
+use App\Models\TxSign;
 use App\Models\TxTag;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Queue;
@@ -84,6 +85,9 @@ trait TransactionTrait
                     $pk = $tx['data']['pubkey'] ?? $tx['data']['pub_key'];
                     $transaction->pub_key = StringHelper::mb_ucfirst($pk);
                     break;
+                case Transaction::TYPE_MULTI_SIG:
+                    $transaction->threshold = $tx['data']['threshold'] ?? null;
+                    break;
             }
 
             if (
@@ -114,6 +118,11 @@ trait TransactionTrait
             $transaction->save();
             if ($tags) {
                 $transaction->tags()->saveMany($tags);
+            }
+
+            if ($transaction->type === Transaction::TYPE_MULTI_SIG) {
+                $txSigns = $this->getTxSigns(tx['data']);
+                $transaction->signs()->saveMany($txSigns);
             }
 
             if ($transaction->type === Transaction::TYPE_CREATE_COIN) {
@@ -158,5 +167,25 @@ trait TransactionTrait
             }
         }
         return null;
+    }
+
+    /**
+     * @param array $txData
+     * @return Collection
+     */
+    private function getTxSigns(array $txData): Collection
+    {
+        $addresses = $txData['addresses'];
+        $weights = $txData['weights'];
+        $result = [];
+
+        foreach ($addresses as $k => $address) {
+            $txSign = new TxSign;
+            $txSign->address = $address;
+            $txSign->weight = $weights[$k];
+            $result[] = $txSign;
+        }
+
+        return collect($result);
     }
 }
