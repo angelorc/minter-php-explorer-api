@@ -214,9 +214,9 @@ class StatusService implements StatusServiceInterface
             'bipPriceBtc' => 0.0000015883176063418346,
             'bipPriceChange' => 10,
             'marketCap' => $marketCap,
-            'latestBlockHeight' => $latestBlockHeight,
+            'latestBlockHeight' => (int)$latestBlockHeight,
             'latestBlockTime' => $latestBlockTime,
-            'totalTransactions' => $totalTransactions,
+            'totalTransactions' => (int)$totalTransactions,
             'transactionsPerSecond' => $transactionsPerSecond,
             'averageBlockTime' => $averageBlockTime,
         ];

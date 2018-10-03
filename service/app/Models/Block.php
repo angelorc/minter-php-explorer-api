@@ -16,6 +16,7 @@ use Illuminate\Support\Collection;
  * @property int size
  * @property string hash
  * @property string created_at
+ * @property string formattedDate
  * @property int block_time
  * @property float block_reward
  * @property Collection validators
