@@ -121,7 +121,7 @@ trait TransactionTrait
             }
 
             if ($transaction->type === Transaction::TYPE_MULTI_SIG) {
-                $txSigns = $this->getTxSigns(tx['data']);
+                $txSigns = $this->getTxSigns($tx['data']);
                 $transaction->signs()->saveMany($txSigns);
             }
 
