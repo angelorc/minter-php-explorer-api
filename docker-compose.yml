@@ -109,6 +109,21 @@ services:
       - centrifugo
     networks:
       - explorer-network
+  supervisor:
+    container_name: "minter_explorer_supervisor"
+    build: ./docker/supervisor
+    volumes:
+    - ./service:/var/www
+    depends_on:
+    - postgres
+    - redis
+    - centrifugo
+    links:
+    - postgres
+    - redis
+    - centrifugo
+    networks:
+    - explorer-network
 networks:
   explorer-network:
     driver: bridge

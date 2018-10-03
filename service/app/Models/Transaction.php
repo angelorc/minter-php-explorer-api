@@ -48,6 +48,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int gas_used
  * @property int commission
  * @property int stake
+ * @property int threshold
  * @property float value
  * @property float fee
  * @property float initial_amount
@@ -87,7 +88,7 @@ class Transaction extends Model
     public const TYPE_REDEEM_CHECK = 9;
     public const TYPE_SET_CANDIDATE_ONLINE = 10;
     public const TYPE_SET_CANDIDATE_OFFLINE = 11;
-
+    public const TYPE_MULTI_SIG = 12;
 
     public const PAYLOAD = 'payload';
     public const TOGGLE_CANDIDATES_STATUS = 'toggle_status';
@@ -108,6 +109,14 @@ class Transaction extends Model
     public function tags()
     {
         return $this->hasMany(TxTag::class);
+    }
+
+    /**
+     * Get the signs that belong the transactions.
+     */
+    public function signs()
+    {
+        return $this->hasMany(TxSign::class);
     }
 
     /**
@@ -167,6 +176,8 @@ class Transaction extends Model
                 return 'setCandidateOnData';
             case $this::TYPE_SET_CANDIDATE_OFFLINE:
                 return 'setCandidateOffData';
+            case $this::TYPE_MULTI_SIG:
+                return 'multiSig';
             default:
                 return '';
         }

@@ -36,6 +36,7 @@ class CreateTransactionsTable extends Migration
             $table->string('gas_coin')->nullable();
             $table->string('coin')->nullable();
             $table->integer('nonce');
+            $table->integer('threshold')->nullable();
             $table->text('payload')->nullable();
             $table->string('service_data')->nullable();
             $table->string('address')->nullable();
@@ -49,6 +50,11 @@ class CreateTransactionsTable extends Migration
             $table->timestampsTz();
             $table->softDeletesTz();
             $table->foreign('block_id')->references('height')->on('blocks');
+
+            $table->index('from');
+            $table->index('to');
+            $table->index('hash');
+            $table->index('address');
         });
     }
 

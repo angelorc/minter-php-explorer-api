@@ -59,11 +59,11 @@ class EstimateController
             $coinToSell = $request->get('coinToSell', null);
             $coinToBuy = $request->get('coinToBuy', null);
             $valueToSell = $request->get('valueToSell', null);
-
             $result = $this->minterApiService->estimateSellCoin($coinToSell, $coinToBuy, $valueToSell);
+        } catch (BadResponseException $e) {
+            return new Response(['error' => NodeExceptionHelper::handleNodeException($e)], 400);
         } catch (GuzzleException $e) {
-            $result = $this->handleGuzzleException($e);
-            return new Response(['error' => $result], 400);
+            return new Response(['error' => NodeExceptionHelper::handleGuzzleException($e)], 400);
         }
 
         return new Response(['data' => $result], 200);
@@ -103,13 +103,12 @@ class EstimateController
             $coinToBuy = $request->get('coinToBuy', null);
             $valueToBuy = $request->get('valueToBuy', null);
             $result = $this->minterApiService->estimateBuyCoin($coinToSell, $coinToBuy, $valueToBuy);
+            return new Response(['data' => $result], 200);
         } catch (BadResponseException $e) {
             return new Response(['error' => NodeExceptionHelper::handleNodeException($e)], 400);
         } catch (GuzzleException $e) {
             return new Response(['error' => NodeExceptionHelper::handleGuzzleException($e)], 400);
         }
-
-        return new Response(['data' => $result], 200);
     }
 
     /**
@@ -141,28 +140,11 @@ class EstimateController
         try {
             $transaction = $request->get('transaction', null);
             $result = $this->minterApiService->estimateTxCommission($transaction);
+            return new Response(['data' => $result], 200);
+        } catch (BadResponseException $e) {
+            return new Response(['error' => NodeExceptionHelper::handleNodeException($e)], 400);
         } catch (GuzzleException $e) {
-            $result = $this->handleGuzzleException($e);
-            return new Response(['error' => $result], 400);
+            return new Response(['error' => NodeExceptionHelper::handleGuzzleException($e)], 400);
         }
-
-        return new Response(['data' => $result], 200);
-    }
-
-
-    private function handleGuzzleException(GuzzleException $e): array
-    {
-        $result = null;
-        preg_match_all('/.*\{.*\}/', $e->getMessage(), $result);
-        if (isset($result[0][0])) {
-            $result = json_decode($result[0][0], 1);
-        } else {
-            $result = [
-                'code' => 1,
-                'log' => $e->getMessage(),
-            ];
-        }
-
-        return $result;
     }
 }
