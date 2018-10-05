@@ -11,9 +11,10 @@ class CreateTxSignsTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('tx_signs', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->bigInteger('transaction_id');
             $table->integer('weight');
             $table->string('address');
@@ -26,7 +27,7 @@ class CreateTxSignsTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('tx_signs');
     }

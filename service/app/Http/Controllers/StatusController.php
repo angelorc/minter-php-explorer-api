@@ -6,13 +6,18 @@ use App\Http\Resources\TxCountCollection;
 use App\Models\MinterNode;
 use App\Models\TxPerDay;
 use App\Services\BlockServiceInterface;
+use App\Services\MinterApiService;
 use App\Services\StatusServiceInterface;
 use App\Services\TransactionServiceInterface;
 use App\Services\ValidatorServiceInterface;
+use App\Traits\NodeTrait;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
 
 class StatusController extends Controller
 {
+    use NodeTrait;
+
     /**
      * @var StatusServiceInterface
      */
@@ -179,7 +184,7 @@ class StatusController extends Controller
      */
     public function statusPage(): array
     {
-
+        $apiService = new MinterApiService($this->getActualNode());
         $transactionData = $this->transactionService->get24hTransactionsData();
         $activeValidators = $this->validatorService->getActiveValidatorsCount();
 
@@ -187,6 +192,18 @@ class StatusController extends Controller
 
         if (!$status) {
             $status = $this->statusService->isActiveStatus() ? 'active' : 'down';
+        }
+
+        try {
+            $candidatesData = $apiService->getCandidatesData($this->blockService->getExplorerLastBlockHeight());
+            $activeCandidates = 0;
+            foreach ($candidatesData as $candidate) {
+                if ($candidate['status'] === 2) {
+                    $activeCandidates++;
+                }
+            }
+        } catch (GuzzleException $e) {
+            $activeCandidates = $this->validatorService->getActiveValidatorsCount();
         }
 
         return [
@@ -199,7 +216,7 @@ class StatusController extends Controller
                 'tx24hCount' => $transactionData['count'],
                 'txPerSecond' => $transactionData['perSecond'],
                 'activeValidators' => $activeValidators,
-                'activeCandidates' => $activeValidators,
+                'activeCandidates' => $activeCandidates,
                 'averageTxCommission' => $transactionData['avg'],
                 'totalCommission' => $transactionData['sum'],
             ]
@@ -210,7 +227,7 @@ class StatusController extends Controller
      * Get actual minter node
      * @return array
      */
-    public function getActualNode(): array
+    public function getActualNodeData(): array
     {
         /** @var MinterNode $node */
         $node = MinterNode::where('is_active', true)->where('is_local', false)->orderBy('ping', 'asc')->first();

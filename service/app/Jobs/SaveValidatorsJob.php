@@ -46,9 +46,15 @@ class SaveValidatorsJob extends Job
         try {
             $validatorsData = $apiService->getBlockValidatorsData($this->block->height);
             $candidatesData = $apiService->getCandidatesData($this->block->height);
+            $activeCandidates = 0;
+            foreach ($candidatesData as $candidate) {
+                if ($candidate['status'] === 2) {
+                    $activeCandidates++;
+                }
+            }
             $validators = $this->validatorService->createFromAipData($validatorsData);
             $this->block->validators()->saveMany($validators);
-            Queue::pushOn('broadcast', new BroadcastStatusPageJob($validators->count(), \count($candidatesData)));
+            Queue::pushOn('broadcast', new BroadcastStatusPageJob($validators->count(), $activeCandidates));
         } catch (GuzzleException $exception) {
             LogHelper::apiError($exception);
         } catch (\Exception $exception) {
