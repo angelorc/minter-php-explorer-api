@@ -38,6 +38,8 @@ class BroadcastStatusInfoJob extends Job
      */
     public function handle(): void
     {
-        $this->centrifuge->publish('status-info', $this->statusService->getStatusInfo());
+        $channel = env('MINTER_NETWORK', false) ? env('MINTER_NETWORK', 'mainnet') . '_status-info' : 'status-info';
+
+        $this->centrifuge->publish($channel, $this->statusService->getStatusInfo());
     }
 }

@@ -33,6 +33,8 @@ class BroadcastBlockJob extends Job
      */
     public function handle(): void
     {
-        $this->centrifuge->publish('blocks', new BlockResource($this->block));
+        $channel = env('MINTER_NETWORK', false) ? env('MINTER_NETWORK', 'mainnet') . '_blocks' : 'blocks';
+
+        $this->centrifuge->publish($channel, new BlockResource($this->block));
     }
 }

@@ -71,6 +71,8 @@ class BroadcastStatusPageJob extends Job
             'totalCommission' => $transactionData['sum'],
         ];
 
-        $this->centrifuge->publish('status_page', $data);
+        $channel = env('MINTER_NETWORK', false) ? env('MINTER_NETWORK', 'mainnet') . '_status_page' : 'status_page';
+
+        $this->centrifuge->publish($channel, $data);
     }
 }
