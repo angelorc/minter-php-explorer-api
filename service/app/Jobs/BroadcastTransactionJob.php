@@ -33,6 +33,8 @@ class BroadcastTransactionJob extends Job
      */
     public function handle(): void
     {
-        $this->centrifuge->publish('transactions', new TransactionResource($this->transaction));
+        $channel = env('MINTER_NETWORK', false) ? env('MINTER_NETWORK', 'mainnet') . '_transactions' : 'transactions';
+
+        $this->centrifuge->publish($channel, new TransactionResource($this->transaction));
     }
 }

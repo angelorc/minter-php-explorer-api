@@ -78,7 +78,9 @@ class SettingsController extends Controller
 
         $token = $this->centrifuge->generateClientToken($user, $timestamp);
 
-        $channel = substr(base64_encode(implode(';', [$timestamp, $token, random_bytes(5)])), random_int(0, 10), 20);
+        $channelName = substr(base64_encode(implode(';', [$timestamp, $token, random_bytes(5)])), random_int(0, 10), 20);
+
+        $channel = env('MINTER_NETWORK', false) ? env('MINTER_NETWORK', 'mainnet') . '_' . $channelName : $channelName;
 
         foreach ($addresses as $address) {
             BalanceChannel::create([
