@@ -18,6 +18,7 @@ class NodeExceptionHelper
 
         switch ($error['code']) {
             case 1:
+            case 103:
                 $pattern = '/.*has\D+(\d+).*required (\d+)/i';
                 $error['log'] = preg_replace_callback($pattern, function ($matches) use (&$error) {
                     $error['has'] = MathHelper::makeAmountFromIntString($matches[1]);
