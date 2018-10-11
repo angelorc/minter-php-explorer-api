@@ -55,6 +55,7 @@
         <fail unless="env.rmq_vhost" message="rmq_vhost environment variable is not set"/>
         <fail unless="env.minter_api" message="minter_api environment variable is not set"/>
         <fail unless="env.minter_network" message="minter_network environment variable is not set"/>
+        <fail unless="env.minter_base_coin" message="minter_base_coin environment variable is not set"/>
         <fail unless="env.centrifuge_secret" message="centrifuge_secret environment variable is not set"/>
         <fail unless="env.centrifuge_url" message="centrifuge_url environment variable is not set"/>
     </target>
