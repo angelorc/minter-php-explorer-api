@@ -41,13 +41,14 @@ class UpdateCoinJob extends Job
         $apiService = new MinterApiService($this->getActualNode());
         try {
 
-            foreach ($this->coins as $coin) {
-                $data = $apiService->getCoinInfo($coin);
-                Coin::where('symbol', $coin)->update([
-                    'volume' => $data['volume'],
-                    'crr' => $data['crr'],
-                    'reserve_balance' => $data['reserve_balance'],
-                ]);
+            foreach ($this->coins as $c) {
+                $data = $apiService->getCoinInfo($c);
+                /** @var Coin $coin */
+                $coin = Coin::where('symbol', '=', mb_strtoupper($c))->first();
+                $coin->volume = $data['volume'];
+                $coin->crr = $data['crr'];
+                $coin->reserve_balance = $data['reserve_balance'];
+                $coin->save();
             }
 
         } catch (GuzzleException $exception) {
