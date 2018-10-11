@@ -38,6 +38,11 @@ class UpdateCoinJob extends Job
         try {
 
             foreach ($this->coins as $c) {
+
+                if ($c === env('MINTER_BASE_COIN')) {
+                    continue;
+                }
+
                 $data = $apiService->getCoinInfo($c);
                 /** @var Coin $coin */
                 $coin = Coin::where('symbol', '=', mb_strtoupper($c))->first();
