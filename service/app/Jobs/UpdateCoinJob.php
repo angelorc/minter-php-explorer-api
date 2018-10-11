@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Helpers\LogHelper;
 use App\Models\Coin;
-use App\Services\CoinService;
 use App\Services\MinterApiService;
 use App\Traits\NodeTrait;
 use GuzzleHttp\Exception\GuzzleException;
@@ -15,8 +14,6 @@ class UpdateCoinJob extends Job
 
     /** @var array */
     protected $coins;
-    /** @var CoinService */
-    protected $coinService;
 
     public $queue = 'main';
 
@@ -28,7 +25,6 @@ class UpdateCoinJob extends Job
     public function __construct(array $coins)
     {
         $this->coins = $coins;
-        $this->coinService = app(CoinService::class);
     }
 
     /**
