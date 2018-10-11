@@ -221,4 +221,16 @@ class MinterApiService implements MinterApiServiceInterface
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }
+
+    /**
+     * @param string $coin
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getCoinInfo(string $coin): array
+    {
+        $res = $this->httpClient->request('GET', 'api/coinInfo/' . mb_strtoupper($coin));
+        $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
+        return $data['result'];
+    }
 }

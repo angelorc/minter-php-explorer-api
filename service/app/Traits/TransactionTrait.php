@@ -6,6 +6,7 @@ namespace App\Traits;
 use App\Helpers\LogHelper;
 use App\Helpers\StringHelper;
 use App\Jobs\CreateCoinFromTransactionJob;
+use App\Jobs\UpdateCoinJob;
 use App\Models\Transaction;
 use App\Models\TxSign;
 use App\Models\TxTag;
@@ -96,7 +97,11 @@ trait TransactionTrait
                 $transaction->type === Transaction::TYPE_BUY_COIN) {
                 $transaction->coin_to_sell = mb_strtoupper($tx['data']['coin_to_sell']);
                 $transaction->coin_to_buy = mb_strtoupper($tx['data']['coin_to_buy']);
+                Queue::pushOn('main', new UpdateCoinJob(array_unique([$transaction->gas_coin, $transaction->coin_to_buy, $transaction->coin_to_sell])));
+            } elseif (env('MINTER_BASE_COIN') !== $transaction->gas_coin) {
+                Queue::pushOn('main', new UpdateCoinJob([$transaction->gas_coin]));
             }
+
             if ($transaction->type === Transaction::TYPE_SELL_COIN) {
                 $transaction->value_to_sell = $tx['data']['value_to_sell'] ?? 0;
                 $transaction->value_to_buy = $this->getValueFromTxTag($tx['tags']) ?? 0;
@@ -116,6 +121,7 @@ trait TransactionTrait
             }
 
             $transaction->save();
+
             if ($tags) {
                 $transaction->tags()->saveMany($tags);
             }
