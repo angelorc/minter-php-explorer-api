@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Resources;
 
+use App\Helpers\MathHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CoinsResource extends JsonResource
@@ -17,8 +18,8 @@ class CoinsResource extends JsonResource
             'symbol' => $this->symbol,
             'name' => $this->name,
             'crr' => $this->crr,
-            'reserveBalance' => $this->reserve_balance,
-            'volume' => $this->volume,
+            'reserveBalance' => MathHelper::makeAmountFromIntString($this->reserve_balance),
+            'volume' => MathHelper::makeAmountFromIntString($this->volume),
         ];
     }
 }
