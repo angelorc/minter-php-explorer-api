@@ -98,4 +98,10 @@ interface MinterApiServiceInterface
      */
     public function estimateTxCommission(string $tx): array;
 
+    /**
+     * @param string $coin
+     * @return array
+     */
+    public function getCoinInfo(string $coin): array;
+
 }
