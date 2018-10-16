@@ -28,7 +28,6 @@ $router->get('coins', CoinController::class . '@getList');
 $router->get('settings/get-balance-channel', SettingsController::class . '@getBalanceWsChannel');
 $router->get('settings/get-ws-data', SettingsController::class . '@getWsConnectData');
 
-
 $router->get('events/rewards/chart/{address}', EventController::class . '@getRewardsChartData');
 $router->get('events/rewards', EventController::class . '@getRewardsList');
 $router->get('events/slashes', EventController::class . '@getSlashesList');

@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Coin;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCoinsTable extends Migration
 {
@@ -24,6 +25,15 @@ class CreateCoinsTable extends Migration
             $table->timestampsTz();
             $table->softDeletesTz();
         });
+
+        Coin::create([
+            'symbol' => env('MINTER_BASE_COIN', 'BIP'),
+            'name' => 'Minter Coin',
+            'crr' => 0,
+            'volume' => 0,
+            'reserve_balance' => 0,
+            'creator' => '',
+        ]);
     }
 
     /**
