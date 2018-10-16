@@ -69,7 +69,7 @@ services:
       - explorer-network
   status:
     container_name: "minter_explorer_status"
-    image: minterteam/status-minter-network:1.1-alpine
+    image: minterteam/status-minter-network:1.2-alpine
     build:
       context: https://github.com/MinterTeam/docker-status-minter-network.git
       dockerfile: alpine/Dockerfile
@@ -83,7 +83,7 @@ services:
       - explorer-network
   explorer:
     container_name: "minter_explorer_web"
-    image: minterteam/explorer-minter-network:1.1-alpine
+    image: minterteam/explorer-minter-network:1.2-alpine
     build:
       context: https://github.com/MinterTeam/docker-explorer-web-minter.git
       dockerfile: alpine/Dockerfile
