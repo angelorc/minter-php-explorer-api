@@ -149,15 +149,16 @@ trait TransactionTrait
      */
     private function getTxTags(array $tagsData): Collection
     {
-        $result = [];
+        $result = collect([]);
 
         foreach ($tagsData as $k => $v) {
             $tag = new TxTag();
-            $tag->key = base64_decode($k);
+            $tag->key = $k;
             $tag->value = $v;
+            $result->push($tag);
         }
 
-        return collect($result);
+        return $result;
     }
 
     /**
