@@ -25,6 +25,8 @@ class PullMinterApiDataCommand extends Command
      */
     protected const SLEEP_TIME = 2500000;
 
+    protected const UPDATE_NODE_BLOCK_COUNT = 25;
+
     /** @var string */
     protected $signature = 'minter:api:pull-node-data';
 
@@ -42,6 +44,9 @@ class PullMinterApiDataCommand extends Command
 
     /** @var BalanceServiceInterface */
     protected $balanceService;
+
+    /** @var MinterService */
+    protected $minterService;
 
     /**
      * PullMinterApiDataCommand constructor.
@@ -69,14 +74,16 @@ class PullMinterApiDataCommand extends Command
      */
     public function handle(): void
     {
-        $minterService = new MinterService($this->getActualNode(), $this->blockService, $this->transactionService, $this->validatorService, $this->balanceService);
+        $this->updateNode();
 
-        $this->info('Start pulling data from Minter Node API (' . $minterService->getNode()->fullLink . ')');
+        $blocksCount = 0;
+
+        $this->info('Start pulling data from Minter Node API (' . $this->minterService->getNode()->fullLink . ')');
 
         try {
 
             $explorerCurrentBlockHeight = $this->blockService->getExplorerLastBlockHeight() + 1;
-            $apiCurrentBlockHeight = $minterService->getLastBlock();
+            $apiCurrentBlockHeight = $this->minterService->getLastBlock();
 
             $this->info('Begin from block: ' . $explorerCurrentBlockHeight);
 
@@ -87,7 +94,7 @@ class PullMinterApiDataCommand extends Command
                 $start = microtime(1);
 
                 if ($this->blockService->getExplorerLastBlockHeight() !== $explorerCurrentBlockHeight) {
-                    $minterService->storeNodeData($explorerCurrentBlockHeight);
+                    $this->minterService->storeNodeData($explorerCurrentBlockHeight);
                 }
 
                 $end = microtime(1);
@@ -97,7 +104,7 @@ class PullMinterApiDataCommand extends Command
                     $this->info('Block has been saved in ' . $spentTime . ' sec');
                 }
 
-                $apiCurrentBlockHeight = $minterService->getLastBlock();
+                $apiCurrentBlockHeight = $this->minterService->getLastBlock();
                 $explorerCurrentBlockHeight = $blocksDiff <= 2 ? $this->blockService->getExplorerLastBlockHeight() + 1 : $explorerCurrentBlockHeight + 1;
                 if ($explorerCurrentBlockHeight > $apiCurrentBlockHeight) {
                     $explorerCurrentBlockHeight = $apiCurrentBlockHeight;
@@ -107,16 +114,34 @@ class PullMinterApiDataCommand extends Command
                 if (2.5 > $spentTime && $blocksDiff <= 2) {
                     usleep($this::SLEEP_TIME - round($spentTime * 10 ** 6));
                 }
+
+                if ($blocksCount === $this::UPDATE_NODE_BLOCK_COUNT) {
+                    $blocksCount = 0;
+                    $this->updateNode();
+                }
+
+                $blocksCount++;
+
             }
 
         } catch (GuzzleException $exception) {
             //Try new node
-            $minterService = new MinterService($this->getActualNode(), $this->blockService, $this->transactionService, $this->validatorService, $this->balanceService);
-            $this->warn('Minter Node URL has been changed to ' . $minterService->getNode()->fullLink);
+            $this->updateNode();
+            $this->warn('Minter Node URL has been changed to ' . $this->minterService->getNode()->fullLink);
             LogHelper::apiError($exception);
         } catch (\Exception $exception) {
             LogHelper::error($exception);
         }
+    }
 
+    private function updateNode(): void
+    {
+        $this->minterService = new MinterService(
+            $this->getActualNode(),
+            $this->blockService,
+            $this->transactionService,
+            $this->validatorService,
+            $this->balanceService
+        );
     }
 }

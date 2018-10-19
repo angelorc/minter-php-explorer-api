@@ -38,9 +38,13 @@ class CheckMinterNodeListCommand extends Command
                         $node->is_active = $this->isNodeSynced($node);
                     }
                     $node->save();
+
+                    if (env('APP_DEBUG', false)) {
+                        $status = $node->is_active ? 'Active' : 'Fail';
+                        $this->info('Node ' . $node->host . ' have been checked. Status: ' . $status);
+                    }
                 });
 
-            $this->info('Nodes have been checked');
             sleep($this::CHECK_SLEEP_PERIOD);
         }
 
@@ -101,17 +105,16 @@ class CheckMinterNodeListCommand extends Command
             $node->version = $data['version'];
             $node->save();
         } catch (GuzzleException $e) {
+            $this->error($e->getMessage());
             return false;
         }
 
         /** @var \DateTime  $dt */
         $dt = DateTimeHelper::parse($data['latest_block_time']);
-
-        if(isset($dt)){
+        if ($dt !== null) {
             $diff = time() - (int) $dt->getTimestamp();
-
-            //If last block time less then 10 sec node is synced
-            return $diff < 10;
+            //If last block time less then 60 sec node is synced
+            return $diff < 60;
         }
 
         return false;
