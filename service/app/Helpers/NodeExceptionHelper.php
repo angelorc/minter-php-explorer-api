@@ -37,8 +37,6 @@ class NodeExceptionHelper
                 }, $error['log']);
                 break;
             default:
-                $error['log'] = 'Unknown error';
-                $error['code'] = 0;
                 break;
         }
 

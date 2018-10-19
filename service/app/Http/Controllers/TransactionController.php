@@ -207,13 +207,27 @@ class TransactionController extends Controller
     public function pushTransactionToBlockChain(Request $request): Response
     {
         $transaction = $request->get('transaction', null);
+        $attempt = 0;
+        $result = ['error' => 'Unknown error'];
+        while ($attempt <= 5) {
+            $result = $this->sendTransaction($transaction);
+            if (isset($result['data'])) {
+                return new Response(['data' => $result], 200);
+            }
+            $attempt++;
+        }
+        return new Response($result, 400);
+    }
+
+    private function sendTransaction(string $transaction): array
+    {
         try {
             $result = $this->minterApiService->pushTransactionToBlockChain($transaction);
         } catch (BadResponseException $e) {
-            return new Response(['error' => NodeExceptionHelper::handleNodeException($e)], 400);
+            return ['error' => NodeExceptionHelper::handleNodeException($e)];
         } catch (GuzzleException $e) {
-            return new Response(['error' => NodeExceptionHelper::handleGuzzleException($e)], 400);
+            return ['error' => NodeExceptionHelper::handleGuzzleException($e)];
         }
-        return new Response(['data' => $result], 200);
+        return ['data' => $result];
     }
 }
