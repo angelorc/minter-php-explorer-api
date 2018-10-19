@@ -214,6 +214,7 @@ class TransactionController extends Controller
             if (isset($result['data'])) {
                 return new Response($result, 200);
             }
+            $this->minterApiService = new MinterApiService($this->getActualNode());
             $attempt++;
         }
         return new Response($result, 400);
