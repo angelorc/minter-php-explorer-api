@@ -212,7 +212,7 @@ class TransactionController extends Controller
         while ($attempt <= 5) {
             $result = $this->sendTransaction($transaction);
             if (isset($result['data'])) {
-                return new Response(['data' => $result], 200);
+                return new Response($result, 200);
             }
             $attempt++;
         }
