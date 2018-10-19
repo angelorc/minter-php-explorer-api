@@ -138,7 +138,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         $query = Transaction::query();
 
-        $query->where('status', true);
+        $query->where('status', $filter['status'] ?? true);
 
         if (!empty($filter['block'])) {
             $query->whereHas('block', function ($query) use ($filter) {
