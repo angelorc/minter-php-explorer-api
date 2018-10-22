@@ -241,6 +241,8 @@ class TransactionController extends Controller
         } catch (BadResponseException $e) {
             return ['error' => NodeExceptionHelper::handleNodeException($e)];
         } catch (GuzzleException $e) {
+            $this->minterApiService->getNode()->is_active = false;
+            $this->minterApiService->getNode()->save();
             return ['error' => NodeExceptionHelper::handleGuzzleException($e)];
         }
         return ['data' => $result];
@@ -257,6 +259,8 @@ class TransactionController extends Controller
         } catch (BadResponseException $e) {
             return ['error' => NodeExceptionHelper::handleNodeException($e)];
         } catch (GuzzleException $e) {
+            $this->minterApiService->getNode()->is_active = false;
+            $this->minterApiService->getNode()->save();
             return ['error' => NodeExceptionHelper::handleGuzzleException($e)];
         }
         return ['data' => $result];
