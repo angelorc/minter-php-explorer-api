@@ -179,7 +179,7 @@ class MinterApiService implements MinterApiServiceInterface
     }
 
     /**
-     * @param string $coinToSel
+     * @param string $coinToSell
      * @param string $coinToBuy
      * @param string $valueToSell
      * @return array

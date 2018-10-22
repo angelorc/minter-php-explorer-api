@@ -16,6 +16,9 @@ class TransactionController extends Controller
 {
     use NodeTrait;
 
+    /**
+     *
+     */
     public const BLOCKS_PER_PAGE = 50;
 
     /** @var TransactionRepositoryInterface */
@@ -149,14 +152,21 @@ class TransactionController extends Controller
      **/
     /**
      * @param string $address
-     * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return Response
      */
-    public function getCountByAddress(string $address): array
+    public function getCountByAddress(string $address): Response
     {
-        return [
-            'data' => $this->minterApiService->getTransactionsCountByAddress($address)
-        ];
+        $result = ['error' => 'Unknown error'];
+        $attempt = 0;
+        while ($attempt <= 5) {
+            $result = $this->getTxCount($address);
+            if (isset($result['data'])) {
+                return new Response($result, 200);
+            }
+            $this->minterApiService = new MinterApiService($this->getActualNode());
+            $attempt++;
+        }
+        return new Response($result, 400);
     }
 
     /**
@@ -220,10 +230,30 @@ class TransactionController extends Controller
         return new Response($result, 400);
     }
 
+    /**
+     * @param string $transaction
+     * @return array
+     */
     private function sendTransaction(string $transaction): array
     {
         try {
             $result = $this->minterApiService->pushTransactionToBlockChain($transaction);
+        } catch (BadResponseException $e) {
+            return ['error' => NodeExceptionHelper::handleNodeException($e)];
+        } catch (GuzzleException $e) {
+            return ['error' => NodeExceptionHelper::handleGuzzleException($e)];
+        }
+        return ['data' => $result];
+    }
+
+    /**
+     * @param $address
+     * @return array
+     */
+    private function getTxCount($address)
+    {
+        try {
+            $result = $this->minterApiService->getTransactionsCountByAddress($address);
         } catch (BadResponseException $e) {
             return ['error' => NodeExceptionHelper::handleNodeException($e)];
         } catch (GuzzleException $e) {
