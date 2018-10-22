@@ -16,6 +16,11 @@ class NodeExceptionHelper
     {
         $error = json_decode($e->getResponse()->getBody(true)->getContents(), 1);
 
+        if ($error === null) {
+            $error['code'] = 0;
+            $error['log'] = 'Unknown error';
+        }
+
         switch ($error['code']) {
             case 1:
             case 103:
