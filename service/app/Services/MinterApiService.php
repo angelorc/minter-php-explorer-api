@@ -89,7 +89,7 @@ class MinterApiService implements MinterApiServiceInterface
     public function getBlockValidatorsData(int $blockHeight): array
     {
         $res = $this->httpClient->request('GET', 'api/validators/', [
-            'timeout' => 10,
+            'timeout' => 11,
             'query' => ['height' => $blockHeight]]);
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
@@ -104,7 +104,7 @@ class MinterApiService implements MinterApiServiceInterface
     public function getCandidatesData(int $blockHeight): array
     {
         $res = $this->httpClient->request('GET', 'api/candidates/', [
-            'timeout' => 10,
+            'timeout' => 12,
             'query' => ['height' => $blockHeight]]);
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
@@ -118,7 +118,7 @@ class MinterApiService implements MinterApiServiceInterface
      */
     public function getAddressBalance(string $address): array
     {
-        $res = $this->httpClient->request('GET', 'api/balance/' . StringHelper::mb_ucfirst($address), ['timeout' => 10]);
+        $res = $this->httpClient->request('GET', 'api/balance/' . StringHelper::mb_ucfirst($address), ['timeout' => 15]);
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }
@@ -135,7 +135,7 @@ class MinterApiService implements MinterApiServiceInterface
         try {
             $res = $this->httpClient->request('GET', 'api/estimateCoinSell',
                 [
-                    'timeout' => 10,
+                    'timeout' => 13,
                     'query' => [
                     'coin_to_sell' => $coin,
                     'value_to_sell' => $value,
@@ -189,7 +189,7 @@ class MinterApiService implements MinterApiServiceInterface
     {
         $res = $this->httpClient->request('GET', 'api/estimateCoinSell',
             [
-                'timeout' => 10,
+                'timeout' => 14,
                 'query' => [
                 'coin_to_sell' => $coinToSell,
                 'value_to_sell' => $valueToSell,
@@ -210,7 +210,7 @@ class MinterApiService implements MinterApiServiceInterface
     {
         $res = $this->httpClient->request('GET', 'api/estimateCoinBuy',
             [
-                'timeout' => 10,
+                'timeout' => 16,
                 'query' => [
                 'coin_to_sell' => $coinToSell,
                 'value_to_buy' => $valueToBuy,
@@ -229,7 +229,7 @@ class MinterApiService implements MinterApiServiceInterface
     {
         $res = $this->httpClient->request('GET', 'api/estimateTxCommission',
             [
-                'timeout' => 10,
+                'timeout' => 17,
                 'query' => [
                 'tx' => $tx,
             ]]);
@@ -244,7 +244,7 @@ class MinterApiService implements MinterApiServiceInterface
      */
     public function getCoinInfo(string $coin): array
     {
-        $res = $this->httpClient->request('GET', 'api/coinInfo/' . mb_strtoupper($coin), ['timeout' => 10]);
+        $res = $this->httpClient->request('GET', 'api/coinInfo/' . mb_strtoupper($coin), ['timeout' => 18]);
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
         return $data['result'];
     }

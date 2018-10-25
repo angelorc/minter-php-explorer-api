@@ -31,7 +31,6 @@ trait TransactionTrait
             $transaction->nonce = $tx['nonce'];
             $transaction->gas_price = $tx['gas_price'];
             $transaction->type = $tx['type'];
-            $transaction->payload = $tx['payload'] ?? null;
             $transaction->fee = $tx['gas'] ?? 0;
             $transaction->service_data = $tx['serviceData'] ?? null;
             $transaction->created_at = $blockTime->format('Y-m-d H:i:sO');
