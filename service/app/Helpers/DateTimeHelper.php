@@ -46,7 +46,7 @@ class DateTimeHelper
 
         $result = new \Carbon\Carbon($result);
 
-        return $result->timestamp . '.' . $ns;
+        return $result->timestamp;
     }
 
 }
