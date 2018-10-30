@@ -24,6 +24,7 @@ class CreateMinterNodesTable extends Migration
             $table->boolean('is_active')->default(false);
             $table->boolean('is_local')->default(false);
             $table->boolean('is_excluded')->default(false);
+            $table->unique(['host', 'port']);
         });
     }
 
