@@ -54,8 +54,12 @@ class UpdateCoinJob extends Job
 
         } catch (GuzzleException $exception) {
             LogHelper::apiError($exception);
+            $apiService->getNode()->is_active = false;
+            $apiService->getNode()->save();
         } catch (\Exception $exception) {
             LogHelper::error($exception);
+            $apiService->getNode()->is_active = false;
+            $apiService->getNode()->save();
         }
     }
 
