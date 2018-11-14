@@ -213,6 +213,8 @@ class TransactionController extends Controller
     /**
      * @param Request $request
      * @return Response
+     *
+     * @throws GuzzleException
      */
     public function pushTransactionToBlockChain(Request $request): Response
     {
@@ -233,19 +235,15 @@ class TransactionController extends Controller
     /**
      * @param string $transaction
      * @return array
+     * @throws GuzzleException
      */
     private function sendTransaction(string $transaction): array
     {
         try {
-            $result = $this->minterApiService->pushTransactionToBlockChain($transaction);
+            return $this->minterApiService->pushTransactionToBlockChain($transaction);
         } catch (BadResponseException $e) {
-            return ['error' => NodeExceptionHelper::handleNodeException($e)];
-        } catch (GuzzleException $e) {
-            $this->minterApiService->getNode()->is_active = false;
-            $this->minterApiService->getNode()->save();
-            return ['error' => NodeExceptionHelper::handleGuzzleException($e)];
+            return json_decode($e->getResponse()->getBody(true)->getContents(), 1);
         }
-        return ['data' => $result];
     }
 
     /**

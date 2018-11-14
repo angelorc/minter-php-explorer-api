@@ -170,12 +170,12 @@ class MinterApiService implements MinterApiServiceInterface
      */
     public function pushTransactionToBlockChain(string $txHash): array
     {
-        $res = $this->httpClient->request('POST', 'api/sendTransaction', [
+        $res = $this->httpClient->request('POST', 'https://gate.minter.network/api/v1/transaction/push', [
             'timeout' => 20,
             'json' => ['transaction' => $txHash]
         ]);
         $data = \GuzzleHttp\json_decode($res->getBody()->getContents(), 1);
-        return $data['result'];
+        return $data;
     }
 
     /**
