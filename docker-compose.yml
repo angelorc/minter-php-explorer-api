@@ -60,7 +60,7 @@ services:
       - ./service:/app
     command: install
   centrifugo:
-    image: centrifugo/centrifugo
+    image: centrifugo/centrifugo:v2.0.2
     volumes:
       - ./docker/centrifugo:/centrifugo
     ports:
