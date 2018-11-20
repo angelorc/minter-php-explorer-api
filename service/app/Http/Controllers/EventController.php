@@ -75,7 +75,7 @@ class EventController extends Controller
         $data = $this->rewardsRepository
             ->query($filters)
             ->with('block')
-            ->orderByDesc('block_height')
+            ->orderByDesc('block_id')
             ->paginate($this::EVENTS_PER_PAGE);
 
         return RewardResource::collection($data);
@@ -122,7 +122,7 @@ class EventController extends Controller
         $data = $this->slashesRepository
             ->query($filters)
             ->with('block')
-            ->orderByDesc('block_height')
+            ->orderByDesc('block_id')
             ->paginate($this::EVENTS_PER_PAGE);
 
         return SlashResource::collection($data);

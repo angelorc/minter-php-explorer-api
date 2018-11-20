@@ -33,8 +33,8 @@ services:
     ports:
       - 54322:5432
     environment:
-      POSTGRES_DB: explorer_db
-      POSTGRES_USER: minter_adm
+      POSTGRES_DB: explorer
+      POSTGRES_USER: minter
       POSTGRES_PASSWORD: password
     volumes:
       - ./service/db_data:/var/lib/postgresql/data
@@ -65,63 +65,6 @@ services:
       - ./docker/centrifugo:/centrifugo
     ports:
       - 8800:8000
-    networks:
-      - explorer-network
-  status:
-    container_name: "minter_explorer_status"
-    image: minterteam/status-minter-network:1.2-alpine
-    build:
-      context: https://github.com/MinterTeam/docker-status-minter-network.git
-      dockerfile: alpine/Dockerfile
-      args:
-        EXPLORER_MAINNET_URL: "http://localhost:8000"
-        EXPLORER_TESTNET_URL: "http://localhost:8000"
-        EXPLORER_RTM_URL: "http://localhost:8800"
-    ports:
-      - 8010:80
-    networks:
-      - explorer-network
-  explorer:
-    container_name: "minter_explorer_web"
-    image: minterteam/explorer-minter-network:1.2-alpine
-    build:
-      context: https://github.com/MinterTeam/docker-explorer-web-minter.git
-      dockerfile: alpine/Dockerfile
-      args:
-        EXPLORER_URL: "http://localhost:8000"
-        EXPLORER_RTM_URL: "http://localhost:8800"
-    ports:
-    - 8011:80
-    networks:
-    - explorer-network
-  tests:
-    container_name: "minter_explorer_tests"
-    build: ./docker/tests
-    volumes:
-      - ./service:/var/www
-    depends_on:
-      - postgres
-      - redis
-      - centrifugo
-    links:
-      - postgres
-      - redis
-      - centrifugo
-    networks:
-      - explorer-network
-  supervisor:
-    container_name: "minter_explorer_supervisor"
-    build: ./docker/supervisor
-    volumes:
-    - ./service:/var/www
-    depends_on:
-    - postgres
-    - redis
-    - centrifugo
-    links:
-    - postgres
-    - redis
-    - centrifugo
     networks:
     - explorer-network
 networks:

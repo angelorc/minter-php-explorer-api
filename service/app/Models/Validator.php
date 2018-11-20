@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
 class Validator extends Model
 {
 
-    protected $dateFormat = 'Y-m-d H:i:sO';
+    protected $dateFormat = 'Y-m-d H:i:s.uO';
 
     protected $fillable = [
         'name',

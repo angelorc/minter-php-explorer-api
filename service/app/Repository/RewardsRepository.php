@@ -31,7 +31,7 @@ class RewardsRepository extends ModelRepository implements RewardsRepositoryInte
         $result = DB::select('
             select sum (r.amount) as amount,  date_trunc(:scale, b.created_at) as time
             FROM rewards r
-               left join blocks b on b.height = r.block_height
+               left join blocks b on b.height = r.block_id
             where r.address = :address AND b.created_at >= :start AND b.created_at <= :end
             group by date_trunc(:scale, b.created_at)
             order by time

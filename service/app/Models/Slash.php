@@ -36,7 +36,7 @@ class Slash extends Model
 
     public function block()
     {
-        return $this->hasOne(Block::class, 'height', 'block_height');
+        return $this->hasOne(Block::class, 'height', 'block_id');
     }
 
 }

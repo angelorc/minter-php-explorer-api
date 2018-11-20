@@ -40,7 +40,7 @@ use Illuminate\Support\Collection;
  */
 class Block extends Model
 {
-    protected $dateFormat = 'Y-m-d H:i:sO';
+    protected $dateFormat = 'Y-m-d H:i:s.uO';
 
     protected $hidden = ['id'];
 
