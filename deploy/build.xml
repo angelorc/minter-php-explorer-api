@@ -41,6 +41,11 @@
         <fail unless="env.db_database" message="db_database environment variable is not set"/>
         <fail unless="env.db_username" message="db_username environment variable is not set"/>
         <fail unless="env.db_password" message="db_password environment variable is not set"/>
+        <fail unless="env.dbm_host" message="dbm_host environment variable is not set"/>
+        <fail unless="env.dbm_port" message="dbm_port environment variable is not set"/>
+        <fail unless="env.dbm_database" message="dbm_database environment variable is not set"/>
+        <fail unless="env.dbm_username" message="dbm_username environment variable is not set"/>
+        <fail unless="env.dbm_password" message="dbm_password environment variable is not set"/>
         <fail unless="env.cache_driver" message="cache_driver environment variable is not set"/>
         <fail unless="env.queue_driver" message="queue_driver environment variable is not set"/>
         <fail unless="env.session_driver" message="session_driver environment variable is not set"/>

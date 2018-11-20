@@ -13,7 +13,7 @@ class CreateCurrenciesTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('currencies', function (Blueprint $table) {
+        Schema::connection('master')->create('currencies', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('short_name');

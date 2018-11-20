@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTxPerDayTable extends Migration
 {
@@ -13,7 +13,7 @@ class CreateTxPerDayTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('tx_per_day', function (Blueprint $table) {
+        Schema::connection('master')->create('tx_per_day', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('transactions_count');
             $table->date('date');

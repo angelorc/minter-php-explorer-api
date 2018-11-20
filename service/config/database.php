@@ -18,6 +18,18 @@ return [
             'schema' => 'public',
             'sslmode' => 'prefer',
         ],
+        'master' => [
+            'driver' => 'pgsql',
+            'host' => env('DBM_HOST', '127.0.0.1'),
+            'port' => env('DBM_PORT', '5432'),
+            'database' => env('DBM_DATABASE', 'forge'),
+            'username' => env('DBM_USERNAME', 'forge'),
+            'password' => env('DBM_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
     ],
 
     'redis' => [
