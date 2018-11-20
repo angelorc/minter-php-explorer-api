@@ -13,7 +13,7 @@ class CreateTxPerDayTable extends Migration
      */
     public function up(): void
     {
-        Schema::connection('master')->create('tx_per_day', function (Blueprint $table) {
+        Schema::create('tx_per_day', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('transactions_count');
             $table->date('date');

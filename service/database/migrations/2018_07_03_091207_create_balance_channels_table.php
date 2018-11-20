@@ -13,7 +13,7 @@ class CreateBalanceChannelsTable extends Migration
      */
     public function up(): void
     {
-        Schema::connection('master')->create('balance_channels', function (Blueprint $table) {
+        Schema::create('balance_channels', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('address');

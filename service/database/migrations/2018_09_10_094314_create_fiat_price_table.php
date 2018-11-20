@@ -13,7 +13,7 @@ class CreateFiatPriceTable extends Migration
      */
     public function up(): void
     {
-        Schema::connection('master')->create('fiat_price', function (Blueprint $table) {
+        Schema::create('fiat_price', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('coin_id');
             $table->integer('currency_id');
