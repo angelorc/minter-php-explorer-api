@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Reward;
 use App\Models\Slash;
+use App\Models\Validator;
 use App\Repository\BalanceRepository;
 use App\Repository\BalanceRepositoryInterface;
 use App\Repository\BlockRepository;
@@ -16,6 +17,8 @@ use App\Repository\SlashesRepository;
 use App\Repository\SlashesRepositoryInterface;
 use App\Repository\TransactionRepository;
 use App\Repository\TransactionRepositoryInterface;
+use App\Repository\ValidatorRepository;
+use App\Repository\ValidatorRepositoryInterface;
 use App\Services\BalanceService;
 use App\Services\BalanceServiceInterface;
 use App\Services\BlockService;
@@ -56,6 +59,9 @@ class ContainerServiceProvider extends ServiceProvider
         $this->app->singleton(SlashesRepositoryInterface::class, function () {
             return new SlashesRepository(new Slash());
         });
+        $this->app->singleton(ValidatorRepositoryInterface::class, function () {
+            return new ValidatorRepository(new Validator());
+        });
 
         /** Services */
         $this->app->singleton(BalanceServiceInterface::class, BalanceService::class);
@@ -64,6 +70,8 @@ class ContainerServiceProvider extends ServiceProvider
         $this->app->singleton(TransactionServiceInterface::class, TransactionService::class);
         $this->app->singleton(ValidatorServiceInterface::class, ValidatorService::class);
         $this->app->singleton(CoinServiceInterface::class, CoinService::class);
+        $this->app->singleton(ValidatorServiceInterface::class, ValidatorService::class);
+
         $this->app->singleton(\phpcent\Client::class, function () {
             $centrifuge = new \phpcent\Client(env('CENTRIFUGE_URL', 'http://localhost:8000'));
             $centrifuge->setSecret(env('CENTRIFUGE_SECRET', null));

@@ -14,7 +14,7 @@ interface ModelRepositoryInterface
      * @param array $filters
      * @return Builder
      */
-    public function query(array $filters): Builder;
+    public function query(array $filters = []): Builder;
 
     /**
      * Get list

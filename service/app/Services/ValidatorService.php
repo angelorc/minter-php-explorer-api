@@ -6,11 +6,24 @@ namespace App\Services;
 use App\Helpers\StringHelper;
 use App\Models\Block;
 use App\Models\Validator;
+use App\Repository\ValidatorRepositoryInterface;
 use Illuminate\Support\Collection;
 
 
 class ValidatorService implements ValidatorServiceInterface
 {
+    protected $validatorRepository;
+
+    /**
+     * ValidatorService constructor.
+     * @param ValidatorRepositoryInterface $validatorRepository
+     */
+    public function __construct(ValidatorRepositoryInterface $validatorRepository)
+    {
+        $this->validatorRepository = $validatorRepository;
+    }
+
+
     /**
      * Get Active Validators Count
      * @return int
@@ -79,5 +92,42 @@ class ValidatorService implements ValidatorServiceInterface
         }
 
         return collect($validators);
+    }
+
+    /**
+     * @param string $pk
+     * @return string
+     */
+    public function getStake(string $pk): array
+    {
+        return $this->validatorRepository->getStake($pk);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTotalStake(): string
+    {
+        return $this->validatorRepository->getTotalStake();
+    }
+
+    /**
+     * @param string $pk
+     * @return int
+     */
+    public function getStatus(string $pk): int
+    {
+        /** @var Validator $validator */
+        $validator = $this->validatorRepository->query()->where('public_key', $pk)->first();
+        return $validator->status;
+    }
+
+    /**
+     * @param string $pk
+     * @return array
+     */
+    public function getDelegatorList(string $pk): Collection
+    {
+        return $this->validatorRepository->getDelegatorList($pk);
     }
 }

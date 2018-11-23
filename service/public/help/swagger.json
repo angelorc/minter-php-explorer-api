@@ -832,6 +832,61 @@
             }
           }
         }
+      },
+      "/api/v1/validator/{publicKey}": {
+        "get": {
+          "tags": [
+            "Validator"
+          ],
+          "summary": "Validator info",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "Public Key",
+              "in": "path",
+              "description": "Validator public key",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "properties": {
+                  "data": {
+                    "properties": {
+                      "status": {
+                        "type": "integer",
+                        "example": "2"
+                      },
+                      "count": {
+                        "type": "integer",
+                        "example": "23"
+                      },
+                      "stake": {
+                        "type": "float",
+                        "example": "25.53556"
+                      },
+                      "part": {
+                        "type": "float",
+                        "example": "0.53556"
+                      },
+                      "delegator_list": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/Delegator"
+                        }
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
         }
     },
     "definitions": {
@@ -1210,6 +1265,23 @@
                     "example": "Minter Coin"
                 }
             },
+          "type": "object"
+        },
+      "Delegator": {
+        "properties": {
+          "coin": {
+            "type": "string",
+            "example": "MNT"
+          },
+          "address": {
+            "type": "string",
+            "example": "Mx2ffe59556ffc6564f8e6132f445bc2e102fd713c"
+          },
+          "value": {
+            "type": "string",
+            "example": "99.2424"
+          }
+        },
             "type": "object"
         },
       "Reward": {

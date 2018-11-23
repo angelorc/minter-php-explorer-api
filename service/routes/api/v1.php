@@ -35,3 +35,5 @@ $router->get('events/slashes', EventController::class . '@getSlashesList');
 $router->get('estimate/tx-commission', EstimateController::class . '@txCommission');
 $router->get('estimate/coin-buy', EstimateController::class . '@buyCoin');
 $router->get('estimate/coin-sell', EstimateController::class . '@sellCoin');
+
+$router->get('validator/{pk}', ValidatorController::class . '@info');

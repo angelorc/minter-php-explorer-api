@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string name
  * @property string address
  * @property string public_key
+ * @property int status
  *
  * @SWG\Definition(
  *     definition="Validator",

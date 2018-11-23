@@ -26,4 +26,28 @@ interface ValidatorServiceInterface
      * @return int
      */
     public function getActiveValidatorsCount(): int;
+
+    /**
+     * Get Validator Stake
+     * @param string $pk
+     * @return array
+     */
+    public function getStake(string $pk): array;
+
+    /**
+     * @return string
+     */
+    public function getTotalStake(): string;
+
+    /**
+     * @param string $pk
+     * @return int
+     */
+    public function getStatus(string $pk): int;
+
+    /**
+     * @param string $pk
+     * @return array
+     */
+    public function getDelegatorList(string $pk): Collection;
 }
