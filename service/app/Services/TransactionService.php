@@ -27,8 +27,10 @@ class TransactionService implements TransactionServiceInterface
      * @param TransactionRepositoryInterface $transactionRepository
      * @param CoinServiceInterface $coinService
      */
-    public function __construct(TransactionRepositoryInterface $transactionRepository, CoinServiceInterface $coinService)
-    {
+    public function __construct(
+        TransactionRepositoryInterface $transactionRepository,
+        CoinServiceInterface $coinService
+    ) {
         $this->transactionRepository = $transactionRepository;
         $this->coinService = $coinService;
     }
@@ -153,5 +155,25 @@ class TransactionService implements TransactionServiceInterface
         }
     }
 
+    /**
+     * Get delegation data for address
+     * @param string $address
+     * @return Collection
+     */
+    public function getDelegationsForAddress(string $address): Collection
+    {
+        $data = $this->transactionRepository->getDelegationsForAddress($address);
 
+        $result = collect([]);
+
+        foreach ($data as $item) {
+            $result->push([
+                'coin' => $item->coin,
+                'pub_key' => $item->pub_key,
+                'value' => MathHelper::makeAmountFromIntString($item->value)
+            ]);
+        }
+
+        return $result;
+    }
 }

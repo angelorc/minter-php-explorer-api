@@ -27,6 +27,4 @@ class Delegator
     public $coin;
     public $address;
     public $value;
-
-
 }

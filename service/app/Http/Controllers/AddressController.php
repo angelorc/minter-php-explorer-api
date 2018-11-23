@@ -164,4 +164,41 @@ class AddressController extends Controller
             ]
         ];
     }
+
+    /**
+     * @SWG\Definition(
+     *     definition="DelegationData",
+     *     type="object",
+     *
+     *     @SWG\Property(property="coin",     type="string", example="MNT"),
+     *     @SWG\Property(property="pub_key",  type="string", example="Mp5c87d35a7adb055f54140ba03c0eed418ddc7c52ff7a63fc37a0e85611388610"),
+     *     @SWG\Property(property="value", type="float", example="402.87"),
+     * )
+     */
+    /**
+     * @SWG\Get(
+     *     path="/api/v1/address/delegations/{address}",
+     *     tags={"Address"},
+     *     summary="Delegation data",
+     *     produces={"application/json"},
+     *
+     *     @SWG\Parameter(in="path", name="address", type="string", description="Address", required=true),
+     *
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success",
+     *         @SWG\Schema(
+     *              @SWG\Property(property="data", type="array",  @SWG\Items(ref="#/definitions/DelegationData")),
+     *         )
+     *     )
+     * )
+     *
+     * @return array
+     */
+    public function delegations(string $address): array
+    {
+        return [
+            'data' => $this->transactionService->getDelegationsForAddress($address)
+        ];
+    }
 }

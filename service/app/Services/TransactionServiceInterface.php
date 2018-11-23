@@ -61,7 +61,6 @@ interface TransactionServiceInterface
      */
     public function getAverageCommission(\DateTime $startTime = null): string;
 
-
     /**
      * @return array
      */
@@ -72,4 +71,11 @@ interface TransactionServiceInterface
      * @param array $txTags
      */
     public function saveTransactionsTags(array $txTags): void;
+
+    /**
+     * Get delegation data for address
+     * @param string $address
+     * @return Collection
+     */
+    public function getDelegationsForAddress(string $address): Collection;
 }

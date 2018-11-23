@@ -211,6 +211,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     /**
      * Get commission in 24h
      * @return Collection
+     * @throws \Exception
      */
     public function get24hTransactionsCommission(): string
     {
@@ -223,6 +224,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     /**
      * Get summary transactions data
      * @return array
+     * @throws \Exception
      */
     public function get24hTransactionsData(): array
     {
@@ -241,5 +243,20 @@ class TransactionRepository implements TransactionRepositoryInterface
             'sum' => $result[0]->sum ?? 0,
             'avg' => $result[0]->avg ?? 0,
         ];
+    }
+
+
+    /**
+     * @param string $address
+     * @return array
+     */
+    public function getDelegationsForAddress(string $address): array
+    {
+        return DB::select('
+            select  coin, pub_key, sum(stake) as value
+            from transactions
+            where "type" = :type and "from" = :address
+            group by coin, pub_key
+        ', ['type' => Transaction::TYPE_DELEGATE, 'address' => $address]);
     }
 }

@@ -84,4 +84,10 @@ interface TransactionRepositoryInterface
      */
     public function get24hTransactionsData(): array;
 
+    /**
+     * @param string $address
+     * @return array
+     */
+    public function getDelegationsForAddress(string $address): array;
+
 }

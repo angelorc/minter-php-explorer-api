@@ -20,6 +20,7 @@ $router->get('transaction/{hash}', TransactionController::class . '@getTransacti
 $router->get('transactions', TransactionController::class. '@getList');
 
 $router->get('address/get-balance-channel', SettingsController::class . '@getBalanceWsChannel');//Для совместимости со старыми версиями
+$router->get('address/delegations/{address}', AddressController::class . '@delegations');
 $router->get('address/{address}', AddressController::class. '@address');
 $router->get('address', AddressController::class. '@addresses');
 

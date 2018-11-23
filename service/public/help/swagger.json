@@ -68,6 +68,41 @@
                 }
             }
         },
+      "/api/v1/address/delegations/{address}": {
+        "get": {
+          "tags": [
+            "Address"
+          ],
+          "summary": "Delegation data",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "address",
+              "in": "path",
+              "description": "Address",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "schema": {
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/DelegationData"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
         "/api/v1/blocks": {
             "get": {
                 "tags": [
@@ -956,6 +991,23 @@
                 }
             },
           "type": "object"
+        },
+      "DelegationData": {
+        "properties": {
+          "coin": {
+            "type": "string",
+            "example": "MNT"
+          },
+          "pub_key": {
+            "type": "string",
+            "example": "Mp5c87d35a7adb055f54140ba03c0eed418ddc7c52ff7a63fc37a0e85611388610"
+          },
+          "value": {
+            "type": "float",
+            "example": "402.87"
+          }
+        },
+        "type": "object"
         },
       "RewardChartData": {
         "properties": {
